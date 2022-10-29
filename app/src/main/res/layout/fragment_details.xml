@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragButtons"
+    tools:context=".DetailsFragment">
+
+    <LinearLayout
+        android:id="@+id/info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/type_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="@dimen/marginEight"
+            android:layout_marginTop="@dimen/marginEight"
+            android:layout_marginBottom="@dimen/marginEight"
+            android:contentDescription="icon"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/type_text"
+            android:layout_width="147dp"
+            android:layout_height="50dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="@dimen/marginEight"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="216dp"
+        android:id="@+id/decoded_text_layout"
+        android:background="@drawable/decoded_text_layout_back"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info_layout">
+
+        <TextView
+            android:id="@+id/decoded_text"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/fragViewBack"
+            android:layout_marginTop="@dimen/marginEight"
+            android:layout_marginStart="@dimen/marginEight"
+            android:layout_marginEnd="@dimen/marginEight"
+            android:textSize="18sp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/decoded_text_layout_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/decoded_text_layout"
+        app:layout_constraintVertical_bias="0.101">
+
+        <ImageButton
+            android:id="@+id/copy_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@color/fragViewBack"
+            android:src="@drawable/outline_content_copy_24"
+            android:layout_marginTop="@dimen/marginEight"
+            android:layout_marginBottom="@dimen/marginEight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/share_button"
+            app:layout_constraintHorizontal_bias="0.08"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            android:contentDescription="copy"
+            tools:ignore="HardcodedText" />
+
+        <ImageButton
+            android:id="@+id/share_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@color/fragViewBack"
+            android:src="@drawable/outline_share_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="share"
+            tools:ignore="HardcodedText" />
+
+        <ImageButton
+            android:id="@+id/wifi_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@color/fragViewBack"
+            android:src="@drawable/outline_wifi_24"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.822"
+            app:layout_constraintStart_toEndOf="@+id/share_button"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="open wifi settings"
+            tools:ignore="HardcodedText" />
+
+        <ImageButton
+            android:id="@+id/launch_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@color/fragViewBack"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/outline_launch_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="launch"
+            tools:ignore="HardcodedText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
