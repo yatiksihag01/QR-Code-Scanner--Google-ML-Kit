@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Camera mCamera;
     private boolean isClickedAllowButton = false;
+    private boolean isImageSelected = false;
     private ActivityMainBinding binding;
     boolean doublePressToExit = false;
     private final int CAMERA_REQUEST_CODE = 100;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         binding.selectFromGallery.setOnClickListener(view -> mChoosePhoto.launch("image/*"));
 
         mChoosePhoto = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
+            isImageSelected = true;
             InputImage image;
             BarcodeScannerOptions options =
                     new BarcodeScannerOptions.Builder()
@@ -221,6 +223,11 @@ public class MainActivity extends AppCompatActivity {
                     .setReorderingAllowed(true)
                     .addToBackStack("detailsFrag")
                     .commit();
+            isImageSelected = false;
+
+        } else if (isImageSelected){
+            Toast.makeText(this, "Failed to scan", Toast.LENGTH_SHORT).show();
+            isImageSelected = false;
         }
     }
 
