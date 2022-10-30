@@ -72,24 +72,26 @@ public class MainActivity extends AppCompatActivity {
         binding.selectFromGallery.setOnClickListener(view -> mChoosePhoto.launch("image/*"));
 
         mChoosePhoto = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
-            isImageSelected = true;
-            InputImage image;
-            BarcodeScannerOptions options =
-                    new BarcodeScannerOptions.Builder()
-                            .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-                            .build();
-            BarcodeScanner scanner = BarcodeScanning.getClient(options);
-            try {
-                image = InputImage.fromFilePath(this, result);
-                scanner.process(image)
-                    .addOnSuccessListener(MainActivity.this::processResult)
-                    .addOnFailureListener(e -> {
-                        // Task failed with an exception
-                        Toast.makeText(MainActivity.this, "Failed to scan.", Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    });
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (result != null){
+                isImageSelected = true;
+                InputImage image;
+                BarcodeScannerOptions options =
+                        new BarcodeScannerOptions.Builder()
+                                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+                                .build();
+                BarcodeScanner scanner = BarcodeScanning.getClient(options);
+                try {
+                    image = InputImage.fromFilePath(this, result);
+                    scanner.process(image)
+                        .addOnSuccessListener(MainActivity.this::processResult)
+                        .addOnFailureListener(e -> {
+                            // Task failed with an exception
+                            Toast.makeText(MainActivity.this, "Failed to scan.", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
