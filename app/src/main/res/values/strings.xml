@@ -5,6 +5,11 @@
     <string name="Allow"><![CDATA[<font color=\'#89B3F7\'>Allow</font>]]></string>
     <string name="Cancel"><![CDATA[<font color=\'#89B3F7\'>Cancel</font>]]></string>
     <string name="Wifi"><![CDATA[<font color=\'#89B3F7\'>Wifi</font>]]></string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text">Text</string>
+    <string name="url">Url</string>
+    <string name="sms">SMS</string>
+    <string name="raw">Raw</string>
+    <string name="wifi">Wifi</string>
+    <string name="phone">Phone</string>
+    <string name="text2">Text</string>
 </resources>
