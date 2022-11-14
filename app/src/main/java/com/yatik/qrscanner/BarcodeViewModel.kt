@@ -1,7 +1,6 @@
 package com.yatik.qrscanner
 
 import androidx.lifecycle.*
-import com.yatik.qrscanner.database.BarcodeDao
 import com.yatik.qrscanner.database.BarcodeData
 import com.yatik.qrscanner.repository.BarcodeDataRepository
 import kotlinx.coroutines.launch
@@ -13,6 +12,9 @@ class BarcodeViewModel(private val repository: BarcodeDataRepository) : ViewMode
 
     fun insert(barcodeData: BarcodeData) = viewModelScope.launch {
         repository.insert(barcodeData)
+    }
+    fun delete(barcodeData: BarcodeData) = viewModelScope.launch {
+        repository.delete(barcodeData)
     }
 }
 

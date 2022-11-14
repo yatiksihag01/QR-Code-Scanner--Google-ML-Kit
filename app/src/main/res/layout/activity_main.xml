@@ -18,11 +18,6 @@
         </androidx.camera.view.PreviewView>
     </FrameLayout>
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_flash_off"
         style="?attr/materialButtonOutlinedStyle"

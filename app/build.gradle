@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id("kotlin-parcelize")
 }
 
 android {
@@ -61,11 +62,10 @@ dependencies {
     implementation 'com.google.mlkit:barcode-scanning:17.0.2'
 
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
-    implementation "androidx.fragment:fragment:$fragment_version"
 
     // Room components
     implementation "androidx.room:room-ktx:$rootProject.roomVersion"
-//    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
     androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
 

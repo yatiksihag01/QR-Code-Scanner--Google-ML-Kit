@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BarcodeDao {
@@ -13,10 +14,10 @@ interface BarcodeDao {
     suspend fun insert(barcodeData: BarcodeData)
 
     @Delete
-    fun delete(barcodeData: BarcodeData)
+    suspend fun delete(barcodeData: BarcodeData)
 
     @Query("SELECT * FROM barcode_table ORDER BY id DESC")
-    fun getAllBarcodes(): kotlinx.coroutines.flow.Flow<List<BarcodeData>>
+    fun getAllBarcodes(): Flow<List<BarcodeData>>
 
     @Query("DELETE FROM barcode_table")
     suspend fun deleteAll()

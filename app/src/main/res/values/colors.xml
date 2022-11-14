@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="fragButtons">#212A31</color>
     <color name="fragViewBack">#35414A</color>
+    <color name="dialogButtons">#89B3F7</color>
 </resources>

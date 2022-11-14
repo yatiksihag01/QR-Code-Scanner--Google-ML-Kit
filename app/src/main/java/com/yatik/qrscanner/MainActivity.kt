@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
-import android.text.Html
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -30,7 +29,6 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.yatik.qrscanner.databinding.ActivityMainBinding
-import com.yatik.qrscanner.fragments.DetailsFragment
 import com.yatik.qrscanner.fragments.HistoryFragment
 import java.io.IOException
 import java.util.*
@@ -57,9 +55,11 @@ class MainActivity : AppCompatActivity() {
         requestCameraPermission()
         binding.selectFromGallery.setOnClickListener { mChoosePhoto!!.launch("image/*") }
         binding.history.setOnClickListener {
+            mCameraProvider?.unbindAll()
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add<HistoryFragment>(R.id.fragment_container_view)
+                addToBackStack("historyFrag")
+                add<HistoryFragment>(R.id.main_layout)
             }
         }
         mChoosePhoto = registerForActivityResult(ActivityResultContracts.GetContent()) { result: Uri? ->
@@ -146,8 +146,8 @@ class MainActivity : AppCompatActivity() {
         builder.setTitle("Permission Denied!")
             .setMessage(message)
             .setCancelable(false)
-            .setNegativeButton(Html.fromHtml(getString(R.string.Cancel))) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
-            .setPositiveButton(Html.fromHtml(getString(R.string.Allow))) { _: DialogInterface?, _: Int ->
+            .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+            .setPositiveButton("Allow") { _: DialogInterface?, _: Int ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 val uri = Uri.fromParts("package", this@MainActivity.packageName, null)
                 intent.data = uri
@@ -156,6 +156,12 @@ class MainActivity : AppCompatActivity() {
             }
         val dialog = builder.create()
         dialog.show()
+        dialog.makeButtonTextBlue()
+    }
+
+    private fun AlertDialog.makeButtonTextBlue() {
+        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
     }
 
     @SuppressLint("UnsafeOptInUsageError")
@@ -196,19 +202,83 @@ class MainActivity : AppCompatActivity() {
             } else {
                 vibrator.vibrate(100)
             }
-            mCameraProvider!!.unbindAll()
-            val fragmentManager = supportFragmentManager
-            fragmentManager.beginTransaction()
-                .replace(R.id.main_layout,
-                    DetailsFragment(barcodes), null)
-                .setReorderingAllowed(true)
-                .addToBackStack("detailsFrag")
-                .commit()
+            mCameraProvider?.unbindAll()
+            sendRequiredData(barcodes[0])
+
             isImageSelected = false
+            setUpCamera()
         } else if (isImageSelected) {
             Toast.makeText(this, "Failed to scan", Toast.LENGTH_SHORT).show()
             isImageSelected = false
         }
+    }
+
+    /*
+    * SSID, title, text, number, phone_number, raw => title: String
+    *
+    * password, url, message => decryptedText: String
+    *
+    * encryptionType, ($latitude,$longitude) => others: String
+    *
+    * */
+
+    private fun sendRequiredData(barcode: Barcode){
+        intent = Intent(this, DetailsActivity::class.java)
+        intent.putExtra("valueType", barcode.valueType)
+        when(barcode.valueType){
+            Barcode.TYPE_WIFI -> {
+                val ssid = barcode.wifi?.ssid
+                val password = barcode.wifi?.password
+                val encryptionType: String = when (barcode.wifi?.encryptionType) {
+                    Barcode.WiFi.TYPE_OPEN -> "Open"
+                    Barcode.WiFi.TYPE_WPA -> "WPA"
+                    Barcode.WiFi.TYPE_WEP -> "WEP"
+                    else -> ""
+                }
+                intent.putExtra("title", ssid)
+                intent.putExtra("decryptedText", password)
+                intent.putExtra("others", encryptionType)
+            }
+
+            Barcode.TYPE_URL -> {
+                val title = barcode.url?.title
+                val url = barcode.url?.url
+                intent.putExtra("title", title)
+                intent.putExtra("decryptedText", url)
+
+            }
+
+            Barcode.TYPE_TEXT -> {
+                val text = barcode.displayValue
+                intent.putExtra("title", text)
+            }
+
+            Barcode.TYPE_PHONE -> {
+                val tel = barcode.phone?.number
+                intent.putExtra("title", tel)
+            }
+
+            Barcode.TYPE_GEO -> {
+                val latitude = barcode.geoPoint!!.lat
+                val longitude = barcode.geoPoint!!.lng
+                val latLongString = "$latitude,$longitude"
+                intent.putExtra("others", latLongString)
+            }
+
+            Barcode.TYPE_SMS -> {
+                val phoneNumber = barcode.sms?.phoneNumber
+                val message = barcode.sms?.message
+                intent.putExtra("title", phoneNumber)
+                intent.putExtra("decryptedText", message)
+            }
+
+            else -> {
+                val rawValue = barcode.rawValue ?: "Sorry, this QR code doesn't contain any data"
+                intent.putExtra("title", rawValue)
+            }
+
+        }
+        startActivity(intent)
     }
 
     private fun flashControl() {

@@ -9,12 +9,16 @@ import androidx.room.PrimaryKey
 *
 * password, url, message => decryptedText: String
 *
+* encryptionType, ($latitude,$longitude) => others: String
+*
 * */
 
 @Entity(tableName = "barcode_table")
 class BarcodeData(@ColumnInfo(name = "type") val type: Int,
                   @ColumnInfo(name = "title") val title: String?,
-                  @ColumnInfo(name = "decryptedText") val decryptedText: String?) {
+                  @ColumnInfo(name = "decryptedText") val decryptedText: String?,
+                  @ColumnInfo(name = "others") val others: String?,
+                  @ColumnInfo(name = "dateTime") val dateTime: String) {
 
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id = 0
 

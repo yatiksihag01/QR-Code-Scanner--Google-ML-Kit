@@ -14,4 +14,9 @@ class BarcodeDataRepository(private val barcodeDao: BarcodeDao) {
     suspend fun insert(barcodeData: BarcodeData) {
         barcodeDao.insert(barcodeData)
     }
+
+    @WorkerThread
+    suspend fun delete(barcodeData: BarcodeData) {
+        barcodeDao.delete(barcodeData)
+    }
 }

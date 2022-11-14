@@ -52,7 +52,7 @@ abstract class BarcodeRoomDataBase : RoomDatabase() {
                 barcodeDao.deleteAll()
 
                 // Add sample data.
-                val detail = BarcodeData(Barcode.TYPE_TEXT, "Sample Text", null)
+                val detail = BarcodeData(Barcode.TYPE_TEXT, "Sample Text", null, null, "Sample Text")
                 barcodeDao.insert(detail)
             }
         }

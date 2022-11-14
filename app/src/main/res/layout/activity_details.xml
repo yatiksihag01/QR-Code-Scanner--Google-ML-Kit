@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fragButtons"
-    tools:context=".fragments.DetailsFragment">
+    tools:context=".DetailsActivity">
 
     <LinearLayout
         android:id="@+id/info_layout"

@@ -2,8 +2,6 @@
     <string name="app_name">QR Scanner</string>
     <string name="permissionDeniedMessageCam">In order to work properly, app needs access to camera. Please click Allow -> Permissions -> Camera -> Allow only while using the app</string>
     <string name="permissionDeniedMessageStorage">In order to pick gallery image, app needs to access device storage. Please click Allow -> Permissions -> Files and media -> Allow access to media only</string>
-    <string name="Allow"><![CDATA[<font color=\'#89B3F7\'>Allow</font>]]></string>
-    <string name="Cancel"><![CDATA[<font color=\'#89B3F7\'>Cancel</font>]]></string>
     <string name="Wifi"><![CDATA[<font color=\'#89B3F7\'>Wifi</font>]]></string>
     <string name="text">Text</string>
     <string name="url">Url</string>
@@ -12,4 +10,6 @@
     <string name="wifi">Wifi</string>
     <string name="phone">Phone</string>
     <string name="text2">Text</string>
+    <string name="upi">UPI</string>
+    <string name="location">Location</string>
 </resources>
