@@ -64,6 +64,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/decoded_text_layout_back"
@@ -78,17 +79,17 @@
             android:id="@+id/copy_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@color/fragViewBack"
-            android:src="@drawable/outline_content_copy_24"
             android:layout_marginTop="@dimen/marginEight"
             android:layout_marginBottom="@dimen/marginEight"
+            android:background="@color/fragViewBack"
+            android:contentDescription="copy"
+            android:src="@drawable/outline_content_copy_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/share_button"
             app:layout_constraintHorizontal_bias="0.08"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            android:contentDescription="copy"
             tools:ignore="HardcodedText" />
 
         <ImageButton
@@ -96,12 +97,12 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@color/fragViewBack"
+            android:contentDescription="share"
             android:src="@drawable/outline_share_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="share"
             tools:ignore="HardcodedText" />
 
         <ImageButton
@@ -109,6 +110,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@color/fragViewBack"
+            android:contentDescription="open wifi settings"
             android:src="@drawable/outline_wifi_24"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -116,22 +118,34 @@
             app:layout_constraintHorizontal_bias="0.822"
             app:layout_constraintStart_toEndOf="@+id/share_button"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="open wifi settings"
             tools:ignore="HardcodedText" />
 
         <ImageButton
             android:id="@+id/launch_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@color/fragViewBack"
             android:layout_marginEnd="16dp"
+            android:background="@color/fragViewBack"
+            android:contentDescription="launch"
             android:src="@drawable/outline_launch_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="launch"
             tools:ignore="HardcodedText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/extra_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintVertical_bias="0.06" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,11 +45,13 @@ class HistoryFragment : Fragment() {
         adapter.setOnItemClickListener(object : BarcodeListAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 val barcodeData = barcodeViewModel.allBarcodes.value?.get(position)
+                val format = barcodeData?.format
                 val title = barcodeData?.title
                 val decryptedText = barcodeData?.decryptedText
                 val others = barcodeData?.others
                 val valueType = barcodeData?.type
                 requireActivity().intent = Intent(requireContext(), DetailsActivity::class.java)
+                    .putExtra("format", format)
                     .putExtra("title", title)
                     .putExtra("decryptedText", decryptedText)
                     .putExtra("others", others)

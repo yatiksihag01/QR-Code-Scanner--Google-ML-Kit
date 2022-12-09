@@ -1,6 +1,7 @@
 package com.yatik.qrscanner.database
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -9,7 +10,13 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [BarcodeData::class], version = 1, exportSchema = false)
+@Database(
+    version = 2,
+    entities = [BarcodeData::class],
+    autoMigrations = [
+        AutoMigration (from = 1, to = 2)
+    ]
+)
 abstract class BarcodeRoomDataBase : RoomDatabase() {
 
     abstract fun barcodeDao(): BarcodeDao
@@ -52,7 +59,7 @@ abstract class BarcodeRoomDataBase : RoomDatabase() {
                 barcodeDao.deleteAll()
 
                 // Add sample data.
-                val detail = BarcodeData(Barcode.TYPE_TEXT, "Sample Text", null, null, "Sample Text")
+                val detail = BarcodeData(Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample Text", null, null, "Sample Text")
                 barcodeDao.insert(detail)
             }
         }

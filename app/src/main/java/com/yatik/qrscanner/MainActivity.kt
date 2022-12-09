@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity() {
                 isImageSelected = true
                 val image: InputImage
                 val options = BarcodeScannerOptions.Builder()
-                    .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
                     .build()
                 val scanner = BarcodeScanning.getClient(options)
                 try {
@@ -174,7 +173,6 @@ class MainActivity : AppCompatActivity() {
 
             val image = InputImage.fromMediaImage(imageProxy.image!!, imageProxy.imageInfo.rotationDegrees)
             val options = BarcodeScannerOptions.Builder()
-                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
                 .build()
             val scanner = BarcodeScanning.getClient(options)
             scanner.process(image)
@@ -196,15 +194,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun processResult(barcodes: List<Barcode>) {
         if (barcodes.isNotEmpty()) {
+            mCameraProvider?.unbindAll()
             val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createOneShot(100, 125))
             } else {
                 vibrator.vibrate(100)
             }
-            mCameraProvider?.unbindAll()
             sendRequiredData(barcodes[0])
-
             isImageSelected = false
             setUpCamera()
         } else if (isImageSelected) {
@@ -214,7 +211,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /*
-    * SSID, title, text, number, phone_number, raw => title: String
+    * SSID, title, text, number, phone_number, raw, barcodes => title: String
     *
     * password, url, message => decryptedText: String
     *
@@ -224,59 +221,65 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendRequiredData(barcode: Barcode){
         intent = Intent(this, DetailsActivity::class.java)
+        intent.putExtra("format", barcode.format)
         intent.putExtra("valueType", barcode.valueType)
-        when(barcode.valueType){
-            Barcode.TYPE_WIFI -> {
-                val ssid = barcode.wifi?.ssid
-                val password = barcode.wifi?.password
-                val encryptionType: String = when (barcode.wifi?.encryptionType) {
-                    Barcode.WiFi.TYPE_OPEN -> "Open"
-                    Barcode.WiFi.TYPE_WPA -> "WPA"
-                    Barcode.WiFi.TYPE_WEP -> "WEP"
-                    else -> ""
+        if (barcode.format == Barcode.FORMAT_QR_CODE) {
+            when(barcode.valueType){
+                Barcode.TYPE_WIFI -> {
+                    val ssid = barcode.wifi?.ssid
+                    val password = barcode.wifi?.password
+                    val encryptionType: String = when (barcode.wifi?.encryptionType) {
+                        Barcode.WiFi.TYPE_OPEN -> "Open"
+                        Barcode.WiFi.TYPE_WPA -> "WPA"
+                        Barcode.WiFi.TYPE_WEP -> "WEP"
+                        else -> ""
+                    }
+                    intent.putExtra("title", ssid)
+                    intent.putExtra("decryptedText", password)
+                    intent.putExtra("others", encryptionType)
                 }
-                intent.putExtra("title", ssid)
-                intent.putExtra("decryptedText", password)
-                intent.putExtra("others", encryptionType)
+
+                Barcode.TYPE_URL -> {
+                    val title = barcode.url?.title
+                    val url = barcode.url?.url
+                    intent.putExtra("title", title)
+                    intent.putExtra("decryptedText", url)
+
+                }
+
+                Barcode.TYPE_TEXT -> {
+                    val text = barcode.displayValue
+                    intent.putExtra("title", text)
+                }
+
+                Barcode.TYPE_PHONE -> {
+                    val tel = barcode.phone?.number
+                    intent.putExtra("title", tel)
+                }
+
+                Barcode.TYPE_GEO -> {
+                    val latitude = barcode.geoPoint!!.lat
+                    val longitude = barcode.geoPoint!!.lng
+                    val latLongString = "$latitude,$longitude"
+                    intent.putExtra("others", latLongString)
+                }
+
+                Barcode.TYPE_SMS -> {
+                    val phoneNumber = barcode.sms?.phoneNumber
+                    val message = barcode.sms?.message
+                    intent.putExtra("title", phoneNumber)
+                    intent.putExtra("decryptedText", message)
+                }
+
+                else -> {
+                    val rawValue = barcode.rawValue ?: "Sorry, this QR code doesn't contain any data"
+                    intent.putExtra("title", rawValue)
+                }
+
             }
-
-            Barcode.TYPE_URL -> {
-                val title = barcode.url?.title
-                val url = barcode.url?.url
-                intent.putExtra("title", title)
-                intent.putExtra("decryptedText", url)
-
-            }
-
-            Barcode.TYPE_TEXT -> {
-                val text = barcode.displayValue
-                intent.putExtra("title", text)
-            }
-
-            Barcode.TYPE_PHONE -> {
-                val tel = barcode.phone?.number
-                intent.putExtra("title", tel)
-            }
-
-            Barcode.TYPE_GEO -> {
-                val latitude = barcode.geoPoint!!.lat
-                val longitude = barcode.geoPoint!!.lng
-                val latLongString = "$latitude,$longitude"
-                intent.putExtra("others", latLongString)
-            }
-
-            Barcode.TYPE_SMS -> {
-                val phoneNumber = barcode.sms?.phoneNumber
-                val message = barcode.sms?.message
-                intent.putExtra("title", phoneNumber)
-                intent.putExtra("decryptedText", message)
-            }
-
-            else -> {
-                val rawValue = barcode.rawValue ?: "Sorry, this QR code doesn't contain any data"
-                intent.putExtra("title", rawValue)
-            }
-
+        } else {
+            val title = barcode.rawValue ?: "Sorry, Something wrong happened. Please try to rescan."
+            intent.putExtra("title", title)
         }
         startActivity(intent)
     }
