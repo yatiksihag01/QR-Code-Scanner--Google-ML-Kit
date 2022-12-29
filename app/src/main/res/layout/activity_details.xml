@@ -5,17 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fragButtons"
-    tools:context=".DetailsActivity">
+    tools:context=".others.DetailsActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/detailsToolbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/detailsToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/fragButtons"
+            app:navigationIcon="@drawable/arrow_back_24"
+            app:title="Scanned Data"
+            app:titleCentered="true"
+            app:titleTextColor="@color/white" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/detailsToolbarLayout">
 
         <ImageView
             android:id="@+id/type_icon"
@@ -31,20 +50,19 @@
             android:id="@+id/type_text"
             android:layout_width="147dp"
             android:layout_height="50dp"
-            android:textSize="15sp"
-            android:textStyle="bold"
             android:layout_marginStart="24dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="@dimen/marginEight"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="216dp"
+        android:layout_height="200dp"
         android:id="@+id/decoded_text_layout"
         android:background="@drawable/decoded_text_layout_back"
-        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +71,7 @@
         <TextView
             android:id="@+id/decoded_text"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="185dp"
             android:background="@color/fragViewBack"
             android:layout_marginTop="@dimen/marginEight"
             android:layout_marginStart="@dimen/marginEight"

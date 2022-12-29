@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/fragButtons"
-    tools:context=".fragments.HistoryFragment">
+    tools:context=".others.SettingsActivity"
+    android:orientation="horizontal">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/historyToolbarLayout"
+        android:id="@+id/settingsToolbarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/historyToolbar"
+            android:id="@+id/settingsToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="History"
+            app:title="Settings"
             app:titleCentered="true"
             app:titleTextColor="@color/white"
-            app:menu="@menu/history_menu"
             android:background="@color/fragButtons"
             app:navigationIcon="@drawable/arrow_back_24" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/history_recycler_view"
-        android:layout_marginTop="?attr/actionBarSize"
+    <fragment
+        android:id="@+id/settings_frag"
+        android:name="com.yatik.qrscanner.others.SettingsActivity$QRScannerPreferenceFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="8dp" />
+        android:layout_below="@id/settingsToolbarLayout"
+        tools:context="com.yatik.qrscanner.others.SettingsActivity"
+        tools:ignore="FragmentTagUsage" />
 
-</FrameLayout>
+  </RelativeLayout>

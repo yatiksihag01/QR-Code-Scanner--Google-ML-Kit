@@ -1,4 +1,4 @@
-package com.yatik.qrscanner
+package com.yatik.qrscanner.others
 
 import android.app.Application
 import com.yatik.qrscanner.database.BarcodeRoomDataBase

@@ -16,6 +16,9 @@ class BarcodeViewModel(private val repository: BarcodeDataRepository) : ViewMode
     fun delete(barcodeData: BarcodeData) = viewModelScope.launch {
         repository.delete(barcodeData)
     }
+    fun deleteAll() = viewModelScope.launch {
+        repository.deleteAll()
+    }
 }
 
 class BarcodeViewModelFactory(private val repository: BarcodeDataRepository) : ViewModelProvider.Factory {

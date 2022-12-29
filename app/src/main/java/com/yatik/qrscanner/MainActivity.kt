@@ -2,14 +2,22 @@ package com.yatik.qrscanner
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
-import android.view.View
-import android.view.WindowManager
+import android.view.*
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.RatingBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +31,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
+import androidx.preference.PreferenceManager
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -30,13 +39,15 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.yatik.qrscanner.databinding.ActivityMainBinding
 import com.yatik.qrscanner.fragments.HistoryFragment
+import com.yatik.qrscanner.others.DetailsActivity
+import com.yatik.qrscanner.others.SettingsActivity
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
     private var _mCamera: Camera? = null
-    private val mCamera get() = _mCamera
+    private val mCamera get() = _mCamera!!
     private var isImageSelected = false
     private var doublePressToExit = false
     private var isClickedAllowButton = false
@@ -50,7 +61,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        hideSystemBars()
+        setSystemBars()
+
+        binding.expand.setOnClickListener {
+            bottomSheet()
+        }
+
         mCameraProviderFuture = ProcessCameraProvider.getInstance(this)
         requestCameraPermission()
         binding.selectFromGallery.setOnClickListener { mChoosePhoto!!.launch("image/*") }
@@ -86,6 +102,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onResume() {
         super.onResume()
         if (isClickedAllowButton) {
@@ -98,6 +115,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun requestCameraPermission() {
         if (ContextCompat.checkSelfPermission(
                 this, Manifest.permission.CAMERA
@@ -108,6 +126,7 @@ class MainActivity : AppCompatActivity() {
             requestPermissions(arrayOf(Manifest.permission.CAMERA), cameraRequestCode)
         }
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>,
@@ -140,6 +159,7 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
+
     private fun noPermissionDialog(message: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Permission Denied!")
@@ -158,17 +178,12 @@ class MainActivity : AppCompatActivity() {
         dialog.makeButtonTextBlue()
     }
 
-    private fun AlertDialog.makeButtonTextBlue() {
-        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-    }
 
     @SuppressLint("UnsafeOptInUsageError")
     private fun processScan() {
-        val preview = Preview.Builder()
-            .build()
-        val imageAnalysis = ImageAnalysis.Builder()
-            .build()
+        val preview = Preview.Builder().build()
+        val imageAnalysis = ImageAnalysis.Builder().build()
+
         imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this)) { imageProxy: ImageProxy ->
 
             val image = InputImage.fromMediaImage(imageProxy.image!!, imageProxy.imageInfo.rotationDegrees)
@@ -189,17 +204,32 @@ class MainActivity : AppCompatActivity() {
             .build()
         preview.setSurfaceProvider(binding.previewView.surfaceProvider)
         _mCamera = mCameraProvider?.bindToLifecycle(this, cameraSelector, imageAnalysis, preview)
+
+        zoomControl()
         flashControl()
     }
+
 
     private fun processResult(barcodes: List<Barcode>) {
         if (barcodes.isNotEmpty()) {
             mCameraProvider?.unbindAll()
-            val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(100, 125))
-            } else {
-                vibrator.vibrate(100)
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+            val vibrateAllowed = sharedPreferences.getBoolean("vibration_preference", true)
+            if (vibrateAllowed) {
+                val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val vibratorManager =
+                        getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                    vibratorManager.defaultVibrator
+                } else {
+                    @Suppress("DEPRECATION")
+                    getSystemService(VIBRATOR_SERVICE) as Vibrator
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(100, 125))
+                } else {
+                    @Suppress("DEPRECATION")
+                    vibrator.vibrate(100)
+                }
             }
             sendRequiredData(barcodes[0])
             isImageSelected = false
@@ -284,10 +314,33 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+
+    private fun zoomControl() {
+        val listener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            @SuppressLint("SetTextI18n")
+            override fun onScale(detector: ScaleGestureDetector): Boolean {
+                val scale = mCamera.cameraInfo.zoomState.value!!.zoomRatio * detector.scaleFactor
+                mCamera.cameraControl.setZoomRatio(scale)
+                if (scale in 1.0..mCamera.cameraInfo.zoomState.value!!.maxZoomRatio.toDouble()) {
+                    binding.zoomInfo.text = String.format("%.1f", scale) + "x"
+                }
+                return true
+            }
+        }
+
+        val scaleGestureDetector = ScaleGestureDetector(this@MainActivity, listener)
+        binding.previewView.setOnTouchListener { view, event ->
+            scaleGestureDetector.onTouchEvent(event)
+            view.performClick()
+            return@setOnTouchListener true
+        }
+    }
+
+
     private fun flashControl() {
         binding.buttonFlashOff.setOnClickListener {
-            if (mCamera!!.cameraInfo.hasFlashUnit()) {
-                mCamera!!.cameraControl.enableTorch(true)
+            if (mCamera.cameraInfo.hasFlashUnit()) {
+                mCamera.cameraControl.enableTorch(true)
                 binding.buttonFlashOff.visibility = View.GONE
                 binding.buttonFlashOn.visibility = View.VISIBLE
             } else {
@@ -296,34 +349,140 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.buttonFlashOn.setOnClickListener {
-            mCamera!!.cameraControl.enableTorch(false)
+            mCamera.cameraControl.enableTorch(false)
             binding.buttonFlashOn.visibility = View.GONE
             binding.buttonFlashOff.visibility = View.VISIBLE
         }
     }
 
-    private fun hideSystemBars() {
+
+    private fun bottomSheet() {
+        val dialog = Dialog(this@MainActivity)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.bottom_sheet_main)
+
+        val dismissButton = dialog.findViewById<ImageButton>(R.id.dismiss_button)
+        val settings = dialog.findViewById<LinearLayout>(R.id.settings_layout)
+        val rateUs = dialog.findViewById<LinearLayout>(R.id.rate_layout)
+        val shareApp = dialog.findViewById<LinearLayout>(R.id.share_layout)
+        val privacyPolicy = dialog.findViewById<LinearLayout>(R.id.policy_layout)
+
+        dismissButton.setOnClickListener {
+            dialog.dismiss()
+        }
+        settings.setOnClickListener {
+            dialog.dismiss()
+            intent = Intent(this@MainActivity, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+        rateUs.setOnClickListener {
+            dialog.dismiss()
+            ratingDialog()
+        }
+        shareApp.setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.putExtra(Intent.EXTRA_TEXT,
+                "Hey!! check out this awesome QR Scanner app at Play Store: https://play.google.com/store/apps/details?id=com.yatik.qrscanner and at Galaxy Store: https://apps.samsung.com/appquery/appDetail.as?appId=com.yatik.qrscanner")
+            intent.type = "text/plain"
+            startActivity(Intent.createChooser(intent, "Share app via"))
+        }
+        privacyPolicy.setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://sites.google.com/view/yatik-qr-scanner/home")))
+        }
+
+        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window!!.attributes.windowAnimations = R.style.DialogAnimation
+        dialog.window!!.setGravity(Gravity.BOTTOM)
+        dialog.show()
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private fun ratingDialog() {
+        val dialog = Dialog(this@MainActivity)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.rating_layout)
+
+        var currentRating = 4.5F
+        val myRatingBar = dialog.findViewById<RatingBar>(R.id.rating_bar)
+        val submitButton = dialog.findViewById<Button>(R.id.submit_button)
+        val cancelButton = dialog.findViewById<Button>(R.id.cancel_button)
+        val feedbackText = dialog.findViewById<TextView>(R.id.rating_feedback_text)
+
+        myRatingBar.setOnRatingBarChangeListener { ratingBar, _, _ ->
+            currentRating = ratingBar.rating
+            if (currentRating in 0.5..2.0) {
+                feedbackText.text = "Very Bad 😠"
+            } else if (currentRating in 2.5..3.5) {
+                feedbackText.text = "Fair 😏"
+            } else if (currentRating.toInt() == 4) {
+                feedbackText.text = "Good ✌"
+            } else if (currentRating in 4.5..5.0) {
+                feedbackText.text = "Excellent 😍💕"
+            } else {
+                feedbackText.text = "🎶🎶"
+            }
+        }
+        submitButton.setOnClickListener {
+            when (currentRating) {
+                in 0.5..3.5 -> {
+                    dialog.dismiss()
+                    val intent = Intent(Intent.ACTION_SENDTO)
+                    intent.data = Uri.parse("mailto:yatikapps@outlook.com")
+                    startActivity(intent)
+                }
+                in 4.0..5.0 -> {
+                    dialog.dismiss()
+                    startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://play.google.com/store/apps/details?id=com.yatik.qrscanner")))
+                }
+                else -> {
+                    Toast.makeText(this, "Can't rate 0 ⭐", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.window!!.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+    }
+
+
+    private fun setSystemBars() {
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         // Configure the behavior of the hidden system bars
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         // Hide the status bar
         windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
+        window.navigationBarColor = getColor(R.color.fragButtons)
 
         // Make navigation bar transparent
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
+//        window.setFlags(
+//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+//        )
     }
+
+
+    private fun AlertDialog.makeButtonTextBlue() {
+        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+    }
+
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount > 0) {
+            setUpCamera()
             supportFragmentManager.popBackStack()
             binding.buttonFlashOn.visibility = View.GONE
             binding.buttonFlashOff.visibility = View.VISIBLE
-            setUpCamera()
             return
         } else if (doublePressToExit) {
             super.onBackPressed()

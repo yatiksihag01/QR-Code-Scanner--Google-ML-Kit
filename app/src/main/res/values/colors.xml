@@ -7,7 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="golden">#EEB978</color>
     <color name="fragButtons">#212A31</color>
     <color name="fragViewBack">#35414A</color>
     <color name="dialogButtons">#89B3F7</color>
+    <color name="redButton">#DF3737</color>
+    <color name="navBackground">#F2212A31</color>
+    <color name="transparent">#00212A31</color>
 </resources>

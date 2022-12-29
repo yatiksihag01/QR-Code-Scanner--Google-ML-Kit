@@ -1,4 +1,4 @@
-package com.yatik.qrscanner
+package com.yatik.qrscanner.others
 
 import android.annotation.SuppressLint
 import android.content.ClipData
@@ -9,11 +9,15 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import com.google.mlkit.vision.barcode.common.Barcode
+import com.yatik.qrscanner.BarcodeViewModel
+import com.yatik.qrscanner.BarcodeViewModelFactory
+import com.yatik.qrscanner.R
 import com.yatik.qrscanner.database.BarcodeData
 import com.yatik.qrscanner.databinding.ActivityDetailsBinding
 import java.text.SimpleDateFormat
@@ -42,13 +46,13 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // Make navigation bar transparent
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        window.navigationBarColor = ContextCompat.getColor(this@DetailsActivity,
+            R.color.fragButtons
         )
 
+        binding.detailsToolbar.setNavigationOnClickListener {
+            finish()
+        }
         val format = intent.getIntExtra("format", -1)
         val valueType = intent.getIntExtra("valueType", -1)
         val title = intent.getStringExtra("title")
@@ -58,10 +62,12 @@ class DetailsActivity : AppCompatActivity() {
         getBarcodeDetails(format, valueType, title, decryptedText, others, retrievedFrom)
     }
 
+
     @SuppressLint("SetTextI18n")
     private fun getBarcodeDetails(format: Int, valueType: Int, title: String?, decryptedText: String?, others: String?, retrievedFrom: String) {
 
         val rawValue = title ?: "Sorry, this QR code doesn't contain any data"
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
         val answer: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val current = LocalDateTime.now()
@@ -96,6 +102,10 @@ class DetailsActivity : AppCompatActivity() {
                             decryptedText
                         )
                         binding.launchButton.setOnClickListener {
+                            startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(decryptedText)))
+                        }
+                        val openAutomatically = sharedPreferences.getBoolean("open_url_preference", false)
+                        if (openAutomatically) {
                             startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(decryptedText)))
                         }
                     }
@@ -199,12 +209,13 @@ class DetailsActivity : AppCompatActivity() {
             )
         }
 
-        if (retrievedFrom == "QR") {
+        val saveScan = sharedPreferences.getBoolean("save_scans_preference", true)
+        if (retrievedFrom == "QR" && saveScan) {
             val barcodeData = BarcodeData(format, valueType, title, decryptedText, others, answer)
             barcodeViewModel.insert(barcodeData)
         }
-
     }
+
 
     private fun copyData(text: String) {
         val clipboardManager =
@@ -212,6 +223,7 @@ class DetailsActivity : AppCompatActivity() {
         val clipData = ClipData.newPlainText("copied", text)
         clipboardManager.setPrimaryClip(clipData)
     }
+
 
     private fun shareData(text: String) {
         val sendIntent = Intent()
@@ -222,11 +234,13 @@ class DetailsActivity : AppCompatActivity() {
         startActivity(shareIntent)
     }
 
+
     private fun payViaUPI(ID: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ID))
         val payIntent = Intent.createChooser(intent, "Pay with:")
         startActivity(payIntent)
     }
+
 
     private fun openWifiSettings() {
         startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))

@@ -46,11 +46,12 @@
         app:layout_constraintTop_toBottomOf="@+id/type_text_history"
         app:layout_constraintVertical_bias="0.033" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/delete_button"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginEnd="4dp"
+        android:background="@color/fragButtons"
         android:contentDescription="delete item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -12,11 +12,24 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.QRScanner.Button.Rounded" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+
+    <style name="PreferenceScreen" parent="Theme.QRScanner">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorSecondary">#C1C1C1</item>
+        <item name="colorAccent">@color/white</item>
     </style>
 
 </resources>
