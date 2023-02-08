@@ -2,12 +2,12 @@ package com.yatik.qrscanner.repository
 
 import androidx.annotation.WorkerThread
 import com.yatik.qrscanner.database.BarcodeDao
-import com.yatik.qrscanner.database.BarcodeData
+import com.yatik.qrscanner.models.BarcodeData
 import kotlinx.coroutines.flow.Flow
 
 class BarcodeDataRepository(private val barcodeDao: BarcodeDao) {
 
-    val allWords: Flow<List<BarcodeData>> = barcodeDao.getAllBarcodes()
+    val listFlow: Flow<List<BarcodeData>> = barcodeDao.getAllBarcodes()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -24,4 +24,5 @@ class BarcodeDataRepository(private val barcodeDao: BarcodeDao) {
     suspend fun deleteAll() {
         barcodeDao.deleteAll()
     }
+
 }

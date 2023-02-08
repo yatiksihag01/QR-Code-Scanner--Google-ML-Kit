@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.others
+package com.yatik.qrscanner.ui
 
 import android.annotation.SuppressLint
 import android.content.ClipData
@@ -10,28 +10,18 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.google.mlkit.vision.barcode.common.Barcode
-import com.yatik.qrscanner.BarcodeViewModel
-import com.yatik.qrscanner.BarcodeViewModelFactory
 import com.yatik.qrscanner.R
-import com.yatik.qrscanner.database.BarcodeData
+import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.databinding.ActivityDetailsBinding
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class DetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailsBinding
-
-    private val barcodeViewModel: BarcodeViewModel by viewModels {
-        BarcodeViewModelFactory((application as BarcodeDataApplication).repository)
-    }
 
     /*
     * SSID, title, text, number, phone_number, raw => title: String
@@ -47,37 +37,37 @@ class DetailsActivity : AppCompatActivity() {
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         window.navigationBarColor = ContextCompat.getColor(this@DetailsActivity,
-            R.color.fragButtons
+            R.color.main_background
         )
 
         binding.detailsToolbar.setNavigationOnClickListener {
             finish()
         }
-        val format = intent.getIntExtra("format", -1)
-        val valueType = intent.getIntExtra("valueType", -1)
-        val title = intent.getStringExtra("title")
-        val decryptedText = intent.getStringExtra("decryptedText")
-        val others = intent.getStringExtra("others")
-        val retrievedFrom = intent.getStringExtra("retrievedFrom") ?: "QR"
-        getBarcodeDetails(format, valueType, title, decryptedText, others, retrievedFrom)
+
+        val barcodeData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("barcodeData", BarcodeData::class.java)
+        } else {
+            intent.getParcelableExtra("barcodeData")
+        }
+
+        if (barcodeData != null) {
+            getBarcodeDetails(barcodeData)
+        }
+
     }
 
 
     @SuppressLint("SetTextI18n")
-    private fun getBarcodeDetails(format: Int, valueType: Int, title: String?, decryptedText: String?, others: String?, retrievedFrom: String) {
+    private fun getBarcodeDetails(barcodeData: BarcodeData) {
+
+        val format = barcodeData.format
+        val valueType = barcodeData.type
+        val title = barcodeData.title
+        val decryptedText = barcodeData.decryptedText
+        val others = barcodeData.others
 
         val rawValue = title ?: "Sorry, this QR code doesn't contain any data"
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
-        val answer: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val current = LocalDateTime.now()
-            val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
-            current.format(formatter)
-        } else {
-            val date = Date()
-            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-            formatter.format(date)
-        }
 
         when (format) {
             Barcode.FORMAT_QR_CODE -> {
@@ -179,6 +169,7 @@ class DetailsActivity : AppCompatActivity() {
                     }
                 }
             }
+
             Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E, Barcode.FORMAT_EAN_8, Barcode.FORMAT_EAN_13, Barcode.TYPE_ISBN -> {
                 binding.typeIcon.setImageResource(R.drawable.outline_product_24)
                 binding.typeText.text = "Product"
@@ -189,6 +180,7 @@ class DetailsActivity : AppCompatActivity() {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.barcodelookup.com/$title")))
                 }
             }
+
             else -> {
                 binding.typeIcon.setImageResource(R.drawable.outline_barcode_24)
                 binding.typeText.text = "Barcode"
@@ -197,23 +189,21 @@ class DetailsActivity : AppCompatActivity() {
                     shareData(rawValue)
                 }
             }
+
         }
 
         binding.copyButton.setOnClickListener {
             Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
-            copyData((binding.decodedText.text as String))
+            val text = binding.decodedText.text.toString()
+            copyData((text))
         }
+
         binding.shareButton.setOnClickListener {
             shareData(
-                (binding.decodedText.text as String)
+                (binding.decodedText.text.toString())
             )
         }
 
-        val saveScan = sharedPreferences.getBoolean("save_scans_preference", true)
-        if (retrievedFrom == "QR" && saveScan) {
-            val barcodeData = BarcodeData(format, valueType, title, decryptedText, others, answer)
-            barcodeViewModel.insert(barcodeData)
-        }
     }
 
 
@@ -245,4 +235,5 @@ class DetailsActivity : AppCompatActivity() {
     private fun openWifiSettings() {
         startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
     }
+
 }

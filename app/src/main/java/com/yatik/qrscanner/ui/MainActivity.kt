@@ -1,4 +1,4 @@
-package com.yatik.qrscanner
+package com.yatik.qrscanner.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.ImageButton
@@ -21,6 +22,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -37,15 +39,20 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.yatik.qrscanner.R
+import com.yatik.qrscanner.application.BarcodeDataApplication
 import com.yatik.qrscanner.databinding.ActivityMainBinding
-import com.yatik.qrscanner.fragments.HistoryFragment
-import com.yatik.qrscanner.others.DetailsActivity
-import com.yatik.qrscanner.others.SettingsActivity
+import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.ui.fragments.HistoryFragment
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
+
     private var _mCamera: Camera? = null
     private val mCamera get() = _mCamera!!
     private var isImageSelected = false
@@ -57,15 +64,17 @@ class MainActivity : AppCompatActivity() {
     private var mCameraProvider: ProcessCameraProvider? = null
     private lateinit var mCameraProviderFuture : ListenableFuture<ProcessCameraProvider>
 
+    private val barcodeViewModel: BarcodeViewModel by viewModels {
+        BarcodeViewModelFactory((application as BarcodeDataApplication).repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSystemBars()
 
-        binding.expand.setOnClickListener {
-            bottomSheet()
-        }
+        binding.expand.setOnClickListener { bottomSheet() }
 
         mCameraProviderFuture = ProcessCameraProvider.getInstance(this)
         requestCameraPermission()
@@ -115,18 +124,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun requestCameraPermission() {
         if (ContextCompat.checkSelfPermission(
                 this, Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            setUpCamera()
-        } else {
+        ) setUpCamera()
+        else {
             requestPermissions(arrayOf(Manifest.permission.CAMERA), cameraRequestCode)
         }
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>,
@@ -152,9 +158,12 @@ class MainActivity : AppCompatActivity() {
             } catch (e: ExecutionException) {
                 // No errors need to be handled for this Future.
                 // This should never be reached.
-            } catch (_: InterruptedException) {
+                Log.d("MainActivity", "An error occurred: $e")
+
+            } catch (e: InterruptedException) {
                 // No errors need to be handled for this Future.
                 // This should never be reached.
+                Log.d("MainActivity", "An error occurred: $e")
             }
         }, ContextCompat.getMainExecutor(this))
     }
@@ -209,7 +218,6 @@ class MainActivity : AppCompatActivity() {
         flashControl()
     }
 
-
     private fun processResult(barcodes: List<Barcode>) {
         if (barcodes.isNotEmpty()) {
             mCameraProvider?.unbindAll()
@@ -250,67 +258,75 @@ class MainActivity : AppCompatActivity() {
     * */
 
     private fun sendRequiredData(barcode: Barcode){
-        intent = Intent(this, DetailsActivity::class.java)
-        intent.putExtra("format", barcode.format)
-        intent.putExtra("valueType", barcode.valueType)
+
+        val format = barcode.format
+        val valueType = barcode.valueType
+
+        val dateTime: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+            current.format(formatter)
+        } else {
+            val date = Date()
+            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            formatter.format(date)
+        }
+
+        var title: String? = null
+        var decryptedText: String? = null
+        var others: String? = null
+
         if (barcode.format == Barcode.FORMAT_QR_CODE) {
             when(barcode.valueType){
                 Barcode.TYPE_WIFI -> {
-                    val ssid = barcode.wifi?.ssid
-                    val password = barcode.wifi?.password
-                    val encryptionType: String = when (barcode.wifi?.encryptionType) {
+                    title = barcode.wifi?.ssid
+                    decryptedText = barcode.wifi?.password
+                    others = when (barcode.wifi?.encryptionType) {
                         Barcode.WiFi.TYPE_OPEN -> "Open"
                         Barcode.WiFi.TYPE_WPA -> "WPA"
                         Barcode.WiFi.TYPE_WEP -> "WEP"
                         else -> ""
                     }
-                    intent.putExtra("title", ssid)
-                    intent.putExtra("decryptedText", password)
-                    intent.putExtra("others", encryptionType)
                 }
 
                 Barcode.TYPE_URL -> {
-                    val title = barcode.url?.title
-                    val url = barcode.url?.url
-                    intent.putExtra("title", title)
-                    intent.putExtra("decryptedText", url)
+                    title = barcode.url?.title
+                    decryptedText = barcode.url?.url
 
                 }
 
-                Barcode.TYPE_TEXT -> {
-                    val text = barcode.displayValue
-                    intent.putExtra("title", text)
-                }
-
-                Barcode.TYPE_PHONE -> {
-                    val tel = barcode.phone?.number
-                    intent.putExtra("title", tel)
-                }
+                Barcode.TYPE_TEXT -> { title = barcode.displayValue }
+                Barcode.TYPE_PHONE -> { title = barcode.phone?.number }
 
                 Barcode.TYPE_GEO -> {
                     val latitude = barcode.geoPoint!!.lat
                     val longitude = barcode.geoPoint!!.lng
-                    val latLongString = "$latitude,$longitude"
-                    intent.putExtra("others", latLongString)
+                    others = "$latitude,$longitude"
                 }
 
                 Barcode.TYPE_SMS -> {
-                    val phoneNumber = barcode.sms?.phoneNumber
-                    val message = barcode.sms?.message
-                    intent.putExtra("title", phoneNumber)
-                    intent.putExtra("decryptedText", message)
+                    title = barcode.sms?.phoneNumber
+                    decryptedText = barcode.sms?.message
                 }
 
                 else -> {
-                    val rawValue = barcode.rawValue ?: "Sorry, this QR code doesn't contain any data"
-                    intent.putExtra("title", rawValue)
+                    title = barcode.rawValue ?: "Sorry, this QR code doesn't contain any data"
                 }
 
             }
         } else {
-            val title = barcode.rawValue ?: "Sorry, Something wrong happened. Please try to rescan."
-            intent.putExtra("title", title)
+            title = barcode.rawValue ?: "Sorry, Something wrong happened. Please try to rescan."
         }
+
+
+        val barcodeData = BarcodeData(format, valueType, title, decryptedText, others, dateTime)
+
+        val saveScan = PreferenceManager.getDefaultSharedPreferences(this)
+            .getBoolean("save_scans_preference", true)
+        if (saveScan) barcodeViewModel.insert(barcodeData)
+
+        intent = Intent(this, DetailsActivity::class.java)
+        intent.putExtra("barcodeData", barcodeData)
         startActivity(intent)
     }
 
@@ -336,7 +352,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun flashControl() {
         binding.buttonFlashOff.setOnClickListener {
             if (mCamera.cameraInfo.hasFlashUnit()) {
@@ -354,7 +369,6 @@ class MainActivity : AppCompatActivity() {
             binding.buttonFlashOff.visibility = View.VISIBLE
         }
     }
-
 
     private fun bottomSheet() {
         val dialog = Dialog(this@MainActivity)
@@ -460,7 +474,7 @@ class MainActivity : AppCompatActivity() {
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         // Hide the status bar
         windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
-        window.navigationBarColor = getColor(R.color.fragButtons)
+        window.navigationBarColor = getColor(R.color.main_background)
 
         // Make navigation bar transparent
 //        window.setFlags(
@@ -471,8 +485,12 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun AlertDialog.makeButtonTextBlue() {
-        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context,
+            R.color.dialogButtons
+        ))
+        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context,
+            R.color.dialogButtons
+        ))
     }
 
 

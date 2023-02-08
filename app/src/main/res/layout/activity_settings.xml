@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/fragButtons"
-    tools:context=".others.SettingsActivity"
+    android:background="@color/main_background_dark"
+    tools:context=".ui.SettingsActivity"
     android:orientation="horizontal">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -20,18 +20,18 @@
             app:title="Settings"
             app:titleCentered="true"
             app:titleTextColor="@color/white"
-            android:background="@color/fragButtons"
+            android:background="@color/main_background"
             app:navigationIcon="@drawable/arrow_back_24" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <fragment
         android:id="@+id/settings_frag"
-        android:name="com.yatik.qrscanner.others.SettingsActivity$QRScannerPreferenceFragment"
+        android:name="com.yatik.qrscanner.ui.SettingsActivity$QRScannerPreferenceFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/settingsToolbarLayout"
-        tools:context="com.yatik.qrscanner.others.SettingsActivity"
+        tools:context="com.yatik.qrscanner.ui.SettingsActivity"
         tools:ignore="FragmentTagUsage" />
 
   </RelativeLayout>

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fragButtons"
-    tools:context=".others.DetailsActivity">
+    android:background="@color/main_background_dark"
+    tools:context=".ui.DetailsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/detailsToolbarLayout"
@@ -19,7 +19,7 @@
             android:id="@+id/detailsToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/fragButtons"
+            android:background="@color/main_background"
             app:navigationIcon="@drawable/arrow_back_24"
             app:title="Scanned Data"
             app:titleCentered="true"
@@ -72,11 +72,12 @@
             android:id="@+id/decoded_text"
             android:layout_width="match_parent"
             android:layout_height="185dp"
-            android:background="@color/fragViewBack"
+            android:background="@color/main_background"
             android:layout_marginTop="@dimen/marginEight"
             android:layout_marginStart="@dimen/marginEight"
             android:layout_marginEnd="@dimen/marginEight"
             android:textSize="18sp"
+            android:textIsSelectable="true"
             android:textColor="@color/white" />
     </LinearLayout>
 
@@ -100,6 +101,7 @@
             android:layout_marginTop="@dimen/marginEight"
             android:layout_marginBottom="@dimen/marginEight"
             android:background="@color/fragViewBack"
+            android:backgroundTint="@color/main_background"
             android:contentDescription="copy"
             android:src="@drawable/outline_content_copy_24"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -115,6 +117,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@color/fragViewBack"
+            android:backgroundTint="@color/main_background"
             android:contentDescription="share"
             android:src="@drawable/outline_share_24"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -128,6 +131,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@color/fragViewBack"
+            android:backgroundTint="@color/main_background"
             android:contentDescription="open wifi settings"
             android:src="@drawable/outline_wifi_24"
             android:visibility="gone"
@@ -144,6 +148,7 @@
             android:layout_height="30dp"
             android:layout_marginEnd="16dp"
             android:background="@color/fragViewBack"
+            android:backgroundTint="@color/main_background"
             android:contentDescription="launch"
             android:src="@drawable/outline_launch_24"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -158,6 +163,7 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:textSize="16sp"
+        android:textColor="#BFFFFFFF"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

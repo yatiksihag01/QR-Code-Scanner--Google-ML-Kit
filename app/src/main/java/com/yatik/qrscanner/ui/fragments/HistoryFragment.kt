@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.fragments
+package com.yatik.qrscanner.ui.fragments
 
 import android.content.Context
 import android.content.Intent
@@ -12,14 +12,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.android.material.snackbar.Snackbar
 import com.yatik.qrscanner.*
-import com.yatik.qrscanner.database.BarcodeData
+import com.yatik.qrscanner.adapters.BarcodeListAdapter
+import com.yatik.qrscanner.application.BarcodeDataApplication
 import com.yatik.qrscanner.databinding.FragmentHistoryBinding
-import com.yatik.qrscanner.others.BarcodeDataApplication
-import com.yatik.qrscanner.others.DetailsActivity
+import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.ui.BarcodeViewModel
+import com.yatik.qrscanner.ui.BarcodeViewModelFactory
+import com.yatik.qrscanner.ui.DetailsActivity
+import com.yatik.qrscanner.ui.MainActivity
 
 class HistoryFragment : Fragment() {
 
@@ -28,10 +33,10 @@ class HistoryFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: BarcodeListAdapter
+
     private val barcodeViewModel: BarcodeViewModel by viewModels {
         BarcodeViewModelFactory((activity?.application as BarcodeDataApplication).repository)
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +47,6 @@ class HistoryFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding.historyToolbar.setOnMenuItemClickListener {
@@ -51,14 +55,12 @@ class HistoryFragment : Fragment() {
                     val builder = AlertDialog.Builder(requireContext())
                     builder.setTitle("WARNING")
                         .setIcon(R.drawable.warning_24)
-                        .setMessage("You're going to delete all items and you won't be able to revert changes. Are you sure to delete all items?")
+                        .setMessage(R.string.deleteAllWarning)
                         .setPositiveButton("Yes") { _, _ ->
-                        barcodeViewModel.deleteAll()
-                        val sample = BarcodeData(Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample Text", null, null, "Sample Text")
-                        barcodeViewModel.insert(sample)
+                            barcodeViewModel.deleteAll()
                         }
                         .setNegativeButton("No") { dialog, _ ->
-                        dialog.dismiss()
+                            dialog.dismiss()
                     }
                     val dialog = builder.create()
                     dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background))
@@ -68,6 +70,7 @@ class HistoryFragment : Fragment() {
                     true
                 } else -> false
             }
+
         }
 
         binding.historyToolbar.setNavigationOnClickListener {
@@ -81,34 +84,56 @@ class HistoryFragment : Fragment() {
         adapter = BarcodeListAdapter()
         recyclerView.adapter = adapter
 
-        adapter.setOnItemClickListener(object : BarcodeListAdapter.OnItemClickListener{
-            override fun onItemClick(position: Int) {
-                val barcodeData = barcodeViewModel.allBarcodes.value?.get(position)
-                val format = barcodeData?.format
-                val title = barcodeData?.title
-                val decryptedText = barcodeData?.decryptedText
-                val others = barcodeData?.others
-                val valueType = barcodeData?.type
-                requireActivity().intent = Intent(requireContext(), DetailsActivity::class.java)
-                    .putExtra("format", format)
-                    .putExtra("title", title)
-                    .putExtra("decryptedText", decryptedText)
-                    .putExtra("others", others)
-                    .putExtra("valueType", valueType)
-                    .putExtra("retrievedFrom", "database")
-                startActivity(requireActivity().intent)
+        adapter.setOnDeleteClickListener { deleteDialog(it) }
+
+        adapter.setOnItemClickListener { barcodeData ->
+
+            requireActivity().intent = Intent(requireContext(), DetailsActivity::class.java)
+                .putExtra("barcodeData", barcodeData)
+                .putExtra("retrievedFrom", "database")
+            startActivity(requireActivity().intent)
+        }
+
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
             }
 
-            override fun onDeleteClick(position: Int) {
-                val barcodeData = barcodeViewModel.allBarcodes.value?.get(position)
-                deleteDialog(barcodeData)
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val barcodeData = adapter.differ.currentList[position]
+                barcodeViewModel.delete(barcodeData)
+                Snackbar.make(view, "Item deleted successfully", Snackbar.LENGTH_LONG).apply {
+                    setAction("Undo") {
+                        barcodeViewModel.insert(barcodeData)
+                    }
+                    show()
+                }
             }
-        })
+        }
+
+        ItemTouchHelper(itemTouchHelperCallback).apply {
+            attachToRecyclerView(binding.historyRecyclerView)
+        }
 
         barcodeViewModel.allBarcodes.observe(viewLifecycleOwner) { barcodesData ->
-            // Update the cached copy of the words in the adapter.
-            barcodesData?.let { adapter.submitList(it) }
+            barcodesData?.let { itemsList ->
+                if (itemsList.isEmpty()) {
+                    binding.noItemInHistory.root.visibility = View.VISIBLE
+                } else {
+                    binding.noItemInHistory.root.visibility = View.GONE
+                }
+                adapter.differ.submitList(itemsList)
+            }
         }
+
     }
 
 
@@ -130,18 +155,19 @@ class HistoryFragment : Fragment() {
         dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background))
         dialog.show()
         dialog.makeButtonTextBlue()
+        Toast.makeText(context, "You can simply swipe to delete", Toast.LENGTH_LONG).show()
+
     }
 
-
-    private fun AlertDialog.makeButtonTextBlue() {
-        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-    }
     private fun AlertDialog.makeButtonTextRed() {
         this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.redButton))
         this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
     }
 
+    private fun AlertDialog.makeButtonTextBlue() {
+        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+    }
 
     private fun vibrate() {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -159,7 +185,6 @@ class HistoryFragment : Fragment() {
             vibrator.vibrate(250)
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

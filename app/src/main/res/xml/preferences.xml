@@ -20,10 +20,20 @@
         android:summary="Open the url automatically after successful scan"
         android:title="Automatically open URL"/>
 
-
     <Preference
-        app:key="feedback"
+        app:key="feedback_preference"
         app:title="Send feedback"
-        app:summary="Report technical issues or suggest new features"/>
+        app:summary="Report technical issues or suggest new features">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="mailto:yatikapps@outlook.com">
+            <extra
+                android:name="android.intent.extra.SUBJECT"
+                android:value="Feedback"/>
+            <extra
+                android:name="android.intent.extra.TEXT"
+                android:value="Text of Feedback"/>
+        </intent>
+    </Preference>
 
 </PreferenceScreen>

@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.mlkit.vision.barcode.common.Barcode
+import com.yatik.qrscanner.models.BarcodeData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -64,6 +65,5 @@ abstract class BarcodeRoomDataBase : RoomDatabase() {
             }
         }
     }
-
 
 }
