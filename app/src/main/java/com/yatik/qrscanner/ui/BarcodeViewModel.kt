@@ -13,7 +13,8 @@ class BarcodeViewModel @Inject constructor(
     ) : ViewModel() {
 
     // As opposed to Flow, LiveData is lifecycle aware
-    val allBarcodes: LiveData<List<BarcodeData>> = repository.listFlow.asLiveData()
+    fun getAllBarcodes(): LiveData<List<BarcodeData>> =
+        repository.getAllBarcodes().asLiveData()
 
     fun insert(barcodeData: BarcodeData) = viewModelScope.launch {
         repository.insert(barcodeData)

@@ -121,7 +121,7 @@ class HistoryFragment : Fragment() {
             attachToRecyclerView(binding.historyRecyclerView)
         }
 
-        barcodeViewModel.allBarcodes.observe(viewLifecycleOwner) { barcodesData ->
+        barcodeViewModel.getAllBarcodes().observe(viewLifecycleOwner) { barcodesData ->
             barcodesData?.let { itemsList ->
                 if (itemsList.isEmpty()) {
                     binding.noItemInHistory.root.visibility = View.VISIBLE
