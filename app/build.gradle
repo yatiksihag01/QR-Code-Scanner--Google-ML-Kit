@@ -13,12 +13,13 @@ android {
         applicationId "com.yatik.qrscanner"
         minSdk 23
         targetSdk 33
-        versionCode 7
-        versionName "1.6"
+        versionCode 8
+        versionName "1.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         kapt {
+            correctErrorTypes = true
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
             }
@@ -61,12 +62,13 @@ dependencies {
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    // CameraX components
     implementation "androidx.camera:camera-core:${camerax_version}"
     implementation "androidx.camera:camera-camera2:${camerax_version}"
     implementation "androidx.camera:camera-view:${camerax_version}"
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
 
-    // Use this dependency to bundle the model with your app
+    // Google Barcode scanning ML-kit
     implementation 'com.google.mlkit:barcode-scanning:17.0.3'
 
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
@@ -83,21 +85,29 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycleVersion"
 
     // Kotlin components
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
 
+    // Dagger Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+
+    // To test coroutines
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation 'app.cash.turbine:turbine:0.12.1'
-    androidTestImplementation 'app.cash.turbine:turbine:0.12.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    // Turbine to test Flow
+    testImplementation 'app.cash.turbine:turbine:0.12.1'
+    androidTestImplementation 'app.cash.turbine:turbine:0.12.1'
+
+    // Truth library for assertions
     testImplementation "com.google.truth:truth:1.0.1"
     androidTestImplementation "com.google.truth:truth:1.0.1"
 }

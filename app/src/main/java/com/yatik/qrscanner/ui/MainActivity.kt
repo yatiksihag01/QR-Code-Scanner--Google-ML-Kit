@@ -14,12 +14,7 @@ import android.os.*
 import android.provider.Settings
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.RatingBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -40,10 +35,10 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.yatik.qrscanner.R
-import com.yatik.qrscanner.application.BarcodeDataApplication
 import com.yatik.qrscanner.databinding.ActivityMainBinding
 import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.ui.fragments.HistoryFragment
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -51,6 +46,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.ExecutionException
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private var _mCamera: Camera? = null
@@ -64,9 +60,7 @@ class MainActivity : AppCompatActivity() {
     private var mCameraProvider: ProcessCameraProvider? = null
     private lateinit var mCameraProviderFuture : ListenableFuture<ProcessCameraProvider>
 
-    private val barcodeViewModel: BarcodeViewModel by viewModels {
-        BarcodeViewModelFactory((application as BarcodeDataApplication).repository)
-    }
+    private val barcodeViewModel: BarcodeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -510,4 +504,5 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show()
         Handler(Looper.getMainLooper()).postDelayed({ doublePressToExit = false }, 2000)
     }
+
 }

@@ -22,4 +22,5 @@ interface BarcodeDao {
 
     @Query("DELETE FROM barcode_table")
     suspend fun deleteAll()
+
 }

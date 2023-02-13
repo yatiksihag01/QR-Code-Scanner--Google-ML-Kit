@@ -18,14 +18,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yatik.qrscanner.*
 import com.yatik.qrscanner.adapters.BarcodeListAdapter
-import com.yatik.qrscanner.application.BarcodeDataApplication
 import com.yatik.qrscanner.databinding.FragmentHistoryBinding
 import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.ui.BarcodeViewModel
-import com.yatik.qrscanner.ui.BarcodeViewModelFactory
 import com.yatik.qrscanner.ui.DetailsActivity
 import com.yatik.qrscanner.ui.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HistoryFragment : Fragment() {
 
     private var _binding: FragmentHistoryBinding? = null
@@ -34,9 +34,7 @@ class HistoryFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: BarcodeListAdapter
 
-    private val barcodeViewModel: BarcodeViewModel by viewModels {
-        BarcodeViewModelFactory((activity?.application as BarcodeDataApplication).repository)
-    }
+    private val barcodeViewModel: BarcodeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -155,7 +153,7 @@ class HistoryFragment : Fragment() {
         dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background))
         dialog.show()
         dialog.makeButtonTextBlue()
-        Toast.makeText(context, "You can simply swipe to delete", Toast.LENGTH_LONG).show()
+        view?.let { Snackbar.make(it, "You can simply swipe to delete", Snackbar.LENGTH_LONG).show() }
 
     }
 
@@ -190,4 +188,5 @@ class HistoryFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

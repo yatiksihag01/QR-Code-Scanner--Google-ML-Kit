@@ -3,9 +3,14 @@ package com.yatik.qrscanner.ui
 import androidx.lifecycle.*
 import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.repository.BarcodeDataRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BarcodeViewModel(private val repository: BarcodeDataRepository) : ViewModel() {
+@HiltViewModel
+class BarcodeViewModel @Inject constructor(
+    private val repository: BarcodeDataRepository
+    ) : ViewModel() {
 
     // As opposed to Flow, LiveData is lifecycle aware
     val allBarcodes: LiveData<List<BarcodeData>> = repository.listFlow.asLiveData()
@@ -22,14 +27,4 @@ class BarcodeViewModel(private val repository: BarcodeDataRepository) : ViewMode
         repository.deleteAll()
     }
 
-}
-
-class BarcodeViewModelFactory(private val repository: BarcodeDataRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(BarcodeViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return BarcodeViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 }
