@@ -1,27 +1,70 @@
 
 # QR-Scanner---Google-ML-Kit-MVVM
 
-This QR Scanner app uses Google's Barcode Scanner ML Kit to scan QR
-codes using camerax api. User can also choose QR codes from gallery.
+This QR Scanner app uses Google's Barcode Scanner ML Kit to scan QR codes using camerax api. Users can also choose QR codes from the gallery.
+
+## 📷Screenshots
+
+| Home Page | Settings Page |
+| --------- | ------------- | 
+| ![QR1_3 1](https://user-images.githubusercontent.com/110741464/220065557-48b4813f-cdd6-4a5b-8718-3603ea93dc28.png) | ![settings_activity_720_332](https://user-images.githubusercontent.com/110741464/220066253-307e4213-760e-42d1-8ca5-a110d1334760.png) |
+
+| Details Activity | Saved data |
+| ---------------- | ---------- |
+| ![DetailsActivity_720_331](https://user-images.githubusercontent.com/110741464/220064084-6d729787-f61d-4ea2-b2fe-e8fe6689813b.png) | ![history_frag_720_331](https://user-images.githubusercontent.com/110741464/220063115-0d66273d-4a66-434b-ad58-2b742cdb9868.png) | |
+
+## ⭐Features
+
+- Users can scan 13 types of QR Codes/Barcodes
+- Users can save the scanned data
+- You can either choose photos from gallery or use caemra
+- Options to automatically open Urls after scanning
 
 
-## Screenshots
+## 🔬Tools & Technologies
 
-![QR1](https://user-images.githubusercontent.com/110741464/201909468-d862634b-c003-48a4-b7ac-60de7513129a.jpg)
+- Android Studio, Kotlin
+- Room Database to store scanned barcodes
+- Hilt for dependency injection
+- CameraX API to scan QR codes/Barcodes
+- Unit tests for ViewModels, Room Database
 
-![QR2](https://user-images.githubusercontent.com/110741464/201909477-7d5a8f9f-cd7e-4750-b8a1-8ea61bc4ba56.jpg)
+## 😊Contribution
 
-![QR3](https://user-images.githubusercontent.com/110741464/201909488-4e333efe-63c7-4e73-ac6b-ba7614f0b32f.jpg)
+Contributions to this project are always welcome. If you find any bugs or have suggestions for new features, please create an issue or a pull request. To contribute to the codebase, follow these steps:
 
-![QR4](https://user-images.githubusercontent.com/110741464/201909499-ce440d1e-1d4d-4b89-92f7-2d9f3933cebc.jpg)
+1. Fork the project
+2. Create a new branch for your feature or bug fix
+3. Write the code and tests for your feature or bug fix
+4. Make sure all test cases are passed
+5. Submit a pull request with a clear description of your changes
 
-![QR5](https://user-images.githubusercontent.com/110741464/201909506-1a6d95b3-4997-4f19-a2b5-58238f393eb1.jpg)
+We appreciate your help in improving this project!
 
+## 😎Google Play
+<a href="https://play.google.com/store/apps/details?id=com.yatik.qrscanner">
+  <img src="https://user-images.githubusercontent.com/110741464/202079928-27ef816f-99a1-47b3-a0ff-f4de1ca7437e.png" alt="Google Play" width="400" height="200">
+</a>
 
-## Authors
+## ✍️Authors
 
 - [@yatiksihag01](https://github.com/yatiksihag01)
 
+## ©️License
+```
+Copyright 2023 Yatik
 
-## Google Play
-[![Google Play](https://user-images.githubusercontent.com/110741464/202079928-27ef816f-99a1-47b3-a0ff-f4de1ca7437e.png)](https://play.google.com/store/apps/details?id=com.yatik.qrscanner)
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+
+
