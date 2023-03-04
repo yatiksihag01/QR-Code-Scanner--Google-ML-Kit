@@ -29,4 +29,12 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(
+            Intent(this@SettingsActivity, MainActivity::class.java)
+        )
+    }
+
 }

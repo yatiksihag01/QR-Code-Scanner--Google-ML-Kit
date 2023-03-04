@@ -17,6 +17,7 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.databinding.ActivityDetailsBinding
+import com.yatik.qrscanner.utils.Utilities
 import java.util.*
 
 class DetailsActivity : AppCompatActivity() {
@@ -68,6 +69,7 @@ class DetailsActivity : AppCompatActivity() {
 
         val rawValue = title ?: "Sorry, this QR code doesn't contain any data"
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val utilities = Utilities()
 
         when (format) {
             Barcode.FORMAT_QR_CODE -> {
@@ -92,11 +94,11 @@ class DetailsActivity : AppCompatActivity() {
                             decryptedText
                         )
                         binding.launchButton.setOnClickListener {
-                            startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(decryptedText)))
+                            utilities.customTabBuilder(this, Uri.parse(decryptedText))
                         }
                         val openAutomatically = sharedPreferences.getBoolean("open_url_preference", false)
                         if (openAutomatically) {
-                            startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(decryptedText)))
+                            utilities.customTabBuilder(this, Uri.parse(decryptedText))
                         }
                     }
 
@@ -177,7 +179,7 @@ class DetailsActivity : AppCompatActivity() {
                 binding.extraInfo.visibility = View.VISIBLE
                 binding.extraInfo.setText(R.string.productMessage)
                 binding.launchButton.setOnClickListener {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.barcodelookup.com/$title")))
+                    utilities.customTabBuilder(this, Uri.parse("https://www.google.com/search?q=$title"))
                 }
             }
 
@@ -189,7 +191,6 @@ class DetailsActivity : AppCompatActivity() {
                     shareData(rawValue)
                 }
             }
-
         }
 
         binding.copyButton.setOnClickListener {
@@ -203,7 +204,6 @@ class DetailsActivity : AppCompatActivity() {
                 (binding.decodedText.text.toString())
             )
         }
-
     }
 
 
@@ -230,7 +230,6 @@ class DetailsActivity : AppCompatActivity() {
         val payIntent = Intent.createChooser(intent, "Pay with:")
         startActivity(payIntent)
     }
-
 
     private fun openWifiSettings() {
         startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))

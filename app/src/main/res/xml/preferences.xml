@@ -20,10 +20,16 @@
         android:summary="Open the url automatically after successful scan"
         android:title="Automatically open URL"/>
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="front_cam_preference"
+        android:summary="By default rear camera will be used"
+        android:title="Use front camera"/>
+
     <Preference
-        app:key="feedback_preference"
-        app:title="Send feedback"
-        app:summary="Report technical issues or suggest new features">
+        android:key="feedback_preference"
+        android:title="Send feedback"
+        android:summary="Report technical issues or suggest new features">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="mailto:yatikapps@outlook.com">

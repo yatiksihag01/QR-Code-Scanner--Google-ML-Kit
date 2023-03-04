@@ -34,7 +34,7 @@ class MainActivityTest {
 
         launch(MainActivity::class.java)
 
-        onView(withId(R.id.history)).perform(click())
+        onView(withId(R.id.button_history)).perform(click())
         onView(withId(R.id.history_fragment)).check(matches(isDisplayed()))
 
         pressBack()

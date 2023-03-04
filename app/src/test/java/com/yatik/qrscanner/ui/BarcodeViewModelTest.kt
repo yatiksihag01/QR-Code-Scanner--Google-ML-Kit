@@ -36,9 +36,13 @@ class BarcodeViewModelTest {
     }
 
     @Test
-    fun `insert single barcodeData, returns size 1` () = runTest {
-        viewModel.insert(BarcodeData(Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
-                "sample text", null, null, "09-02-2023 11:50:54"))
+    fun `insert single barcodeData, returns size 1`() = runTest {
+        viewModel.insert(
+            BarcodeData(
+                Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
+                "sample text", null, null, "09-02-2023 11:50:54"
+            )
+        )
 
         val barcodeDataList = viewModel.getAllBarcodes().getOrAwaitValueTest()
         assertThat(barcodeDataList.size).isEqualTo(1)
@@ -46,9 +50,13 @@ class BarcodeViewModelTest {
     }
 
     @Test
-    fun `insert two barcodeData, returns size 2` () = runTest {
-        viewModel.insert(BarcodeData(Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
-                "sample text", null, null, "09-02-2023 11:50:54"))
+    fun `insert two barcodeData, returns size 2`() = runTest {
+        viewModel.insert(
+            BarcodeData(
+                Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
+                "sample text", null, null, "09-02-2023 11:50:54"
+            )
+        )
 
         val barcodeDataList = viewModel.getAllBarcodes().getOrAwaitValueTest()
         assertThat(barcodeDataList.size).isEqualTo(1)
@@ -56,10 +64,12 @@ class BarcodeViewModelTest {
     }
 
     @Test
-    fun `insert single barcodeData, returns same barcodeData` () = runTest {
+    fun `insert single barcodeData, returns same barcodeData`() = runTest {
 
-        val barcodeData = BarcodeData(Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
-            "sample text", null, null, "09-02-2023 11:50:54")
+        val barcodeData = BarcodeData(
+            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
+            "sample text", null, null, "09-02-2023 11:50:54"
+        )
         viewModel.insert(barcodeData)
 
         val barcodeDataList = viewModel.getAllBarcodes().getOrAwaitValueTest()
@@ -68,9 +78,11 @@ class BarcodeViewModelTest {
     }
 
     @Test
-    fun `delete last barcodeData, returns size 0` () = runTest {
-        val barcodeData = BarcodeData(Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
-            "sample text", null, null, "09-02-2023 11:50:54")
+    fun `delete last barcodeData, returns size 0`() = runTest {
+        val barcodeData = BarcodeData(
+            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
+            "sample text", null, null, "09-02-2023 11:50:54"
+        )
         viewModel.insert(barcodeData)
 
         viewModel.delete(barcodeData)
@@ -81,9 +93,11 @@ class BarcodeViewModelTest {
     }
 
     @Test
-    fun `delete all barcodeData, returns size 0` () = runTest {
-        val barcodeData = BarcodeData(Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
-            "sample text", null, null, "09-02-2023 11:50:54")
+    fun `delete all barcodeData, returns size 0`() = runTest {
+        val barcodeData = BarcodeData(
+            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
+            "sample text", null, null, "09-02-2023 11:50:54"
+        )
         viewModel.insert(barcodeData)
         viewModel.deleteAll()
 

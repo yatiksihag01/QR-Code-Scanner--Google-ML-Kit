@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24"
+    android:width="28dp"
+    android:height="28dp"
+    android:viewportWidth="23"
+    android:viewportHeight="23"
     android:tint="@color/white">
     <path
         android:fillColor="@android:color/white"

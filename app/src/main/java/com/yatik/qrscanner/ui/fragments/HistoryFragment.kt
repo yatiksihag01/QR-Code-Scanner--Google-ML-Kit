@@ -1,14 +1,12 @@
 package com.yatik.qrscanner.ui.fragments
 
-import android.content.Context
 import android.content.Intent
-import android.os.*
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,13 +14,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.yatik.qrscanner.*
+import com.yatik.qrscanner.R
 import com.yatik.qrscanner.adapters.BarcodeListAdapter
 import com.yatik.qrscanner.databinding.FragmentHistoryBinding
 import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.ui.BarcodeViewModel
 import com.yatik.qrscanner.ui.DetailsActivity
 import com.yatik.qrscanner.ui.MainActivity
+import com.yatik.qrscanner.utils.Utilities
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -64,7 +63,7 @@ class HistoryFragment : Fragment() {
                     dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background))
                     dialog.show()
                     dialog.makeButtonTextRed()
-                    vibrate()
+                    Utilities().vibrateIfAllowed(requireContext(), true, 250)
                     true
                 } else -> false
             }
@@ -143,7 +142,7 @@ class HistoryFragment : Fragment() {
             if (barcodeData != null) {
                 barcodeViewModel.delete(barcodeData)
             } else {
-                Toast.makeText(activity, "Sorry, Unable to delete this item", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Sorry, Unable to delete this item", Toast.LENGTH_SHORT).show()
             }
         }
         builder.setNegativeButton("No") { dialog, _ ->
@@ -165,23 +164,6 @@ class HistoryFragment : Fragment() {
     private fun AlertDialog.makeButtonTextBlue() {
         this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
         this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-    }
-
-    private fun vibrate() {
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager =
-                requireActivity().getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            requireActivity().getSystemService(AppCompatActivity.VIBRATOR_SERVICE) as Vibrator
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(250, 125))
-        } else {
-            @Suppress("DEPRECATION")
-            vibrator.vibrate(250)
-        }
     }
 
     override fun onDestroyView() {
