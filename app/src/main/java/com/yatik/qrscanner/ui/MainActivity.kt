@@ -241,11 +241,13 @@ class MainActivity : AppCompatActivity() {
         binding.buttonSettingsMain.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         binding.settingsButton.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
+            finish()
         }
         binding.ratingButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED

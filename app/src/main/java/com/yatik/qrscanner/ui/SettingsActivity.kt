@@ -35,6 +35,7 @@ class SettingsActivity : AppCompatActivity() {
         startActivity(
             Intent(this@SettingsActivity, MainActivity::class.java)
         )
+        finish()
     }
 
 }
