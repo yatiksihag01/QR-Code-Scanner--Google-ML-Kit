@@ -153,12 +153,6 @@ class DetailsActivity : AppCompatActivity() {
                         binding.launchButton.setOnClickListener {
                             shareData(decryptedText ?: "")
                         }
-                        binding.typeIcon.setImageResource(R.drawable.outline_text_icon)
-                        binding.typeText.setText(R.string.raw)
-                        binding.decodedText.text = rawValue
-                        binding.launchButton.setOnClickListener {
-                            shareData(rawValue)
-                        }
                     }
 
                     else -> {

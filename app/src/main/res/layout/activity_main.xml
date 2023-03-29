@@ -8,44 +8,38 @@
     tools:context=".ui.MainActivity" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.MainActivity">
 
-        <FrameLayout
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.camera.view.PreviewView
-                android:id="@+id/previewView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/zoom_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="1.0x"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.1"
             tools:ignore="HardcodedText" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="267dp"
-            android:layout_height="373dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="0.33:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -72,7 +66,7 @@
             android:layout_gravity="center"
             android:src="@drawable/custom_drag_handler"/>
 
-        <!-- Bottom sheet contents. -->
+        <!-- Bottom sheet contents -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,67 +76,80 @@
                 android:id="@+id/button_flash"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="16dp"
                 android:backgroundTint="@color/main_background"
                 android:contentDescription="Flash Off"
                 android:src="@drawable/outline_flash_off_28"
-                app:layout_constraintBottom_toTopOf="@id/bottom_line"
+                app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_25"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/sheet_button_guide_25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="103dp" />
 
             <ImageButton
                 android:id="@+id/button_history"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="110dp"
                 android:backgroundTint="@color/main_background"
                 android:contentDescription="History"
                 android:src="@drawable/outline_history_28"
-                app:layout_constraintBottom_toTopOf="@id/bottom_line"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_mid"
+                app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_25"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/sheet_button_guide_mid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
             <ImageButton
                 android:id="@+id/button_gallery"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="62dp"
                 android:backgroundTint="@color/main_background"
+                android:contentDescription="Pick image from gallery"
                 android:src="@drawable/ic_outline_image_28"
-                app:layout_constraintBottom_toTopOf="@id/bottom_line"
-                app:layout_constraintStart_toEndOf="@+id/button_history"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                android:contentDescription="Pick image from gallery" />
+                app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_75"
+                app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_mid"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/sheet_button_guide_75"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.75" />
 
             <ImageButton
                 android:id="@+id/button_settings_main"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginEnd="16dp"
                 android:backgroundTint="@color/main_background"
+                android:contentDescription="Settings button"
                 android:src="@drawable/settings_28"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.824"
-                app:layout_constraintStart_toEndOf="@+id/button_gallery"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="Settings button"/>
+                app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_75"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/bottom_line"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#80FFFFFF"
-                android:layout_marginTop="66dp"
-                android:layout_marginBottom="12dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="66dp"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="12dp"
+                android:background="#80FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -207,6 +214,5 @@
             android:letterSpacing="0" />
 
     </LinearLayout>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
