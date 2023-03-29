@@ -227,6 +227,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setBottomSheetButtons() {
+        binding.dragHandle.setOnClickListener {
+            bottomSheetBehavior.state =
+                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    BottomSheetBehavior.STATE_EXPANDED
+                } else BottomSheetBehavior.STATE_COLLAPSED
+        }
         binding.buttonGallery.setOnClickListener { mChoosePhoto!!.launch("image/*") }
         binding.buttonHistory.setOnClickListener {
             mCameraProvider?.unbindAll()

@@ -61,6 +61,10 @@ class Utilities {
     }
 
     fun customTabBuilder(context: Context, uri: Uri) {
+        val stringUri = uri.toString()
+        val newUri = if (!stringUri.startsWith("https://") && !stringUri.startsWith("http://")) {
+            Uri.parse("https://$stringUri")
+        } else uri
         val defaultColors = CustomTabColorSchemeParams.Builder()
             .setToolbarColor(ContextCompat.getColor(context, R.color.main_background))
             .build()
@@ -70,7 +74,7 @@ class Utilities {
             .setDefaultColorSchemeParams(defaultColors)
 
         val customTabsIntent = builder.build()
-        customTabsIntent.launchUrl(context, uri)
+        customTabsIntent.launchUrl(context, newUri)
     }
 
     fun calculatePeekHeight(context: Context, peekHeightDp: Int): Int {

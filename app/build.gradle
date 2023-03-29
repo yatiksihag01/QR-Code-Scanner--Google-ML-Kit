@@ -15,8 +15,8 @@ android {
         applicationId "com.yatik.qrscanner"
         minSdk 23
         targetSdk 33
-        versionCode 9
-        versionName "1.8"
+        versionCode 10
+        versionName "1.9"
 
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.yatik.qrscanner.HiltTestRunner"
@@ -62,8 +62,8 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.test:runner:1.5.2'
     testImplementation 'junit:junit:4.13.2'
-    def camerax_version = "1.2.1"
-    def fragment_version = "1.5.5"
+    def camerax_version = "1.2.2"
+    def fragment_version = "1.5.6"
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
@@ -76,7 +76,7 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
 
     // Google Barcode scanning ML-kit
-    implementation 'com.google.mlkit:barcode-scanning:17.0.3'
+    implementation 'com.google.mlkit:barcode-scanning:17.1.0'
 
     // Fragments
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
