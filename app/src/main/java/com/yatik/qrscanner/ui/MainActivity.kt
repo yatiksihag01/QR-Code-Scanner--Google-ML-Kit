@@ -31,6 +31,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.ActivityMainBinding
 import com.yatik.qrscanner.ui.fragments.HistoryFragment
+import com.yatik.qrscanner.ui.fragments.QRCodeGeneratorFragment
 import com.yatik.qrscanner.utils.Constants
 import com.yatik.qrscanner.utils.Constants.Companion.CAMERA_REQUEST_CODE
 import com.yatik.qrscanner.utils.Constants.Companion.SHEET_PEEK_VAL
@@ -101,6 +102,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 
     override fun onResume() {
@@ -244,10 +246,15 @@ class MainActivity : AppCompatActivity() {
             }
             collapseBottomSheet()
         }
-        binding.buttonSettingsMain.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-            finish()
+        binding.buttonCreateQr.setOnClickListener {
+            mCameraProvider?.unbindAll()
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                addToBackStack("QRCodeGeneratorFrag")
+                setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom)
+                add<QRCodeGeneratorFragment>(R.id.main_layout)
+            }
+            collapseBottomSheet()
         }
 
         binding.settingsButton.setOnClickListener {

@@ -15,4 +15,5 @@
     <color name="redButton">#DF3737</color>
     <color name="navBackground">#F2212A31</color>
     <color name="transparent">#00212A31</color>
+    <color name="semiTransparentWhite">#80FFFFFF</color>
 </resources>

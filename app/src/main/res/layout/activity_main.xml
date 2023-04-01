@@ -127,12 +127,12 @@
                 app:layout_constraintGuide_percent="0.75" />
 
             <ImageButton
-                android:id="@+id/button_settings_main"
+                android:id="@+id/button_create_qr"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:backgroundTint="@color/main_background"
                 android:contentDescription="Settings button"
-                android:src="@drawable/settings_28"
+                android:src="@drawable/draw_28"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_75"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -35,4 +35,5 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="initial_zoom">1.0x</string>
+    <string name="save_file">Save file</string>
 </resources>

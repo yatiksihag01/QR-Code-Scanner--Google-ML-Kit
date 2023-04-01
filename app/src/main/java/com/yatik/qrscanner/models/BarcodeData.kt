@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
-/*
+/**
 * SSID, title, number, phone_number, raw, barcodes => title: String
 *
 * password, url, message => decryptedText: String

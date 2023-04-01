@@ -81,7 +81,7 @@
             android:contentDescription="Pick image from gallery" />
 
         <ImageButton
-            android:id="@+id/button_settings_main"
+            android:id="@+id/button_create_qr"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginEnd="16dp"

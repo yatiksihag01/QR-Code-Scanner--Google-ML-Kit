@@ -15,8 +15,8 @@ android {
         applicationId "com.yatik.qrscanner"
         minSdk 23
         targetSdk 33
-        versionCode 10
-        versionName "1.9"
+        versionCode 11
+        versionName "2.0.0"
 
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.yatik.qrscanner.HiltTestRunner"
@@ -122,6 +122,9 @@ dependencies {
     //noinspection GradleDependency
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
+
+    // zxing for QR code generation
+    implementation 'com.google.zxing:core:3.4.1'
 
     // Turbine to test Flow
     testImplementation 'app.cash.turbine:turbine:0.12.1'

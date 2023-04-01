@@ -12,6 +12,7 @@ class Constants {
                 " and at Galaxy Store: $GALAXY_STORE"
         const val SHEET_PEEK_VAL = 90
         const val CAMERA_REQUEST_CODE = 100
+        const val QR_WIDTH_HEIGHT = 600
 
     }
 
