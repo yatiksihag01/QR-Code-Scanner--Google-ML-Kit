@@ -2,6 +2,7 @@
     <string name="app_name">QR Scanner</string>
     <string name="permissionDeniedMessageCam">In order to work properly, app needs access to camera. Please click Allow -> Permissions -> Camera -> Allow only while using the app</string>
     <string name="permissionDeniedMessageStorage">In order to pick gallery image, app needs to access device storage. Please click Allow -> Permissions -> Files and media -> Allow access to media only</string>
+    <string name="permissionDeniedMessageSaveImage">In order to save image, app needs to access device storage. Please click Allow -> Permissions -> Files and media -> Allow access to media only</string>
     <string name="deleteAllWarning">"You're going to delete all items and you won't be able to revert changes. Are you sure to delete all items?"</string>
     <string name="productMessage">Press launch button to retrieve product details.</string>
     <string name="Wifi"><![CDATA[<font color=\'#89B3F7\'>Wifi</font>]]></string>

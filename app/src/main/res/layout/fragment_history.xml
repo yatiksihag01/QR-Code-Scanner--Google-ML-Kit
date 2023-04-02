@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:id="@+id/history_fragment"
     android:background="@color/main_background_dark"
-    tools:context=".ui.fragments.HistoryFragment" >
+    tools:context=".ui.fragments.history.HistoryFragment" >
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/generatorToolbarLayout"

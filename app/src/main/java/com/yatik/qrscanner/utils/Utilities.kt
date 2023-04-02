@@ -1,8 +1,6 @@
 package com.yatik.qrscanner.utils
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
@@ -82,11 +80,6 @@ class Utilities {
         val density = metrics.densityDpi / 160f
         return (peekHeightDp * density).toInt()
     }
-
-    fun hasCameraPermission(context: Context) = ContextCompat.checkSelfPermission(
-        context, Manifest.permission.CAMERA
-    ) == PackageManager.PERMISSION_GRANTED
-
 
     /*
     * SSID, title, text, number, phone_number, raw, barcodes => title: String

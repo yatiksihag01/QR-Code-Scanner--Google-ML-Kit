@@ -40,39 +40,42 @@
         android:id="@+id/qr_final_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/marginEight"
-        app:layout_constraintDimensionRatio="1:1"
+        android:contentDescription="Generate barcode image"
         android:src="@drawable/broken_image_200"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline_40"
         app:layout_constraintStart_toEndOf="@+id/guideline_start"
         app:layout_constraintTop_toBottomOf="@+id/generatorToolbarLayout"
-        android:contentDescription="Generate barcode image"
         tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
         android:text="Barcode content"
-        android:textSize="14sp"
         android:textColor="@color/semiTransparentWhite"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_40"
-        app:layout_constraintStart_toEndOf="@+id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/qr_final_image"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/guideline_40"
+        app:layout_constraintTop_toBottomOf="@+id/generatorToolbarLayout"
         tools:ignore="HardcodedText" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/marginEight"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="12dp"
         android:background="@drawable/decoded_text_layout_back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_40"
-        app:layout_constraintStart_toStartOf="@+id/guideline_start"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/guideline_40"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.0" >
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/barcode_info_tv"
@@ -91,7 +94,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95" />
+        app:layout_constraintGuide_percent="0.40" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

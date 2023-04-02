@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.ui.fragments
+package com.yatik.qrscanner.ui.fragments.generator
 
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -16,6 +16,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.yatik.qrscanner.models.GeneratorData
 import com.yatik.qrscanner.repository.GeneratorRepository
 import com.yatik.qrscanner.utils.Constants.Companion.QR_WIDTH_HEIGHT
+import com.yatik.qrscanner.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,21 +33,20 @@ class GeneratorViewModel @Inject constructor(
     val bitmap: LiveData<Bitmap>
         get() = _bitmap
 
-    private var _isQRGeneratedSuccessfully = true
-    val isQRGeneratedSuccessfully: Boolean
+    private var _isQRGeneratedSuccessfully = SingleLiveEvent<Boolean>()
+    val isQRGeneratedSuccessfully: SingleLiveEvent<Boolean>
         get() = _isQRGeneratedSuccessfully
 
-    private var _imageSaved = false
-    val imageSaved: Boolean
+    private var _imageSaved = SingleLiveEvent<Boolean>()
+    val imageSaved: SingleLiveEvent<Boolean>
         get() = _imageSaved
 
     fun generateQRCode(generatorData: GeneratorData) = viewModelScope.launch {
         val bitMatrix: BitMatrix
-        val writer = QRCodeWriter()
         try {
             when (generatorData.type) {
                 Barcode.TYPE_TEXT -> {
-                    bitMatrix = writer.encode(generatorData.text, BarcodeFormat.QR_CODE, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT)
+                    bitMatrix = QRCodeWriter().encode(generatorData.text, BarcodeFormat.QR_CODE, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT)
                 }
                 Barcode.TYPE_WIFI -> {
                     val wifiString = "WIFI:S:${generatorData.ssid};T:${generatorData.securityType};P:${generatorData.password};"
@@ -68,13 +68,13 @@ class GeneratorViewModel @Inject constructor(
                 else -> bitMatrix = EAN13Writer().encode(generatorData.barcodeNumber, BarcodeFormat.EAN_13, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT)
             }
             renderIntoBitmap(bitMatrix)
-            _isQRGeneratedSuccessfully = true
+            _isQRGeneratedSuccessfully.postValue(true)
         } catch (writerException: WriterException) {
             writerException.printStackTrace()
-            _isQRGeneratedSuccessfully = false
+            _isQRGeneratedSuccessfully.postValue(false)
         } catch (e: Exception) {
             e.printStackTrace()
-            _isQRGeneratedSuccessfully = false
+            _isQRGeneratedSuccessfully.postValue(false)
         }
     }
 
@@ -103,7 +103,7 @@ class GeneratorViewModel @Inject constructor(
             } ?: false
         }
         withContext(Dispatchers.Main) {
-            _imageSaved = result
+            _imageSaved.value = result
         }
     }
 

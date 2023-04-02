@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.ui.fragments
+package com.yatik.qrscanner.ui.fragments.generator
 
 import android.app.Dialog
 import android.content.Intent
@@ -10,12 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentQrCodeGeneratorBinding
+import com.yatik.qrscanner.models.GeneratorData
 import com.yatik.qrscanner.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +24,6 @@ class QRCodeGeneratorFragment : Fragment() {
 
     private var _binding: FragmentQrCodeGeneratorBinding? = null
     private val binding get() = _binding!!
-    private val generatorFragment = GeneratorFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,15 +52,14 @@ class QRCodeGeneratorFragment : Fragment() {
             val submitButton = dialog.findViewById<MaterialButton>(R.id.generate_qr)
             val cancelButton = dialog.findViewById<MaterialButton>(R.id.cancel_generation)
             submitButton.setOnClickListener {
-                generatorFragment.type = Barcode.TYPE_TEXT
-                generatorFragment.text = "abcdef"
-
-                requireActivity().supportFragmentManager.commit {
-                    setReorderingAllowed(true)
-                    addToBackStack(GeneratorFragment.TAG)
-                    setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom)
-                    add<GeneratorFragment>(R.id.main_layout)
+                val generatorData = GeneratorData(type = Barcode.TYPE_TEXT, text = "Yatik Sihag")
+                val bundle = Bundle().apply {
+                    putParcelable("GeneratorData", generatorData)
                 }
+                findNavController().navigate(
+                    R.id.action_QRCodeGeneratorFragment_to_generatorFragment,
+                    bundle
+                )
                 dialog.dismiss()
             }
             cancelButton.setOnClickListener {
@@ -70,26 +68,24 @@ class QRCodeGeneratorFragment : Fragment() {
             showDialog(dialog)
         }
         binding.wifiQrButton.setOnClickListener {
-            generatorFragment.type = Barcode.TYPE_WIFI
-            generatorFragment.ssid = "Yatik"
-            generatorFragment.securityType = "WPA"
-            generatorFragment.password = "1801515300"
-            requireActivity().supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                addToBackStack(GeneratorFragment.TAG)
-                setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom)
-                add<GeneratorFragment>(R.id.main_layout)
+            val generatorData = GeneratorData(type = Barcode.TYPE_WIFI, ssid = "Yatik", securityType = "WPA", password = "1801515300")
+            val bundle = Bundle().apply {
+                putParcelable("GeneratorData", generatorData)
             }
+            findNavController().navigate(
+                R.id.action_QRCodeGeneratorFragment_to_generatorFragment,
+                bundle
+            )
         }
         binding.urlQrButton.setOnClickListener {
-            generatorFragment.type = Barcode.FORMAT_EAN_13
-            generatorFragment.barcodeNumber = "8904054100032"
-            requireActivity().supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                addToBackStack(GeneratorFragment.TAG)
-                setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_bottom)
-                add<GeneratorFragment>(R.id.main_layout)
+            val generatorData = GeneratorData(type = Barcode.FORMAT_EAN_13, barcodeNumber = "8904054100032")
+            val bundle = Bundle().apply {
+                putParcelable("GeneratorData", generatorData)
             }
+            findNavController().navigate(
+                R.id.action_QRCodeGeneratorFragment_to_generatorFragment,
+                bundle
+            )
         }
         binding.smsQrButton.setOnClickListener {
 

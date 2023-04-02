@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.ui.fragments
+package com.yatik.qrscanner.ui.fragments.history
 
 import android.content.Intent
 import android.os.Bundle
@@ -18,7 +18,6 @@ import com.yatik.qrscanner.R
 import com.yatik.qrscanner.adapters.BarcodeListAdapter
 import com.yatik.qrscanner.databinding.FragmentHistoryBinding
 import com.yatik.qrscanner.models.BarcodeData
-import com.yatik.qrscanner.ui.BarcodeViewModel
 import com.yatik.qrscanner.ui.DetailsActivity
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Utilities
@@ -29,10 +28,8 @@ class HistoryFragment : Fragment() {
 
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: BarcodeListAdapter
-
     private val barcodeViewModel: BarcodeViewModel by viewModels()
 
     override fun onCreateView(
@@ -45,7 +42,6 @@ class HistoryFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         binding.historyToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.delete_all -> {
@@ -67,24 +63,19 @@ class HistoryFragment : Fragment() {
                     true
                 } else -> false
             }
-
         }
-
         binding.historyToolbar.setNavigationOnClickListener {
             requireActivity().finish()
             requireActivity().intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(requireActivity().intent)
         }
-
         recyclerView = binding.historyRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = BarcodeListAdapter()
         recyclerView.adapter = adapter
 
         adapter.setOnDeleteClickListener { deleteDialog(it) }
-
         adapter.setOnItemClickListener { barcodeData ->
-
             requireActivity().intent = Intent(requireContext(), DetailsActivity::class.java)
                 .putExtra("barcodeData", barcodeData)
                 .putExtra("retrievedFrom", "database")
@@ -102,7 +93,6 @@ class HistoryFragment : Fragment() {
             ): Boolean {
                 return false
             }
-
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val barcodeData = adapter.differ.currentList[position]
@@ -115,11 +105,9 @@ class HistoryFragment : Fragment() {
                 }
             }
         }
-
         ItemTouchHelper(itemTouchHelperCallback).apply {
             attachToRecyclerView(binding.historyRecyclerView)
         }
-
         barcodeViewModel.getAllBarcodes().observe(viewLifecycleOwner) { barcodesData ->
             barcodesData?.let { itemsList ->
                 if (itemsList.isEmpty()) {
@@ -130,7 +118,6 @@ class HistoryFragment : Fragment() {
                 adapter.differ.submitList(itemsList)
             }
         }
-
     }
 
 

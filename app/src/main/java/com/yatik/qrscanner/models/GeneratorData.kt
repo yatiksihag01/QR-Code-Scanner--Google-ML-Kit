@@ -1,13 +1,17 @@
 package com.yatik.qrscanner.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class GeneratorData(
-    val type: Int,
-    val text: String?,
-    val url: String?,
-    val ssid: String?,
-    val securityType: String?,
-    val password: String?,
-    val phone: String?,
-    val message: String?,
-    val barcodeNumber: String?
-)
+    var type: Int,
+    var text: String? = null,
+    var url: String? = null,
+    var ssid: String? = null,
+    var securityType: String? = null,
+    var password: String? = null,
+    var phone: String? = null,
+    var message: String? = null,
+    var barcodeNumber: String? = null
+) : Parcelable

@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.ui
+package com.yatik.qrscanner.ui.fragments.history
 
 import androidx.lifecycle.*
 import com.yatik.qrscanner.models.BarcodeData
