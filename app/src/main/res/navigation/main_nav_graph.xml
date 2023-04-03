@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.yatik.qrscanner.ui.fragments.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_historyFragment"
             app:destination="@id/historyFragment"
@@ -30,7 +30,7 @@
         android:id="@+id/QRCodeGeneratorFragment"
         android:name="com.yatik.qrscanner.ui.fragments.generator.QRCodeGeneratorFragment"
         android:label="fragment_qr_code_generator"
-        tools:layout="@layout/fragment_qr_code_generator" >
+        tools:layout="@layout/fragment_qr_code_generator">
         <action
             android:id="@+id/action_QRCodeGeneratorFragment_to_generatorFragment"
             app:destination="@id/generatorFragment"
@@ -41,7 +41,7 @@
         android:id="@+id/generatorFragment"
         android:name="com.yatik.qrscanner.ui.fragments.generator.GeneratorFragment"
         android:label="fragment_generator"
-        tools:layout="@layout/fragment_generator" >
+        tools:layout="@layout/fragment_generator">
         <argument
             android:name="GeneratorData"
             app:argType="com.yatik.qrscanner.models.GeneratorData" />

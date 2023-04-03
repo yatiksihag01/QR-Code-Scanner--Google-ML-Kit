@@ -6,7 +6,6 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.getOrAwaitValueTest
 import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.repository.FakeBarcodeDataRepository
-import com.yatik.qrscanner.ui.fragments.history.BarcodeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain

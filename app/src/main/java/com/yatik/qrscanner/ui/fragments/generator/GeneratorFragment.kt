@@ -73,25 +73,31 @@ class GeneratorFragment : Fragment() {
         }
         generatorViewModel.isQRGeneratedSuccessfully.observe(viewLifecycleOwner) { success ->
             if (!success) {
-                Toast.makeText(requireContext(), "Sorry, something went wrong", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Sorry, something went wrong", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
         generatorViewModel.imageSaved.observe(viewLifecycleOwner) { isSaved ->
             if (isSaved) {
-                Toast.makeText(requireContext(), "Image saved successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Image saved successfully", Toast.LENGTH_SHORT)
+                    .show()
             } else {
-                Toast.makeText(requireContext(), "Sorry, Unable to save this image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Sorry, Unable to save this image",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         requestPermissionLauncher = registerForActivityResult(
-                ActivityResultContracts.RequestPermission()
-            ) { isGranted: Boolean ->
-                if (isGranted) {
-                    generatorViewModel.saveImageToGallery()
-                } else {
-                    noPermissionDialog()
-                }
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                generatorViewModel.saveImageToGallery()
+            } else {
+                noPermissionDialog()
             }
+        }
         binding.generatorToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.save_file -> {
@@ -122,7 +128,8 @@ class GeneratorFragment : Fragment() {
                 }
                 else -> {
                     requestPermissionLauncher.launch(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
                 }
             }
         }
@@ -150,13 +157,17 @@ class GeneratorFragment : Fragment() {
 
     private fun AlertDialog.makeButtonTextBlue() {
         this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
-            ContextCompat.getColor(context,
+            ContextCompat.getColor(
+                context,
                 R.color.dialogButtons
-            ))
+            )
+        )
         this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
-            ContextCompat.getColor(context,
+            ContextCompat.getColor(
+                context,
                 R.color.dialogButtons
-            ))
+            )
+        )
     }
 
     @SuppressLint("SetTextI18n")

@@ -34,9 +34,9 @@ class DefaultGeneratorRepository @Inject constructor(
             resolver.insert(imageCollection, contentValues)
                 ?.also { resultUri ->
                     resolver.openOutputStream(resultUri)?.use { outputStream ->
-                       if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)) {
-                           throw IOException("Unable to save bitmap")
-                       }
+                        if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)) {
+                            throw IOException("Unable to save bitmap")
+                        }
                     }
                 } ?: throw IOException("Unable to create MediaStore entry")
             true

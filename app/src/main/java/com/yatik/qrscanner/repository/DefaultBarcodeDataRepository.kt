@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class DefaultBarcodeDataRepository @Inject constructor(
     private val barcodeDao: BarcodeDao
-    ) : BarcodeDataRepository {
+) : BarcodeDataRepository {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

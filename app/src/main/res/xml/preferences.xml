@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
         android:defaultValue="true"
@@ -12,33 +11,33 @@
         android:defaultValue="true"
         android:key="vibration_preference"
         android:summary="Vibrate on successful scan"
-        android:title="Vibration effect"/>
+        android:title="Vibration effect" />
 
     <SwitchPreference
         android:defaultValue="false"
         android:key="open_url_preference"
         android:summary="Open the url automatically after successful scan"
-        android:title="Automatically open URL"/>
+        android:title="Automatically open URL" />
 
     <SwitchPreference
         android:defaultValue="false"
         android:key="front_cam_preference"
         android:summary="By default rear camera will be used"
-        android:title="Use front camera"/>
+        android:title="Use front camera" />
 
     <Preference
         android:key="feedback_preference"
-        android:title="Send feedback"
-        android:summary="Report technical issues or suggest new features">
+        android:summary="Report technical issues or suggest new features"
+        android:title="Send feedback">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="mailto:yatikapps@outlook.com">
             <extra
                 android:name="android.intent.extra.SUBJECT"
-                android:value="Feedback"/>
+                android:value="Feedback" />
             <extra
                 android:name="android.intent.extra.TEXT"
-                android:value="Text of Feedback"/>
+                android:value="Text of Feedback" />
         </intent>
     </Preference>
 

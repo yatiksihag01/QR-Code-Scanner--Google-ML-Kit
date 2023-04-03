@@ -33,9 +33,9 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentHomeBinding
-import com.yatik.qrscanner.ui.fragments.history.BarcodeViewModel
 import com.yatik.qrscanner.ui.DetailsActivity
 import com.yatik.qrscanner.ui.SettingsActivity
+import com.yatik.qrscanner.ui.fragments.history.BarcodeViewModel
 import com.yatik.qrscanner.utils.Constants
 import com.yatik.qrscanner.utils.Constants.Companion.SHEET_PEEK_VAL
 import com.yatik.qrscanner.utils.DialogUtils
@@ -77,7 +77,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet)
-        bottomSheetBehavior.peekHeight = utilities.calculatePeekHeight(requireContext(), SHEET_PEEK_VAL)
+        bottomSheetBehavior.peekHeight =
+            utilities.calculatePeekHeight(requireContext(), SHEET_PEEK_VAL)
         bottomSheetBehavior.isHideable = false
 
         requestPermissionLauncher = registerForActivityResult(
@@ -103,10 +104,18 @@ class HomeFragment : Fragment() {
                     try {
                         image = InputImage.fromFilePath(requireContext(), result)
                         scanner.process(image)
-                            .addOnSuccessListener { barcodes: List<Barcode> -> processResult(barcodes) }
+                            .addOnSuccessListener { barcodes: List<Barcode> ->
+                                processResult(
+                                    barcodes
+                                )
+                            }
                             .addOnFailureListener { e: Exception ->
                                 // Task failed with an exception
-                                Toast.makeText(requireContext(), "Failed to scan.", Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Failed to scan.",
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                                 e.printStackTrace()
                             }
@@ -137,7 +146,8 @@ class HomeFragment : Fragment() {
             }
             else -> {
                 requestPermissionLauncher.launch(
-                    Manifest.permission.CAMERA)
+                    Manifest.permission.CAMERA
+                )
             }
         }
     }
@@ -169,7 +179,8 @@ class HomeFragment : Fragment() {
 
         imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(requireContext())) { imageProxy: ImageProxy ->
 
-            val image = InputImage.fromMediaImage(imageProxy.image!!, imageProxy.imageInfo.rotationDegrees)
+            val image =
+                InputImage.fromMediaImage(imageProxy.image!!, imageProxy.imageInfo.rotationDegrees)
             val options = BarcodeScannerOptions.Builder()
                 .build()
             val scanner = BarcodeScanning.getClient(options)
@@ -186,7 +197,8 @@ class HomeFragment : Fragment() {
         val sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(requireContext())
         val useFrontCam = sharedPreferences.getBoolean("front_cam_preference", false)
-        val hasFrontCamera = mCameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
+        val hasFrontCamera =
+            mCameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
 
         val cameraSelector = if (useFrontCam && hasFrontCamera) {
             CameraSelector.DEFAULT_FRONT_CAMERA
@@ -217,7 +229,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun sendRequiredData(barcode: Barcode){
+    private fun sendRequiredData(barcode: Barcode) {
         val barcodeData = utilities.barcodeToBarcodeData(barcode)
         val saveScan = PreferenceManager.getDefaultSharedPreferences(requireContext())
             .getBoolean("save_scans_preference", true)
@@ -334,13 +346,17 @@ class HomeFragment : Fragment() {
 
     private fun AlertDialog.makeButtonTextBlue() {
         this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
-            ContextCompat.getColor(context,
+            ContextCompat.getColor(
+                context,
                 R.color.dialogButtons
-            ))
+            )
+        )
         this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
-            ContextCompat.getColor(context,
+            ContextCompat.getColor(
+                context,
                 R.color.dialogButtons
-            ))
+            )
+        )
     }
 
     private fun collapseBottomSheet() {

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="10dp"
-    tools:ignore="HardcodedText" >
+    tools:ignore="HardcodedText">
 
     <ImageView
         android:id="@+id/history_icon"

@@ -41,12 +41,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/marginEight"
-        app:layout_constraintDimensionRatio="1:1"
+        android:contentDescription="Generate barcode image"
         android:src="@drawable/broken_image_200"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline_40"
         app:layout_constraintStart_toEndOf="@+id/guideline_start"
         app:layout_constraintTop_toBottomOf="@+id/generatorToolbarLayout"
-        android:contentDescription="Generate barcode image"
         tools:ignore="HardcodedText" />
 
     <TextView
@@ -55,12 +55,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Barcode content"
-        android:textSize="14sp"
         android:textColor="@color/semiTransparentWhite"
+        android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline_40"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/guideline_start"
         app:layout_constraintTop_toBottomOf="@+id/qr_final_image"
-        app:layout_constraintHorizontal_bias="0.0"
         tools:ignore="HardcodedText" />
 
     <LinearLayout
@@ -72,7 +72,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline_40"
         app:layout_constraintStart_toStartOf="@+id/guideline_start"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.0" >
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/barcode_info_tv"

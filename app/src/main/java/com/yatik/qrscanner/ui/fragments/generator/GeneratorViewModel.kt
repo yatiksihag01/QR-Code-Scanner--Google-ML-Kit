@@ -46,14 +46,30 @@ class GeneratorViewModel @Inject constructor(
         try {
             when (generatorData.type) {
                 Barcode.TYPE_TEXT -> {
-                    bitMatrix = QRCodeWriter().encode(generatorData.text, BarcodeFormat.QR_CODE, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT)
+                    bitMatrix = QRCodeWriter().encode(
+                        generatorData.text,
+                        BarcodeFormat.QR_CODE,
+                        QR_WIDTH_HEIGHT,
+                        QR_WIDTH_HEIGHT
+                    )
                 }
                 Barcode.TYPE_WIFI -> {
-                    val wifiString = "WIFI:S:${generatorData.ssid};T:${generatorData.securityType};P:${generatorData.password};"
-                    bitMatrix = MultiFormatWriter().encode(wifiString, BarcodeFormat.QR_CODE, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT)
+                    val wifiString =
+                        "WIFI:S:${generatorData.ssid};T:${generatorData.securityType};P:${generatorData.password};"
+                    bitMatrix = MultiFormatWriter().encode(
+                        wifiString,
+                        BarcodeFormat.QR_CODE,
+                        QR_WIDTH_HEIGHT,
+                        QR_WIDTH_HEIGHT
+                    )
                 }
                 Barcode.TYPE_URL -> {
-                    bitMatrix = MultiFormatWriter().encode(generatorData.url, BarcodeFormat.QR_CODE, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT)
+                    bitMatrix = MultiFormatWriter().encode(
+                        generatorData.url,
+                        BarcodeFormat.QR_CODE,
+                        QR_WIDTH_HEIGHT,
+                        QR_WIDTH_HEIGHT
+                    )
                 }
                 Barcode.TYPE_SMS -> {
                     bitMatrix = MultiFormatWriter().encode(
@@ -63,9 +79,19 @@ class GeneratorViewModel @Inject constructor(
                     )
                 }
                 Barcode.TYPE_PHONE -> {
-                bitMatrix = MultiFormatWriter().encode("tel:${generatorData.phone}", BarcodeFormat.QR_CODE, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT)
+                    bitMatrix = MultiFormatWriter().encode(
+                        "tel:${generatorData.phone}",
+                        BarcodeFormat.QR_CODE,
+                        QR_WIDTH_HEIGHT,
+                        QR_WIDTH_HEIGHT
+                    )
                 }
-                else -> bitMatrix = EAN13Writer().encode(generatorData.barcodeNumber, BarcodeFormat.EAN_13, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT)
+                else -> bitMatrix = EAN13Writer().encode(
+                    generatorData.barcodeNumber,
+                    BarcodeFormat.EAN_13,
+                    QR_WIDTH_HEIGHT,
+                    QR_WIDTH_HEIGHT
+                )
             }
             renderIntoBitmap(bitMatrix)
             _isQRGeneratedSuccessfully.postValue(true)

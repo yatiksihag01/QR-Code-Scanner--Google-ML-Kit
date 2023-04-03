@@ -5,7 +5,7 @@
     android:id="@+id/home_frag_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.HomeFragment" >
+    tools:context=".ui.fragments.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
@@ -49,22 +49,22 @@
 
     <LinearLayout
         android:id="@+id/standard_bottom_sheet"
+        style="@style/ModalBottomSheetDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/ModalBottomSheetDialog"
-        tools:ignore="HardcodedText"
+        android:orientation="vertical"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        android:orientation="vertical">
+        tools:ignore="HardcodedText">
 
         <!-- Drag handle for accessibility -->
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/drag_handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="@dimen/marginEight"
-            android:layout_gravity="center"
-            android:src="@drawable/custom_drag_handler"/>
+            android:src="@drawable/custom_drag_handler" />
 
         <!-- Bottom sheet contents -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -158,60 +158,60 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/transparent"
-            app:icon="@drawable/settings_24"
-            app:iconTint="@color/white"
-            app:iconPadding="16dp"
+            android:letterSpacing="0"
             android:text="Settings"
-            android:textSize="16sp"
-            android:textColor="@color/white"
             android:textAlignment="textStart"
             android:textAllCaps="false"
-            android:letterSpacing="0" />
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:icon="@drawable/settings_24"
+            app:iconPadding="16dp"
+            app:iconTint="@color/white" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/rating_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/transparent"
-            app:icon="@drawable/rate_us"
-            app:iconTint="@color/white"
-            app:iconPadding="16dp"
+            android:letterSpacing="0"
             android:text="Rate Us"
-            android:textSize="16sp"
-            android:textColor="@color/white"
             android:textAlignment="viewStart"
             android:textAllCaps="false"
-            android:letterSpacing="0" />
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:icon="@drawable/rate_us"
+            app:iconPadding="16dp"
+            app:iconTint="@color/white" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/share_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/transparent"
-            app:icon="@drawable/outline_share_24"
-            app:iconTint="@color/white"
-            app:iconPadding="16dp"
+            android:letterSpacing="0"
             android:text="Share App❤"
-            android:textSize="16sp"
-            android:textColor="@color/white"
             android:textAlignment="viewStart"
             android:textAllCaps="false"
-            android:letterSpacing="0" />
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:icon="@drawable/outline_share_24"
+            app:iconPadding="16dp"
+            app:iconTint="@color/white" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/policy_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/transparent"
-            app:icon="@drawable/security_symbol"
-            app:iconTint="@color/white"
-            app:iconPadding="16dp"
+            android:letterSpacing="0"
             android:text="Privacy Policy"
-            android:textSize="16sp"
-            android:textColor="@color/white"
             android:textAlignment="viewStart"
             android:textAllCaps="false"
-            android:letterSpacing="0" />
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:icon="@drawable/security_symbol"
+            app:iconPadding="16dp"
+            app:iconTint="@color/white" />
 
     </LinearLayout>
 

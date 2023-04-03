@@ -8,12 +8,12 @@
     tools:ignore="hardcodedText">
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="Text"
+        android:text="EAN 13"
         android:textColor="@color/teal_200"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,31 +21,32 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/outlinedUrlFieldLayout"
+        android:id="@+id/outlinedEan13FieldLayout"
         style="?attr/textInputOutlinedStyle"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
-        android:hint="Enter text"
+        android:hint="Enter number"
         android:textColorHint="@color/teal_200"
         app:boxStrokeColor="@color/teal_200"
         app:hintTextColor="@color/teal_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
         app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/outlinedTextField"
+            android:id="@+id/outlinedEan13Field"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="number" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/generate_qr_text"
+        android:id="@+id/generate_qr_ean13"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -59,12 +60,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.717"
-        app:layout_constraintStart_toEndOf="@+id/cancel_generation_text"
-        app:layout_constraintTop_toBottomOf="@+id/outlinedUrlFieldLayout"
+        app:layout_constraintStart_toEndOf="@+id/cancel_generation_ean13"
+        app:layout_constraintTop_toBottomOf="@+id/outlinedEan13FieldLayout"
         app:layout_constraintVertical_bias="0.037" />
 
     <Button
-        android:id="@+id/cancel_generation_text"
+        android:id="@+id/cancel_generation_ean13"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
@@ -75,6 +76,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/outlinedUrlFieldLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/outlinedEan13FieldLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -54,14 +54,20 @@ class HistoryFragment : Fragment() {
                         }
                         .setNegativeButton("No") { dialog, _ ->
                             dialog.dismiss()
-                    }
+                        }
                     val dialog = builder.create()
-                    dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background))
+                    dialog.window?.setBackgroundDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.dialog_background
+                        )
+                    )
                     dialog.show()
                     dialog.makeButtonTextRed()
                     Utilities().vibrateIfAllowed(requireContext(), true, 250)
                     true
-                } else -> false
+                }
+                else -> false
             }
         }
         binding.historyToolbar.setNavigationOnClickListener {
@@ -93,6 +99,7 @@ class HistoryFragment : Fragment() {
             ): Boolean {
                 return false
             }
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val barcodeData = adapter.differ.currentList[position]
@@ -121,7 +128,7 @@ class HistoryFragment : Fragment() {
     }
 
 
-    private fun deleteDialog(barcodeData: BarcodeData?){
+    private fun deleteDialog(barcodeData: BarcodeData?) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Delete")
         builder.setMessage("Are you sure to delete this item?")
@@ -129,28 +136,43 @@ class HistoryFragment : Fragment() {
             if (barcodeData != null) {
                 barcodeViewModel.delete(barcodeData)
             } else {
-                Toast.makeText(requireContext(), "Sorry, Unable to delete this item", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Sorry, Unable to delete this item",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         builder.setNegativeButton("No") { dialog, _ ->
             dialog.dismiss()
         }
         val dialog = builder.create()
-        dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background))
+        dialog.window?.setBackgroundDrawable(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.dialog_background
+            )
+        )
         dialog.show()
         dialog.makeButtonTextBlue()
-        view?.let { Snackbar.make(it, "You can simply swipe to delete", Snackbar.LENGTH_LONG).show() }
+        view?.let {
+            Snackbar.make(it, "You can simply swipe to delete", Snackbar.LENGTH_LONG).show()
+        }
 
     }
 
     private fun AlertDialog.makeButtonTextRed() {
-        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.redButton))
-        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+        this.getButton(AlertDialog.BUTTON_POSITIVE)
+            .setTextColor(ContextCompat.getColor(context, R.color.redButton))
+        this.getButton(AlertDialog.BUTTON_NEGATIVE)
+            .setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
     }
 
     private fun AlertDialog.makeButtonTextBlue() {
-        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+        this.getButton(AlertDialog.BUTTON_POSITIVE)
+            .setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+        this.getButton(AlertDialog.BUTTON_NEGATIVE)
+            .setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
     }
 
     override fun onDestroyView() {

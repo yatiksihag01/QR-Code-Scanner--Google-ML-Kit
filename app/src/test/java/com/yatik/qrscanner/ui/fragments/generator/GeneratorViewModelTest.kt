@@ -59,7 +59,7 @@ class GeneratorViewModelTest {
         val bitMatrix = mock(BitMatrix::class.java)
         val writer = if (generatorData.type == Barcode.TYPE_TEXT) {
             mock(QRCodeWriter::class.java)
-        } else{
+        } else {
             mock(MultiFormatWriter::class.java)
         }
         `when`(Bitmap.createBitmap(anyInt(), anyInt(), any())).thenReturn(bmp)
@@ -87,47 +87,62 @@ class GeneratorViewModelTest {
     }
 
     @Test
-    fun `generateQRCode should set isQRGeneratedSuccessfully false for WriterException`() = runTest {
+    fun `generateQRCode should set isQRGeneratedSuccessfully false for WriterException`() =
+        runTest {
 
-        val generatorData = GeneratorData(
-            type = Barcode.TYPE_TEXT,
-            text = "Test QR code generation"
-        )
-        val writer = if (generatorData.type == Barcode.TYPE_TEXT) {
-            mock(QRCodeWriter::class.java)
-        } else{
-            mock(MultiFormatWriter::class.java)
+            val generatorData = GeneratorData(
+                type = Barcode.TYPE_TEXT,
+                text = "Test QR code generation"
+            )
+            val writer = if (generatorData.type == Barcode.TYPE_TEXT) {
+                mock(QRCodeWriter::class.java)
+            } else {
+                mock(MultiFormatWriter::class.java)
+            }
+            `when`(Bitmap.createBitmap(anyInt(), anyInt(), any())).thenReturn(bmp)
+            `when`(
+                writer.encode(
+                    anyString(),
+                    any(),
+                    anyInt(),
+                    anyInt()
+                )
+            ).thenThrow(WriterException())
+            generatorViewModel.generateQRCode(generatorData)
+            assertThat(
+                generatorViewModel.isQRGeneratedSuccessfully.getOrAwaitValueTest()
+            ).isFalse()
+
         }
-        `when`(Bitmap.createBitmap(anyInt(), anyInt(), any())).thenReturn(bmp)
-        `when`(writer.encode(anyString(), any(), anyInt(), anyInt())).thenThrow(WriterException())
-        generatorViewModel.generateQRCode(generatorData)
-        assertThat(
-            generatorViewModel.isQRGeneratedSuccessfully.getOrAwaitValueTest()
-        ).isFalse()
-
-    }
 
     @Test
-    fun `generateQRCode should set isQRGeneratedSuccessfully false for IllegalArgumentException`() = runTest {
+    fun `generateQRCode should set isQRGeneratedSuccessfully false for IllegalArgumentException`() =
+        runTest {
 
-        val generatorData = GeneratorData(
-            type = Barcode.TYPE_TEXT,
-            text = "Test QR code generation"
-        )
-        val writer = if (generatorData.type == Barcode.TYPE_TEXT) {
-            mock(QRCodeWriter::class.java)
-        } else{
-            mock(MultiFormatWriter::class.java)
+            val generatorData = GeneratorData(
+                type = Barcode.TYPE_TEXT,
+                text = "Test QR code generation"
+            )
+            val writer = if (generatorData.type == Barcode.TYPE_TEXT) {
+                mock(QRCodeWriter::class.java)
+            } else {
+                mock(MultiFormatWriter::class.java)
+            }
+            val bitMatrix = mock(BitMatrix::class.java)
+            `when`(writer.encode(anyString(), any(), anyInt(), anyInt())).thenReturn(bitMatrix)
+            `when`(
+                Bitmap.createBitmap(
+                    anyInt(),
+                    anyInt(),
+                    any()
+                )
+            ).thenThrow(java.lang.IllegalArgumentException())
+            generatorViewModel.generateQRCode(generatorData)
+            assertThat(
+                generatorViewModel.isQRGeneratedSuccessfully.getOrAwaitValueTest()
+            ).isFalse()
+
         }
-        val bitMatrix = mock(BitMatrix::class.java)
-        `when`(writer.encode(anyString(), any(), anyInt(), anyInt())).thenReturn(bitMatrix)
-        `when`(Bitmap.createBitmap(anyInt(), anyInt(), any())).thenThrow(java.lang.IllegalArgumentException())
-        generatorViewModel.generateQRCode(generatorData)
-        assertThat(
-            generatorViewModel.isQRGeneratedSuccessfully.getOrAwaitValueTest()
-        ).isFalse()
-
-    }
 
     @Test
     fun `saveImageToGallery should set imageSaved to true on successful insertion`() = runTest {

@@ -18,12 +18,12 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindBarcodeDataRepository(
         defaultBarcodeDataRepository: DefaultBarcodeDataRepository
-    ) : BarcodeDataRepository
+    ): BarcodeDataRepository
 
     @Binds
     @Singleton
     abstract fun bindGeneratorRepository(
         defaultGeneratorRepository: DefaultGeneratorRepository
-    ) : GeneratorRepository
+    ): GeneratorRepository
 
 }

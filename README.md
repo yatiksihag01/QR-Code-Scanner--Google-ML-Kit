@@ -7,17 +7,17 @@ This QR Scanner app uses Google's Barcode Scanner ML Kit to scan QR codes using 
 
 | Home Page | Settings Page |
 | --------- | ------------- | 
-| ![QR1_3 1](https://user-images.githubusercontent.com/110741464/220065557-48b4813f-cdd6-4a5b-8718-3603ea93dc28.png) | ![settings_activity_720_332](https://user-images.githubusercontent.com/110741464/220066253-307e4213-760e-42d1-8ca5-a110d1334760.png) |
+| ![QR1_4_720_330](https://user-images.githubusercontent.com/110741464/224722229-5c22840b-181d-451b-b68c-82b85fa3fe04.jpg) | ![settings_activity_720_332](https://user-images.githubusercontent.com/110741464/224762822-5f791437-5056-4d18-8714-09fbb7375685.jpg) |
 
-| Details Activity | Saved data |
+| Details Page | Saved data |
 | ---------------- | ---------- |
-| ![DetailsActivity_720_331](https://user-images.githubusercontent.com/110741464/220064084-6d729787-f61d-4ea2-b2fe-e8fe6689813b.png) | ![history_frag_720_331](https://user-images.githubusercontent.com/110741464/220063115-0d66273d-4a66-434b-ad58-2b742cdb9868.png) | |
+| ![DetailsActivity_720_331](https://user-images.githubusercontent.com/110741464/220064084-6d729787-f61d-4ea2-b2fe-e8fe6689813b.png) | ![history_frag_720_331](https://user-images.githubusercontent.com/110741464/220063115-0d66273d-4a66-434b-ad58-2b742cdb9868.png) |
 
 ## ⭐Features
 
 - Users can scan 13 types of QR Codes/Barcodes
 - Users can save the scanned data
-- You can either choose photos from gallery or use caemra
+- You can either choose photos from gallery or use camera
 - Options to automatically open Urls after scanning
 
 
