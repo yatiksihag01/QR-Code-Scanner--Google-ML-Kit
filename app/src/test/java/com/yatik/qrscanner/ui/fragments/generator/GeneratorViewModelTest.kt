@@ -5,7 +5,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.*
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.zxing.MultiFormatWriter
-import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import com.yatik.qrscanner.getOrAwaitValueTest
@@ -52,15 +51,12 @@ class GeneratorViewModelTest {
     @Test
     fun `generateQRCode should update bitmap and isQRGeneratedSuccessfully`() = runTest {
 
-        val bitMatrix = mock(BitMatrix::class.java)
         `when`(Bitmap.createBitmap(anyInt(), anyInt(), any())).thenReturn(bmp)
 
         var generatorData = GeneratorData(
             type = Barcode.TYPE_TEXT,
             text = "Test QR code generation"
         )
-        val writer = mock(QRCodeWriter::class.java)
-        `when`(writer.encode(anyString(), any(), anyInt(), anyInt())).thenReturn(bitMatrix)
         generatorViewModel.generateQRCode(generatorData)
         var bitmap = generatorViewModel.bitmap.getOrAwaitValueTest()
         assertThat(bitmap).isNotNull()
@@ -75,8 +71,6 @@ class GeneratorViewModelTest {
             password = "test",
             securityType = "WPA"
         )
-        val multiWriter = mock(MultiFormatWriter::class.java)
-        `when`(multiWriter.encode(anyString(), any(), anyInt(), anyInt())).thenReturn(bitMatrix)
         generatorViewModel.generateQRCode(generatorData)
         bitmap = generatorViewModel.bitmap.getOrAwaitValueTest()
         assertThat(bitmap).isNotNull()
@@ -88,24 +82,16 @@ class GeneratorViewModelTest {
     fun `generateQRCode should set isQRGeneratedSuccessfully false for WriterException`() =
         runTest {
 
-            val generatorData = GeneratorData(
+            var generatorData = GeneratorData(
                 type = Barcode.TYPE_TEXT,
-                text = "Test QR code generation"
+                text = null
             )
-            val writer = if (generatorData.type == Barcode.TYPE_TEXT) {
-                mock(QRCodeWriter::class.java)
-            } else {
-                mock(MultiFormatWriter::class.java)
-            }
-            `when`(Bitmap.createBitmap(anyInt(), anyInt(), any())).thenReturn(bmp)
-            `when`(
-                writer.encode(
-                    anyString(),
-                    any(),
-                    anyInt(),
-                    anyInt()
-                )
-            ).thenThrow(WriterException())
+            generatorViewModel.generateQRCode(generatorData)
+            assertThat(
+                generatorViewModel.isQRGeneratedSuccessfully.getOrAwaitValueTest()
+            ).isFalse()
+
+            generatorData = GeneratorData(type = Barcode.TYPE_PHONE)
             generatorViewModel.generateQRCode(generatorData)
             assertThat(
                 generatorViewModel.isQRGeneratedSuccessfully.getOrAwaitValueTest()
@@ -149,11 +135,8 @@ class GeneratorViewModelTest {
             type = Barcode.TYPE_TEXT,
             text = "Test QR code generation"
         )
-        val bitMatrix = mock(BitMatrix::class.java)
-        val writer = mock(QRCodeWriter::class.java)
 
         `when`(Bitmap.createBitmap(anyInt(), anyInt(), any())).thenReturn(bmp)
-        `when`(writer.encode(anyString(), any(), anyInt(), anyInt())).thenReturn(bitMatrix)
         `when`(fakeGeneratorRepository.saveImageToGallery(bmp)).thenReturn(true)
 
         generatorViewModel.generateQRCode(generatorData)
