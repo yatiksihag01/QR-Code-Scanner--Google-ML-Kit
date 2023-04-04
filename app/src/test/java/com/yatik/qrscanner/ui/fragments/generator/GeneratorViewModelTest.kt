@@ -52,19 +52,15 @@ class GeneratorViewModelTest {
     @Test
     fun `generateQRCode should update bitmap and isQRGeneratedSuccessfully`() = runTest {
 
+        val bitMatrix = mock(BitMatrix::class.java)
+        `when`(Bitmap.createBitmap(anyInt(), anyInt(), any())).thenReturn(bmp)
+
         var generatorData = GeneratorData(
             type = Barcode.TYPE_TEXT,
             text = "Test QR code generation"
         )
-        val bitMatrix = mock(BitMatrix::class.java)
-        val writer = if (generatorData.type == Barcode.TYPE_TEXT) {
-            mock(QRCodeWriter::class.java)
-        } else {
-            mock(MultiFormatWriter::class.java)
-        }
-        `when`(Bitmap.createBitmap(anyInt(), anyInt(), any())).thenReturn(bmp)
+        val writer = mock(QRCodeWriter::class.java)
         `when`(writer.encode(anyString(), any(), anyInt(), anyInt())).thenReturn(bitMatrix)
-
         generatorViewModel.generateQRCode(generatorData)
         var bitmap = generatorViewModel.bitmap.getOrAwaitValueTest()
         assertThat(bitmap).isNotNull()
@@ -79,6 +75,8 @@ class GeneratorViewModelTest {
             password = "test",
             securityType = "WPA"
         )
+        val multiWriter = mock(MultiFormatWriter::class.java)
+        `when`(multiWriter.encode(anyString(), any(), anyInt(), anyInt())).thenReturn(bitMatrix)
         generatorViewModel.generateQRCode(generatorData)
         bitmap = generatorViewModel.bitmap.getOrAwaitValueTest()
         assertThat(bitmap).isNotNull()
