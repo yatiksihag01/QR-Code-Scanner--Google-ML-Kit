@@ -53,7 +53,12 @@ class DialogUtils {
                 }
                 in 4.0..5.0 -> {
                     dialog.dismiss()
-                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PLAY_STORE)))
+                    context.startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(Constants.PLAY_STORE)
+                        )
+                    )
 //                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.GALAXY_STORE)))
                 }
                 else -> {
@@ -65,7 +70,10 @@ class DialogUtils {
             dialog.dismiss()
         }
 
-        dialog.window!!.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window!!.setLayout(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
     }

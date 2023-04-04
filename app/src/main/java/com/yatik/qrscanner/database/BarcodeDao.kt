@@ -1,10 +1,6 @@
 package com.yatik.qrscanner.database
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.yatik.qrscanner.models.BarcodeData
 import kotlinx.coroutines.flow.Flow
 

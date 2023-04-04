@@ -9,8 +9,6 @@ import com.yatik.qrscanner.models.BarcodeData
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.*
 import javax.inject.Inject
@@ -44,29 +42,33 @@ class BarcodeDaoTest {
     }
 
     @Test
-    fun insertBarcodeData() = runTest {
+    fun getAllBarcodesTest() = runTest {
         val barcodeData = BarcodeData(
             Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample",
             null, null, "27.01.2023 23:41:47"
         )
-        dao.insert(barcodeData)
-
         val barcodeData2 = BarcodeData(
             Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample2",
             null, null, "28.01.2023 00:00:47"
         )
-        launch {
-            delay(1000)
-            dao.insert(barcodeData2)
-        }
+        dao.insert(barcodeData)
+        dao.insert(barcodeData2)
 
         dao.getAllBarcodes().test {
 
             val barcodeList = awaitItem()
-            assertThat(barcodeList).contains(barcodeData)
+            var data = barcodeList[1] // items returned by getAllBarcodes() are in LIFO order
 
-            val barcodeList2 = awaitItem()
-            assertThat(barcodeList2).contains(barcodeData2)
+            // id = 0 means auto-generation not working properly
+            assertThat(data.id).isNotEqualTo(0)
+            assertThat(data.format).isEqualTo(barcodeData.format)
+            assertThat(data.title).isEqualTo(barcodeData.title)
+            assertThat(data.dateTime).isEqualTo(barcodeData.dateTime)
+
+            data = barcodeList[0]
+            assertThat(data.format).isEqualTo(barcodeData2.format)
+            assertThat(data.title).isEqualTo(barcodeData2.title)
+            assertThat(data.dateTime).isEqualTo(barcodeData2.dateTime)
             cancel()
         }
     }

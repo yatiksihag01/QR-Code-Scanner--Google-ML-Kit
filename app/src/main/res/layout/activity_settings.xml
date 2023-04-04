@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/main_background_dark"
-    tools:context=".ui.SettingsActivity"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:context=".ui.SettingsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/settingsToolbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/settingsToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/main_background"
+            app:navigationIcon="@drawable/arrow_back_24"
             app:title="Settings"
             app:titleCentered="true"
-            app:titleTextColor="@color/white"
-            android:background="@color/main_background"
-            app:navigationIcon="@drawable/arrow_back_24" />
+            app:titleTextColor="@color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -34,4 +34,4 @@
         tools:context="com.yatik.qrscanner.ui.SettingsActivity"
         tools:ignore="FragmentTagUsage" />
 
-  </RelativeLayout>
+</RelativeLayout>

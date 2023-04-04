@@ -35,7 +35,8 @@ class BarcodeListAdapter : RecyclerView.Adapter<BarcodeListAdapter.BarcodeDataVi
                 R.layout.recyclerview_item,
                 parent,
                 false
-            ))
+            )
+        )
     }
 
     @SuppressLint("SetTextI18n")

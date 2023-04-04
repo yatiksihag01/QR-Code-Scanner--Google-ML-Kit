@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="security_types">
+        <item>WEP</item>
+        <item>WPA</item>
+        <item>WPA2</item>
+        <item>None</item>
+    </array>
+</resources>

@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.ui
+package com.yatik.qrscanner.ui.fragments.history
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.*

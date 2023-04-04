@@ -15,8 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
-import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.databinding.ActivityDetailsBinding
+import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.utils.Utilities
 import java.util.*
 
@@ -37,7 +37,8 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        window.navigationBarColor = ContextCompat.getColor(this@DetailsActivity,
+        window.navigationBarColor = ContextCompat.getColor(
+            this@DetailsActivity,
             R.color.main_background
         )
 
@@ -96,7 +97,8 @@ class DetailsActivity : AppCompatActivity() {
                         binding.launchButton.setOnClickListener {
                             utilities.customTabBuilder(this, Uri.parse(decryptedText))
                         }
-                        val openAutomatically = sharedPreferences.getBoolean("open_url_preference", false)
+                        val openAutomatically =
+                            sharedPreferences.getBoolean("open_url_preference", false)
                         if (openAutomatically) {
                             utilities.customTabBuilder(this, Uri.parse(decryptedText))
                         }
@@ -121,7 +123,12 @@ class DetailsActivity : AppCompatActivity() {
                         binding.typeText.setText(R.string.phone)
                         binding.decodedText.text = String.format("Phone. No: %s", title)
                         binding.launchButton.setOnClickListener {
-                            startActivity(Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", title, null)))
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_DIAL,
+                                    Uri.fromParts("tel", title, null)
+                                )
+                            )
                         }
                     }
 
@@ -131,15 +138,21 @@ class DetailsActivity : AppCompatActivity() {
                         val longitude = longLat?.get(1)
                         binding.typeIcon.setImageResource(R.drawable.outline_location_24)
                         binding.typeText.text = "Location"
-                        binding.decodedText.text = String.format("Latitude: %s\n\nLongitude: %s", latitude, longitude)
+                        binding.decodedText.text =
+                            String.format("Latitude: %s\n\nLongitude: %s", latitude, longitude)
                         binding.launchButton.setOnClickListener {
-                            val gmmIntentUri = Uri.parse(String.format("geo:%s,%s", latitude, longitude))
+                            val gmmIntentUri =
+                                Uri.parse(String.format("geo:%s,%s", latitude, longitude))
                             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                             mapIntent.setPackage("com.google.android.apps.maps")
                             if (packageManager != null) {
                                 startActivity(mapIntent)
                             } else {
-                                Toast.makeText(this, "Google Maps is not installed on your device", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this,
+                                    "Google Maps is not installed on your device",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     }
@@ -152,12 +165,6 @@ class DetailsActivity : AppCompatActivity() {
                         )
                         binding.launchButton.setOnClickListener {
                             shareData(decryptedText ?: "")
-                        }
-                        binding.typeIcon.setImageResource(R.drawable.outline_text_icon)
-                        binding.typeText.setText(R.string.raw)
-                        binding.decodedText.text = rawValue
-                        binding.launchButton.setOnClickListener {
-                            shareData(rawValue)
                         }
                     }
 
@@ -179,7 +186,10 @@ class DetailsActivity : AppCompatActivity() {
                 binding.extraInfo.visibility = View.VISIBLE
                 binding.extraInfo.setText(R.string.productMessage)
                 binding.launchButton.setOnClickListener {
-                    utilities.customTabBuilder(this, Uri.parse("https://www.google.com/search?q=$title"))
+                    utilities.customTabBuilder(
+                        this,
+                        Uri.parse("https://www.google.com/search?q=$title")
+                    )
                 }
             }
 

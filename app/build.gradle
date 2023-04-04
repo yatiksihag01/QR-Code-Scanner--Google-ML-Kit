@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
     id("kotlin-parcelize")
     id 'org.jetbrains.kotlin.android'
     id("com.google.dagger.hilt.android")
@@ -15,8 +16,8 @@ android {
         applicationId "com.yatik.qrscanner"
         minSdk 23
         targetSdk 33
-        versionCode 9
-        versionName "1.8"
+        versionCode 11
+        versionName "2.0.0"
 
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.yatik.qrscanner.HiltTestRunner"
@@ -62,12 +63,18 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.test:runner:1.5.2'
     testImplementation 'junit:junit:4.13.2'
-    def camerax_version = "1.2.1"
-    def fragment_version = "1.5.5"
+    def camerax_version = "1.2.2"
+    def fragment_version = "1.5.6"
+    def nav_version = "2.5.3"
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.guava:guava:31.1-android'
+
+    // Navigation components
+    implementation "androidx.navigation:navigation-fragment-ktx:${nav_version}"
+    implementation "androidx.navigation:navigation-ui-ktx:${nav_version}"
 
     // CameraX components
     implementation "androidx.camera:camera-core:${camerax_version}"
@@ -76,7 +83,7 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
 
     // Google Barcode scanning ML-kit
-    implementation 'com.google.mlkit:barcode-scanning:17.0.3'
+    implementation 'com.google.mlkit:barcode-scanning:17.1.0'
 
     // Fragments
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
@@ -123,6 +130,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
 
+    // zxing for QR code generation
+    implementation 'com.google.zxing:core:3.4.1'
+
     // Turbine to test Flow
     testImplementation 'app.cash.turbine:turbine:0.12.1'
     androidTestImplementation 'app.cash.turbine:turbine:0.12.1'
@@ -137,5 +147,6 @@ dependencies {
 
     // Mockito
     testImplementation 'org.mockito:mockito-core:4.1.0'
+    testImplementation "org.mockito:mockito-inline:3.11.2"
     androidTestImplementation 'org.mockito:mockito-android:4.1.0'
 }
