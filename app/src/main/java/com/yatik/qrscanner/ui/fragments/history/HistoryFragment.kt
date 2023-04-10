@@ -21,6 +21,8 @@ import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.ui.DetailsActivity
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Utilities
+import com.yatik.qrscanner.utils.Utilities.Companion.getColorFromAttr
+import com.yatik.qrscanner.utils.Utilities.Companion.makeButtonTextTeal
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -154,7 +156,7 @@ class HistoryFragment : Fragment() {
             )
         )
         dialog.show()
-        dialog.makeButtonTextBlue()
+        dialog.makeButtonTextTeal(requireContext())
         view?.let {
             Snackbar.make(it, "You can simply swipe to delete", Snackbar.LENGTH_LONG).show()
         }
@@ -165,14 +167,11 @@ class HistoryFragment : Fragment() {
         this.getButton(AlertDialog.BUTTON_POSITIVE)
             .setTextColor(ContextCompat.getColor(context, R.color.redButton))
         this.getButton(AlertDialog.BUTTON_NEGATIVE)
-            .setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-    }
-
-    private fun AlertDialog.makeButtonTextBlue() {
-        this.getButton(AlertDialog.BUTTON_POSITIVE)
-            .setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-        this.getButton(AlertDialog.BUTTON_NEGATIVE)
-            .setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+            .setTextColor(
+                requireContext().getColorFromAttr(
+                    com.google.android.material.R.attr.colorSecondaryVariant
+                )
+            )
     }
 
     override fun onDestroyView() {

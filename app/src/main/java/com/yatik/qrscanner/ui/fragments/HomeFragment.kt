@@ -40,6 +40,7 @@ import com.yatik.qrscanner.utils.Constants
 import com.yatik.qrscanner.utils.Constants.Companion.SHEET_PEEK_VAL
 import com.yatik.qrscanner.utils.DialogUtils
 import com.yatik.qrscanner.utils.Utilities
+import com.yatik.qrscanner.utils.Utilities.Companion.makeButtonTextTeal
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.util.concurrent.ExecutionException
@@ -341,22 +342,7 @@ class HomeFragment : Fragment() {
             ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background)
         )
         dialog.show()
-        dialog.makeButtonTextBlue()
-    }
-
-    private fun AlertDialog.makeButtonTextBlue() {
-        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
-            ContextCompat.getColor(
-                context,
-                R.color.dialogButtons
-            )
-        )
-        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
-            ContextCompat.getColor(
-                context,
-                R.color.dialogButtons
-            )
-        )
+        dialog.makeButtonTextTeal(requireContext())
     }
 
     private fun collapseBottomSheet() {

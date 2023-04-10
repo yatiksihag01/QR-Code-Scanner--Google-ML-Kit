@@ -11,7 +11,6 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
@@ -37,10 +36,7 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        window.navigationBarColor = ContextCompat.getColor(
-            this@DetailsActivity,
-            R.color.main_background
-        )
+        Utilities().hideSystemBars(window, this@DetailsActivity, false)
 
         binding.detailsToolbar.setNavigationOnClickListener {
             finish()

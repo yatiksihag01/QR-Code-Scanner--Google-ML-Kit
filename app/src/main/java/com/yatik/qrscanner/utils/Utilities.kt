@@ -6,15 +6,16 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.google.mlkit.vision.barcode.common.Barcode
-import com.yatik.qrscanner.R
 import com.yatik.qrscanner.models.BarcodeData
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -23,14 +24,44 @@ import java.util.*
 
 class Utilities {
 
-    fun hideSystemBars(window: android.view.Window, context: Context) {
+    companion object {
+        @ColorInt
+        fun Context.getColorFromAttr(
+            @AttrRes attrColor: Int
+        ): Int {
+            val typedArray = theme.obtainStyledAttributes(intArrayOf(attrColor))
+            val textColor = typedArray.getColor(0, 0)
+            typedArray.recycle()
+            return textColor
+        }
+
+        fun AlertDialog.makeButtonTextTeal(context: Context) {
+            this.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(
+                    context.getColorFromAttr(
+                        com.google.android.material.R.attr.colorSecondaryVariant
+                    )
+                )
+            this.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(
+                    context.getColorFromAttr(
+                        com.google.android.material.R.attr.colorSecondaryVariant
+                    )
+                )
+        }
+    }
+
+    fun hideSystemBars(window: android.view.Window, context: Context, hideStatusBar: Boolean) {
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         // Configure the behavior of the hidden system bars
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         // Hide the status bar
-        windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
-        window.navigationBarColor = context.getColor(R.color.main_background)
+        if (hideStatusBar) {
+            windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
+        }
+        window.navigationBarColor =
+            context.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant)
 
         // Make navigation bar transparent
 //        window.setFlags(
@@ -38,6 +69,7 @@ class Utilities {
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 //        )
     }
+
 
     fun vibrateIfAllowed(context: Context, isVibrationAllowed: Boolean, timeInMillis: Long) {
         if (isVibrationAllowed) {
@@ -64,7 +96,8 @@ class Utilities {
             Uri.parse("https://$stringUri")
         } else uri
         val defaultColors = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(ContextCompat.getColor(context, R.color.main_background))
+            .setToolbarColor(context.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant))
+            .setNavigationBarColor(context.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant))
             .build()
 
         val builder = CustomTabsIntent.Builder()

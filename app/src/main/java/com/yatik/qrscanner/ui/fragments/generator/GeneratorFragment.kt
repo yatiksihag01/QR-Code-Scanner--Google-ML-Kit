@@ -1,7 +1,6 @@
 package com.yatik.qrscanner.ui.fragments.generator
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -24,6 +23,7 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentGeneratorBinding
 import com.yatik.qrscanner.ui.MainActivity
+import com.yatik.qrscanner.utils.Utilities.Companion.makeButtonTextTeal
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -152,44 +152,42 @@ class GeneratorFragment : Fragment() {
             ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background)
         )
         dialog.show()
-        dialog.makeButtonTextBlue()
+        dialog.makeButtonTextTeal(requireContext())
     }
 
-    private fun AlertDialog.makeButtonTextBlue() {
-        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
-            ContextCompat.getColor(
-                context,
-                R.color.dialogButtons
-            )
-        )
-        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
-            ContextCompat.getColor(
-                context,
-                R.color.dialogButtons
-            )
-        )
-    }
-
-    @SuppressLint("SetTextI18n")
     private fun setBarcodeInfo() {
         val generatorData = args.GeneratorData
         when (generatorData.type) {
-            Barcode.TYPE_TEXT -> binding.barcodeInfoTv.text = generatorData.text
+            Barcode.TYPE_TEXT -> {
+                binding.barcodeInfoTv.text = generatorData.text
+                binding.barcodeTypeTv.text = getString(R.string.text)
+            }
             Barcode.TYPE_WIFI -> {
                 val info = "SSID: ${generatorData.ssid}\n\n" +
                         "Security: ${generatorData.securityType}\n\n" +
                         "Password: ${generatorData.password}"
                 binding.barcodeInfoTv.text = info
+                binding.barcodeTypeTv.text = getString(R.string.wifi)
             }
-            Barcode.TYPE_URL -> binding.barcodeInfoTv.text = generatorData.url
+            Barcode.TYPE_URL -> {
+                binding.barcodeInfoTv.text = generatorData.url
+                binding.barcodeTypeTv.text = getString(R.string.url)
+            }
             Barcode.TYPE_SMS -> {
                 val info = "Phone: ${generatorData.phone}\n\n" +
                         "Message: ${generatorData.message}"
                 binding.barcodeInfoTv.text = info
+                binding.barcodeTypeTv.text = getString(R.string.sms)
             }
-            Barcode.TYPE_PHONE -> binding.barcodeInfoTv.text = generatorData.phone
-            Barcode.FORMAT_EAN_13 -> binding.barcodeInfoTv.text = generatorData.barcodeNumber
-            else -> binding.barcodeInfoTv.text = "No data available to show"
+            Barcode.TYPE_PHONE -> {
+                binding.barcodeInfoTv.text = generatorData.phone
+                binding.barcodeTypeTv.text = getString(R.string.phone)
+            }
+            Barcode.FORMAT_EAN_13 -> {
+                binding.barcodeInfoTv.text = generatorData.barcodeNumber
+                binding.barcodeTypeTv.text = getString(R.string.ean)
+            }
+            else -> binding.barcodeInfoTv.text = getString(R.string.no_data)
         }
     }
 

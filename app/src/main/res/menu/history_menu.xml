@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/delete_all"
-        android:icon="@drawable/folder_delete_24"
+        android:icon="@drawable/folder_delete_28"
         android:title="@string/delete_all_files"
         app:showAsAction="always" />
 </menu>

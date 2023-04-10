@@ -7,12 +7,13 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import com.yatik.qrscanner.R
+import com.yatik.qrscanner.utils.Utilities
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        window.navigationBarColor = getColor(R.color.main_background)
+        Utilities().hideSystemBars(window, this@SettingsActivity, false)
 
         val settingsToolbar = findViewById<MaterialToolbar>(R.id.settingsToolbar)
         settingsToolbar.setNavigationOnClickListener {

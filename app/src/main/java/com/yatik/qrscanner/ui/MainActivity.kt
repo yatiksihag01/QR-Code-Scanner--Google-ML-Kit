@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Utilities().hideSystemBars(window, this)
+        Utilities().hideSystemBars(window, this, true)
     }
 
 }

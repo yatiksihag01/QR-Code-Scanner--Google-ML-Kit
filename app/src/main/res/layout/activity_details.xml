@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -18,17 +19,14 @@
             android:id="@+id/detailsToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/main_background"
-            app:navigationIcon="@drawable/arrow_back_24"
+            app:navigationIcon="@drawable/arrow_back_28"
             app:title="Scanned Data"
-            app:titleCentered="true"
-            app:titleTextColor="@color/white" />
+            app:titleCentered="true" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/main_background_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,8 +49,8 @@
 
                 <ImageView
                     android:id="@+id/type_icon"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_marginStart="@dimen/marginEight"
                     android:layout_marginTop="@dimen/marginEight"
                     android:layout_marginBottom="@dimen/marginEight"
@@ -66,8 +64,7 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="@dimen/marginEight"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -90,8 +87,6 @@
                     android:layout_marginStart="@dimen/marginEight"
                     android:layout_marginTop="@dimen/marginEight"
                     android:layout_marginEnd="@dimen/marginEight"
-                    android:background="@color/main_background"
-                    android:textColor="@color/white"
                     android:textIsSelectable="true"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -111,14 +106,12 @@
 
                 <ImageButton
                     android:id="@+id/copy_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_marginTop="@dimen/marginEight"
                     android:layout_marginBottom="@dimen/marginEight"
-                    android:background="@color/fragViewBack"
-                    android:backgroundTint="@color/main_background"
                     android:contentDescription="copy"
-                    android:src="@drawable/outline_content_copy_24"
+                    android:src="@drawable/outline_content_copy_32"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/share_button"
                     app:layout_constraintHorizontal_bias="0.08"
@@ -129,12 +122,10 @@
 
                 <ImageButton
                     android:id="@+id/share_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@color/fragViewBack"
-                    android:backgroundTint="@color/main_background"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:contentDescription="share"
-                    android:src="@drawable/outline_share_24"
+                    android:src="@drawable/outline_share_32"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -143,12 +134,10 @@
 
                 <ImageButton
                     android:id="@+id/wifi_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@color/fragViewBack"
-                    android:backgroundTint="@color/main_background"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:contentDescription="open wifi settings"
-                    android:src="@drawable/outline_wifi_24"
+                    android:src="@drawable/outline_wifi_32"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -159,13 +148,11 @@
 
                 <ImageButton
                     android:id="@+id/launch_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_marginEnd="16dp"
-                    android:background="@color/fragViewBack"
-                    android:backgroundTint="@color/main_background"
                     android:contentDescription="launch"
-                    android:src="@drawable/outline_launch_24"
+                    android:src="@drawable/outline_launch_32"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -177,7 +164,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:textColor="#BFFFFFFF"
                 android:textSize="16sp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
