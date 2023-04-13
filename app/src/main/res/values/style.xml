@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+
+    <style name="PreferenceScreen" parent="Theme.QRScanner">
+        <item name="android:textColor">?colorOnPrimary</item>
+        <item name="android:textColorSecondary">?semiTransparent</item>
+        <item name="colorAccent">?colorSecondaryVariant</item>
+    </style>
+
+    <style name="CustomToolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?colorPrimaryVariant</item>
+        <item name="navigationIconTint">?colorOnPrimary</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
+    </style>
+
+    <style name="ModalBottomSheetDialog" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">?colorPrimaryVariant</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+    </style>
+
+    <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
+    </style>
+
+    <style name="ImageButtonStyle" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">?colorPrimaryVariant</item>
+    </style>
+
+    <style name="StraightLineDesign">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">?attr/semiTransparent</item>
+    </style>
+
+    <style name="SemiTransparentTextColor">
+        <item name="android:textColor">?semiTransparent</item>
+    </style>
+
+    <style name="AppTheme.TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="colorError">?colorError</item>
+        <item name="android:textColor">?colorOnPrimary</item>
+        <item name="android:textColorHint">?semiTransparent</item>
+        <item name="hintTextColor">?colorSecondaryVariant</item>
+        <item name="boxStrokeColor">?colorSecondaryVariant</item>
+        <item name="boxStrokeErrorColor">?colorError</item>
+    </style>
+
+</resources>
