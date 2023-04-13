@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background_dark"
+    android:background="?colorPrimary"
     tools:context=".ui.fragments.generator.QRCodeGeneratorFragment"
     tools:ignore="hardcodedText">
 
@@ -20,11 +21,9 @@
             android:id="@+id/generateQRToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/main_background"
-            app:navigationIcon="@drawable/arrow_back_24"
+            app:navigationIcon="@drawable/arrow_back_28"
             app:title="Generate Barcode"
-            app:titleCentered="true"
-            app:titleTextColor="@color/white" />
+            app:titleCentered="true" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -52,23 +51,20 @@
                 android:text="Text"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:icon="@drawable/outline_text_icon"
                 app:iconGravity="start"
-                app:iconTint="@color/white"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/line1"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                style="@style/StraightLineDesign"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="8dp"
-                android:background="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_qr_button" />
@@ -82,23 +78,20 @@
                 android:text="WiFi"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:icon="@drawable/outline_wifi_24"
                 app:iconGravity="start"
-                app:iconTint="@color/white"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/line1" />
 
             <View
                 android:id="@+id/line2"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                style="@style/StraightLineDesign"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="8dp"
-                android:background="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/wifi_qr_button" />
@@ -112,11 +105,10 @@
                 android:text="Url"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:icon="@drawable/outline_url_24"
                 app:iconGravity="start"
-                app:iconTint="@color/white"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -124,12 +116,10 @@
 
             <View
                 android:id="@+id/line3"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                style="@style/StraightLineDesign"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="8dp"
-                android:background="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/url_qr_button" />
@@ -143,23 +133,20 @@
                 android:text="SMS"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:icon="@drawable/outline_sms_24"
                 app:iconGravity="start"
-                app:iconTint="@color/white"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/line3" />
 
             <View
                 android:id="@+id/line4"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                style="@style/StraightLineDesign"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="8dp"
-                android:background="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sms_qr_button" />
@@ -173,23 +160,20 @@
                 android:text="Phone"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:icon="@drawable/outline_call_24"
                 app:iconGravity="start"
-                app:iconTint="@color/white"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/line4" />
 
             <View
                 android:id="@+id/line5"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                style="@style/StraightLineDesign"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="8dp"
-                android:background="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/phone_qr_button" />
@@ -203,11 +187,10 @@
                 android:text="EAN 13"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:icon="@drawable/outline_product_24"
                 app:iconGravity="start"
-                app:iconTint="@color/white"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -215,12 +198,10 @@
 
             <View
                 android:id="@+id/line6"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
+                style="@style/StraightLineDesign"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="8dp"
-                android:background="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ean_13_barcode_button" />

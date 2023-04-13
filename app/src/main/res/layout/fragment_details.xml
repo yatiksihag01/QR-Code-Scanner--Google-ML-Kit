@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.DetailsActivity">
+    android:background="?colorPrimary"
+    tools:context=".ui.fragments.details.DetailsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/detailsToolbarLayout"
@@ -178,3 +179,4 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

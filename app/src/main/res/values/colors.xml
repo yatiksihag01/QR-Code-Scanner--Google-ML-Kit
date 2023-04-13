@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
     <color name="golden">#EEB978</color>
-    <color name="main_background">#212A31</color>
-    <color name="main_background_dark">#181C1F</color>
-    <color name="fragViewBack">#35414A</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- colorPrimary -->
+    <color name="light_primary_blue">#FCFEFF</color>
+    <color name="dark_primary_blue">#181C1F</color>
+    <color name="light_primary_green">#F5FBF4</color>
+    <color name="dark_primary_green">#1D221E</color>
+
+    <!-- colorPrimaryVariant -->
+    <color name="dark_primary_variant_blue">#1D2528</color>
+    <color name="light_primary_variant_blue">#E7EEF4</color>
+    <color name="light_primary_variant_green">#DDEFDB</color>
+    <color name="dark_primary_variant_green">#282D29</color>
+
+    <!-- colorSecondaryVariant -->
+    <color name="light_blue">#76D1FE</color>
+    <color name="dark_blue">#00668C</color>
+    <color name="light_green">#6BD663</color>
+    <color name="dark_green">#418C00</color>
+
     <color name="dialogButtons">#89B3F7</color>
     <color name="redButton">#DF3737</color>
-    <color name="navBackground">#F2212A31</color>
+
+    <!-- Transparent -->
     <color name="transparent">#00212A31</color>
     <color name="semiTransparentWhite">#80FFFFFF</color>
+    <color name="semiTransparentBlack">#99000000</color>
+
 </resources>

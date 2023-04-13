@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,9 +19,10 @@ import com.yatik.qrscanner.R
 import com.yatik.qrscanner.adapters.BarcodeListAdapter
 import com.yatik.qrscanner.databinding.FragmentHistoryBinding
 import com.yatik.qrscanner.models.BarcodeData
-import com.yatik.qrscanner.ui.DetailsActivity
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Utilities
+import com.yatik.qrscanner.utils.Utilities.Companion.getColorFromAttr
+import com.yatik.qrscanner.utils.Utilities.Companion.makeButtonTextTeal
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -82,10 +84,13 @@ class HistoryFragment : Fragment() {
 
         adapter.setOnDeleteClickListener { deleteDialog(it) }
         adapter.setOnItemClickListener { barcodeData ->
-            requireActivity().intent = Intent(requireContext(), DetailsActivity::class.java)
-                .putExtra("barcodeData", barcodeData)
-                .putExtra("retrievedFrom", "database")
-            startActivity(requireActivity().intent)
+            val bundle = Bundle().apply {
+                putParcelable("barcodeData", barcodeData)
+            }
+            findNavController().navigate(
+                R.id.action_historyFragment_to_detailsFragment,
+                bundle
+            )
         }
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
@@ -135,6 +140,10 @@ class HistoryFragment : Fragment() {
         builder.setPositiveButton("Yes") { _, _ ->
             if (barcodeData != null) {
                 barcodeViewModel.delete(barcodeData)
+                view?.let {
+                    Snackbar.make(it, getString(R.string.swipe_delete_info), Snackbar.LENGTH_SHORT)
+                        .show()
+                }
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -144,6 +153,10 @@ class HistoryFragment : Fragment() {
             }
         }
         builder.setNegativeButton("No") { dialog, _ ->
+            view?.let {
+                Snackbar.make(it, getString(R.string.swipe_delete_info), Snackbar.LENGTH_LONG)
+                    .show()
+            }
             dialog.dismiss()
         }
         val dialog = builder.create()
@@ -154,10 +167,7 @@ class HistoryFragment : Fragment() {
             )
         )
         dialog.show()
-        dialog.makeButtonTextBlue()
-        view?.let {
-            Snackbar.make(it, "You can simply swipe to delete", Snackbar.LENGTH_LONG).show()
-        }
+        dialog.makeButtonTextTeal(requireContext())
 
     }
 
@@ -165,14 +175,11 @@ class HistoryFragment : Fragment() {
         this.getButton(AlertDialog.BUTTON_POSITIVE)
             .setTextColor(ContextCompat.getColor(context, R.color.redButton))
         this.getButton(AlertDialog.BUTTON_NEGATIVE)
-            .setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-    }
-
-    private fun AlertDialog.makeButtonTextBlue() {
-        this.getButton(AlertDialog.BUTTON_POSITIVE)
-            .setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
-        this.getButton(AlertDialog.BUTTON_NEGATIVE)
-            .setTextColor(ContextCompat.getColor(context, R.color.dialogButtons))
+            .setTextColor(
+                requireContext().getColorFromAttr(
+                    com.google.android.material.R.attr.colorSecondaryVariant
+                )
+            )
     }
 
     override fun onDestroyView() {

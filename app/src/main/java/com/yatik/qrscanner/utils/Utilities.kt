@@ -6,13 +6,16 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.preference.PreferenceManager
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.models.BarcodeData
@@ -23,14 +26,71 @@ import java.util.*
 
 class Utilities {
 
-    fun hideSystemBars(window: android.view.Window, context: Context) {
+    companion object {
+        @ColorInt
+        fun Context.getColorFromAttr(
+            @AttrRes attrColor: Int
+        ): Int {
+            val typedArray = theme.obtainStyledAttributes(intArrayOf(attrColor))
+            val textColor = typedArray.getColor(0, 0)
+            typedArray.recycle()
+            return textColor
+        }
+
+        fun AlertDialog.makeButtonTextTeal(context: Context) {
+            this.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(
+                    context.getColorFromAttr(
+                        com.google.android.material.R.attr.colorSecondaryVariant
+                    )
+                )
+            this.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(
+                    context.getColorFromAttr(
+                        com.google.android.material.R.attr.colorSecondaryVariant
+                    )
+                )
+        }
+    }
+
+    fun hideSystemBars(window: android.view.Window, context: Context, hideStatusBar: Boolean) {
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         // Configure the behavior of the hidden system bars
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         // Hide the status bar
-        windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
-        window.navigationBarColor = context.getColor(R.color.main_background)
+        if (hideStatusBar) {
+            windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
+        }
+        val lightBlue = context.getString(R.string.light_blue_int_val)
+        val darkBlue = context.getString(R.string.dark_blue_int_val)
+        val lightGreen = context.getString(R.string.light_green_int_val)
+        val darkGreen = context.getString(R.string.dark_green_int_val)
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+        val currentTheme = sharedPref.getString(
+            context.getString(R.string.theme_preference_key),
+            context.getString(R.string.light_blue_int_val)
+        )
+        when (currentTheme) {
+            lightBlue -> {
+                windowInsetsController.isAppearanceLightStatusBars = true
+                windowInsetsController.isAppearanceLightNavigationBars = true
+            }
+            darkBlue -> {
+                windowInsetsController.isAppearanceLightStatusBars = false
+                windowInsetsController.isAppearanceLightNavigationBars = false
+            }
+            lightGreen -> {
+                windowInsetsController.isAppearanceLightStatusBars = true
+                windowInsetsController.isAppearanceLightNavigationBars = true
+            }
+            darkGreen -> {
+                windowInsetsController.isAppearanceLightStatusBars = false
+                windowInsetsController.isAppearanceLightNavigationBars = false
+            }
+        }
+        window.navigationBarColor =
+            context.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant)
 
         // Make navigation bar transparent
 //        window.setFlags(
@@ -64,7 +124,8 @@ class Utilities {
             Uri.parse("https://$stringUri")
         } else uri
         val defaultColors = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(ContextCompat.getColor(context, R.color.main_background))
+            .setToolbarColor(context.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant))
+            .setNavigationBarColor(context.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant))
             .build()
 
         val builder = CustomTabsIntent.Builder()

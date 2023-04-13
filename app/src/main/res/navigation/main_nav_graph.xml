@@ -20,12 +20,23 @@
             app:destination="@id/QRCodeGeneratorFragment"
             app:enterAnim="@anim/slide_in_bottom"
             app:popEnterAnim="@anim/slide_in_left" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:popEnterAnim="@anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.yatik.qrscanner.ui.fragments.history.HistoryFragment"
         android:label="fragment_history"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_historyFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_left" />
+    </fragment>
     <fragment
         android:id="@+id/QRCodeGeneratorFragment"
         android:name="com.yatik.qrscanner.ui.fragments.generator.QRCodeGeneratorFragment"
@@ -45,5 +56,14 @@
         <argument
             android:name="GeneratorData"
             app:argType="com.yatik.qrscanner.models.GeneratorData" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.yatik.qrscanner.ui.fragments.details.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="barcodeData"
+            app:argType="com.yatik.qrscanner.models.BarcodeData" />
     </fragment>
 </navigation>

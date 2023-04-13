@@ -2,12 +2,10 @@ package com.yatik.qrscanner.ui.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ScaleGestureDetector
@@ -17,7 +15,6 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
@@ -33,13 +30,13 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentHomeBinding
-import com.yatik.qrscanner.ui.DetailsActivity
 import com.yatik.qrscanner.ui.SettingsActivity
 import com.yatik.qrscanner.ui.fragments.history.BarcodeViewModel
 import com.yatik.qrscanner.utils.Constants
 import com.yatik.qrscanner.utils.Constants.Companion.SHEET_PEEK_VAL
-import com.yatik.qrscanner.utils.DialogUtils
 import com.yatik.qrscanner.utils.Utilities
+import com.yatik.qrscanner.utils.noPermissionDialog
+import com.yatik.qrscanner.utils.ratingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.util.concurrent.ExecutionException
@@ -54,7 +51,6 @@ class HomeFragment : Fragment() {
     private val mCamera get() = _mCamera!!
 
     private var isImageSelected = false
-    private var isClickedAllowButton = false
 
     private var mChoosePhoto: ActivityResultLauncher<String>? = null
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
@@ -81,18 +77,9 @@ class HomeFragment : Fragment() {
             utilities.calculatePeekHeight(requireContext(), SHEET_PEEK_VAL)
         bottomSheetBehavior.isHideable = false
 
-        requestPermissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                setupCamera()
-            } else {
-                val message = resources.getString(R.string.permissionDeniedMessageCam)
-                noPermissionDialog(message)
-            }
-        }
-        mCameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         requestCameraPermission()
+
+        mCameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         mChoosePhoto =
             registerForActivityResult(ActivityResultContracts.GetContent()) { result: Uri? ->
                 if (result != null) {
@@ -131,30 +118,33 @@ class HomeFragment : Fragment() {
         super.onResume()
         binding.zoomInfo.text = getString(R.string.initial_zoom)
         binding.buttonFlash.setImageResource(R.drawable.outline_flash_off_28)
-        if (isClickedAllowButton) {
-            requestCameraPermission()
+        if (isCameraPermissionGranted()) {
+            setupCamera()
         }
     }
 
+    private fun isCameraPermissionGranted(): Boolean = ContextCompat.checkSelfPermission(
+        requireContext(),
+        Manifest.permission.CAMERA
+    ) == PackageManager.PERMISSION_GRANTED
+
     private fun requestCameraPermission() {
-        when (PackageManager.PERMISSION_GRANTED) {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
+        if (!isCameraPermissionGranted()) {
+            requestPermissionLauncher = registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (!isGranted) {
+                    val message = resources.getString(R.string.permissionDeniedMessageCam)
+                    noPermissionDialog(requireContext(), message)
+                }
+            }
+            requestPermissionLauncher.launch(
                 Manifest.permission.CAMERA
-            ) -> {
-                setupCamera()
-            }
-            else -> {
-                requestPermissionLauncher.launch(
-                    Manifest.permission.CAMERA
-                )
-            }
+            )
         }
     }
 
     private fun setupCamera() {
-        mCameraProvider?.unbindAll()
-        _mCamera = null
         mCameraProviderFuture.addListener({
             try {
                 mCameraProvider = mCameraProviderFuture.get()
@@ -178,7 +168,6 @@ class HomeFragment : Fragment() {
         val imageAnalysis = ImageAnalysis.Builder().build()
 
         imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(requireContext())) { imageProxy: ImageProxy ->
-
             val image =
                 InputImage.fromMediaImage(imageProxy.image!!, imageProxy.imageInfo.rotationDegrees)
             val options = BarcodeScannerOptions.Builder()
@@ -222,7 +211,6 @@ class HomeFragment : Fragment() {
             utilities.vibrateIfAllowed(requireContext(), isVibrationAllowed, 100)
             sendRequiredData(barcodes[0])
             isImageSelected = false
-            setupCamera()
         } else if (isImageSelected) {
             Toast.makeText(requireContext(), "Failed to scan", Toast.LENGTH_SHORT).show()
             isImageSelected = false
@@ -234,9 +222,14 @@ class HomeFragment : Fragment() {
         val saveScan = PreferenceManager.getDefaultSharedPreferences(requireContext())
             .getBoolean("save_scans_preference", true)
         if (saveScan) barcodeViewModel.insert(barcodeData)
-        val intent = Intent(requireContext(), DetailsActivity::class.java)
-        intent.putExtra("barcodeData", barcodeData)
-        startActivity(intent)
+
+        val bundle = Bundle().apply {
+            putParcelable("barcodeData", barcodeData)
+        }
+        findNavController().navigate(
+            R.id.action_homeFragment_to_detailsFragment,
+            bundle
+        )
     }
 
     private fun setBottomSheetButtons() {
@@ -248,12 +241,10 @@ class HomeFragment : Fragment() {
         }
         binding.buttonGallery.setOnClickListener { mChoosePhoto!!.launch("image/*") }
         binding.buttonHistory.setOnClickListener {
-            mCameraProvider?.unbindAll()
             findNavController().navigate(R.id.action_homeFragment_to_historyFragment)
         }
 
         binding.buttonCreateQr.setOnClickListener {
-            mCameraProvider?.unbindAll()
             findNavController().navigate(R.id.action_homeFragment_to_QRCodeGeneratorFragment)
             collapseBottomSheet()
         }
@@ -261,10 +252,11 @@ class HomeFragment : Fragment() {
         binding.settingsButton.setOnClickListener {
             val intent = Intent(requireContext(), SettingsActivity::class.java)
             startActivity(intent)
+            requireActivity().finish()
         }
         binding.ratingButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            DialogUtils().ratingDialog(requireContext())
+            ratingDialog(requireContext())
         }
         binding.shareButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -286,12 +278,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun zoomControl() {
+        val maxZoom = mCamera.cameraInfo.zoomState.value!!.maxZoomRatio.toDouble()
         val listener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @SuppressLint("SetTextI18n")
             override fun onScale(detector: ScaleGestureDetector): Boolean {
                 val scale = mCamera.cameraInfo.zoomState.value!!.zoomRatio * detector.scaleFactor
                 mCamera.cameraControl.setZoomRatio(scale)
-                if (scale in 1.0..mCamera.cameraInfo.zoomState.value!!.maxZoomRatio.toDouble()) {
+                if (scale in 1.0..maxZoom) {
                     binding.zoomInfo.text = String.format("%.1f", scale) + "x"
                 }
                 return true
@@ -323,45 +316,14 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun noPermissionDialog(message: String) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Permission Denied!")
-            .setMessage(message)
-            .setCancelable(false)
-            .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
-            .setPositiveButton("Allow") { _: DialogInterface?, _: Int ->
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri = Uri.fromParts("package", requireContext().packageName, null)
-                intent.data = uri
-                this.startActivity(intent)
-                isClickedAllowButton = true
-            }
-        val dialog = builder.create()
-        dialog.window?.setBackgroundDrawable(
-            ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background)
-        )
-        dialog.show()
-        dialog.makeButtonTextBlue()
-    }
-
-    private fun AlertDialog.makeButtonTextBlue() {
-        this.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
-            ContextCompat.getColor(
-                context,
-                R.color.dialogButtons
-            )
-        )
-        this.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
-            ContextCompat.getColor(
-                context,
-                R.color.dialogButtons
-            )
-        )
-    }
-
     private fun collapseBottomSheet() {
         bottomSheetBehavior.peekHeight = 0
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mCameraProvider?.unbindAll()
     }
 
     override fun onDestroy() {

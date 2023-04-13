@@ -12,7 +12,7 @@ class Constants {
         const val SHARE_APP_MESSAGE =
             "Hey!! check out this awesome QR Scanner app at Play Store: ${PLAY_STORE}\n" +
                     " and at Galaxy Store: $GALAXY_STORE"
-        const val SHEET_PEEK_VAL = 90
+        const val SHEET_PEEK_VAL = 100
         const val QR_WIDTH_HEIGHT = 600
 
     }

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_frag_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?colorPrimary"
     tools:context=".ui.fragments.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,24 +61,20 @@
         <!-- Drag handle for accessibility -->
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/drag_handle"
+            style="@style/Widget.Material3.BottomSheet.DragHandle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="@dimen/marginEight"
-            android:src="@drawable/custom_drag_handler" />
+            android:layout_gravity="center" />
 
         <!-- Bottom sheet contents -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
+            android:layout_height="wrap_content">
 
             <ImageButton
                 android:id="@+id/button_flash"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:backgroundTint="@color/main_background"
                 android:contentDescription="Flash Off"
                 android:src="@drawable/outline_flash_off_28"
                 app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_25"
@@ -94,7 +92,6 @@
                 android:id="@+id/button_history"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:backgroundTint="@color/main_background"
                 android:contentDescription="History"
                 android:src="@drawable/outline_history_28"
                 app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_mid"
@@ -112,9 +109,8 @@
                 android:id="@+id/button_gallery"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:backgroundTint="@color/main_background"
                 android:contentDescription="Pick image from gallery"
-                android:src="@drawable/ic_outline_image_28"
+                android:src="@drawable/outline_attach_file"
                 app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_75"
                 app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_mid"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -130,7 +126,6 @@
                 android:id="@+id/button_create_qr"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:backgroundTint="@color/main_background"
                 android:contentDescription="Settings button"
                 android:src="@drawable/draw_28"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -145,7 +140,7 @@
                 android:layout_marginTop="66dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="12dp"
-                android:background="#80FFFFFF"
+                android:background="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -155,63 +150,63 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settings_button"
+            style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/transparent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?attr/colorPrimaryVariant"
             android:letterSpacing="0"
             android:text="Settings"
             android:textAlignment="textStart"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="18sp"
             app:icon="@drawable/settings_24"
             app:iconPadding="16dp"
-            app:iconTint="@color/white" />
+            app:iconSize="28dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/rating_button"
+            style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/transparent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?attr/colorPrimaryVariant"
             android:letterSpacing="0"
             android:text="Rate Us"
             android:textAlignment="viewStart"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="18sp"
             app:icon="@drawable/rate_us"
             app:iconPadding="16dp"
-            app:iconTint="@color/white" />
+            app:iconSize="28dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/share_button"
+            style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/transparent"
+            android:backgroundTint="?attr/colorPrimaryVariant"
             android:letterSpacing="0"
             android:text="Share App❤"
             android:textAlignment="viewStart"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:icon="@drawable/outline_share_24"
+            android:textSize="18sp"
+            app:icon="@drawable/outline_share_32"
             app:iconPadding="16dp"
-            app:iconTint="@color/white" />
+            app:iconSize="28dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/policy_button"
+            style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/transparent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?attr/colorPrimaryVariant"
             android:letterSpacing="0"
             android:text="Privacy Policy"
             android:textAlignment="viewStart"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="18sp"
             app:icon="@drawable/security_symbol"
             app:iconPadding="16dp"
-            app:iconTint="@color/white" />
+            app:iconSize="28dp" />
 
     </LinearLayout>
 

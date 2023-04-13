@@ -6,7 +6,7 @@
     android:id="@+id/history_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background_dark"
+    android:background="?colorPrimary"
     tools:context=".ui.fragments.history.HistoryFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -21,12 +21,10 @@
             android:id="@+id/historyToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/main_background"
             app:menu="@menu/history_menu"
-            app:navigationIcon="@drawable/arrow_back_24"
+            app:navigationIcon="@drawable/arrow_back_28"
             app:title="History"
-            app:titleCentered="true"
-            app:titleTextColor="@color/white" />
+            app:titleCentered="true" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
