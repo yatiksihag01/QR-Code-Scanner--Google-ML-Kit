@@ -15,7 +15,9 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.preference.PreferenceManager
 import com.google.mlkit.vision.barcode.common.Barcode
+import com.yatik.qrscanner.R
 import com.yatik.qrscanner.models.BarcodeData
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -60,6 +62,33 @@ class Utilities {
         if (hideStatusBar) {
             windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
         }
+        val lightBlue = context.getString(R.string.light_blue_int_val)
+        val darkBlue = context.getString(R.string.dark_blue_int_val)
+        val lightGreen = context.getString(R.string.light_green_int_val)
+        val darkGreen = context.getString(R.string.dark_green_int_val)
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+        val currentTheme = sharedPref.getString(
+            context.getString(R.string.theme_preference_key),
+            context.getString(R.string.light_blue_int_val)
+        )
+        when (currentTheme) {
+            lightBlue -> {
+                windowInsetsController.isAppearanceLightStatusBars = true
+                windowInsetsController.isAppearanceLightNavigationBars = true
+            }
+            darkBlue -> {
+                windowInsetsController.isAppearanceLightStatusBars = false
+                windowInsetsController.isAppearanceLightNavigationBars = false
+            }
+            lightGreen -> {
+                windowInsetsController.isAppearanceLightStatusBars = true
+                windowInsetsController.isAppearanceLightNavigationBars = true
+            }
+            darkGreen -> {
+                windowInsetsController.isAppearanceLightStatusBars = false
+                windowInsetsController.isAppearanceLightNavigationBars = false
+            }
+        }
         window.navigationBarColor =
             context.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant)
 
@@ -69,7 +98,6 @@ class Utilities {
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 //        )
     }
-
 
     fun vibrateIfAllowed(context: Context, isVibrationAllowed: Boolean, timeInMillis: Long) {
         if (isVibrationAllowed) {

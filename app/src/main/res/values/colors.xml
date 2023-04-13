@@ -10,7 +10,7 @@
     <!-- colorPrimary -->
     <color name="light_primary_blue">#FCFEFF</color>
     <color name="dark_primary_blue">#181C1F</color>
-    <color name="light_primary_green">#EEFDEC</color>
+    <color name="light_primary_green">#F5FBF4</color>
     <color name="dark_primary_green">#1D221E</color>
 
     <!-- colorPrimaryVariant -->
@@ -32,4 +32,5 @@
     <color name="transparent">#00212A31</color>
     <color name="semiTransparentWhite">#80FFFFFF</color>
     <color name="semiTransparentBlack">#99000000</color>
+
 </resources>
