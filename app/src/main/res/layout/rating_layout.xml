@@ -51,13 +51,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/submit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:backgroundTint="@color/teal_200"
+        android:backgroundTint="?attr/colorSecondary"
         android:text="Submit"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        app:cornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.821"
@@ -73,7 +76,8 @@
         android:layout_marginEnd="8dp"
         android:background="@color/transparent"
         android:text="Cancel"
-        android:textColor="@color/teal_200"
+        android:textAllCaps="true"
+        android:textColor="?attr/colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/submit_button"
         app:layout_constraintHorizontal_bias="1.0"

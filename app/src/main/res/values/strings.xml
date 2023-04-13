@@ -38,5 +38,38 @@
     <string name="initial_zoom">1.0x</string>
     <string name="save_file">Save file</string>
     <string name="ean">EAN 13</string>
+    <string name="light_blue">Light Blue</string>
+    <string name="dark_blue">Dark Blue</string>
+    <string name="light_green">Light Green</string>
+    <string name="dark_green">Dark Green</string>
+    <string name="system_default">System Default</string>
     <string name="no_data">No data available to show</string>
+    <string name="swipe_delete_info">You can simply swipe to delete</string>
+    <string name="apply_theme_pref_summary">Apply custom theme with different tones</string>
+    <string name="theme_preference_key">theme_preference</string>
+    <string name="current_theme">current_theme</string>
+
+    <string name="light_blue_int_val">0</string>
+    <string name="dark_blue_int_val">1</string>
+    <string name="light_green_int_val">2</string>
+    <string name="dark_green_int_val">3</string>
+    <string name="system_default_int_val">4</string>
+
+
+    <string-array name="theme_types">
+        <item>@string/light_blue</item>
+        <item>@string/dark_blue</item>
+        <item>@string/light_green</item>
+        <item>@string/dark_green</item>
+        <item>@string/system_default</item>
+    </string-array>
+
+    <string-array name="pref_num">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
 </resources>

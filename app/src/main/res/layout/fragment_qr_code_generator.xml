@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?colorPrimary"
     tools:context=".ui.fragments.generator.QRCodeGeneratorFragment"
     tools:ignore="hardcodedText">
 
@@ -53,6 +54,7 @@
                 android:textSize="18sp"
                 app:icon="@drawable/outline_text_icon"
                 app:iconGravity="start"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -79,6 +81,7 @@
                 android:textSize="18sp"
                 app:icon="@drawable/outline_wifi_24"
                 app:iconGravity="start"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/line1" />
@@ -105,6 +108,7 @@
                 android:textSize="18sp"
                 app:icon="@drawable/outline_url_24"
                 app:iconGravity="start"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -132,6 +136,7 @@
                 android:textSize="18sp"
                 app:icon="@drawable/outline_sms_24"
                 app:iconGravity="start"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/line3" />
@@ -158,6 +163,7 @@
                 android:textSize="18sp"
                 app:icon="@drawable/outline_call_24"
                 app:iconGravity="start"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/line4" />
@@ -184,6 +190,7 @@
                 android:textSize="18sp"
                 app:icon="@drawable/outline_product_24"
                 app:iconGravity="start"
+                app:iconSize="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"

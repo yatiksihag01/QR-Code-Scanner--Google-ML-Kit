@@ -6,6 +6,7 @@
     android:id="@+id/home_frag_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?colorPrimary"
     tools:context=".ui.fragments.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,20 +61,15 @@
         <!-- Drag handle for accessibility -->
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/drag_handle"
-            style="@style/SemiTransparentBackground"
+            style="@style/Widget.Material3.BottomSheet.DragHandle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/transparent"
-            android:paddingTop="12dp"
-            android:paddingBottom="@dimen/marginEight"
-            android:src="@drawable/custom_drag_handler" />
+            android:layout_gravity="center" />
 
         <!-- Bottom sheet contents -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
+            android:layout_height="wrap_content">
 
             <ImageButton
                 android:id="@+id/button_flash"
@@ -165,7 +161,7 @@
             android:textSize="18sp"
             app:icon="@drawable/settings_24"
             app:iconPadding="16dp"
-            app:iconSize="24dp" />
+            app:iconSize="28dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/rating_button"
@@ -180,7 +176,7 @@
             android:textSize="18sp"
             app:icon="@drawable/rate_us"
             app:iconPadding="16dp"
-            app:iconSize="24dp" />
+            app:iconSize="28dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/share_button"
@@ -195,7 +191,7 @@
             android:textSize="18sp"
             app:icon="@drawable/outline_share_32"
             app:iconPadding="16dp"
-            app:iconSize="24dp" />
+            app:iconSize="28dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/policy_button"
@@ -210,7 +206,7 @@
             android:textSize="18sp"
             app:icon="@drawable/security_symbol"
             app:iconPadding="16dp"
-            app:iconSize="24dp" />
+            app:iconSize="28dp" />
 
     </LinearLayout>
 

@@ -1,63 +1,57 @@
-package com.yatik.qrscanner.ui
+package com.yatik.qrscanner.ui.fragments.details
 
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
-import com.yatik.qrscanner.databinding.ActivityDetailsBinding
-import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.databinding.FragmentDetailsBinding
+import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Utilities
-import java.util.*
 
-class DetailsActivity : AppCompatActivity() {
+class DetailsFragment : Fragment() {
 
-    private lateinit var binding: ActivityDetailsBinding
+    private var _binding: FragmentDetailsBinding? = null
+    private val binding get() = _binding!!
+    private val args: DetailsFragmentArgs by navArgs()
 
-    /*
-    * SSID, title, text, number, phone_number, raw => title: String
-    *
-    * password, url, message => decryptedText: String
-    *
-    * encryptionType, ($latitude,$longitude) => others: String
-    *
-    * */
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityDetailsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        Utilities().hideSystemBars(window, this@DetailsActivity, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        getBarcodeDetails()
 
         binding.detailsToolbar.setNavigationOnClickListener {
-            finish()
-        }
-
-        val barcodeData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("barcodeData", BarcodeData::class.java)
-        } else {
-            intent.getParcelableExtra("barcodeData")
-        }
-
-        if (barcodeData != null) {
-            getBarcodeDetails(barcodeData)
+            requireActivity().finish()
+            requireActivity().intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(requireActivity().intent)
         }
 
     }
 
-
     @SuppressLint("SetTextI18n")
-    private fun getBarcodeDetails(barcodeData: BarcodeData) {
+    private fun getBarcodeDetails() {
 
+        val barcodeData = args.barcodeData
         val format = barcodeData.format
         val valueType = barcodeData.type
         val title = barcodeData.title
@@ -65,7 +59,7 @@ class DetailsActivity : AppCompatActivity() {
         val others = barcodeData.others
 
         val rawValue = title ?: "Sorry, this QR code doesn't contain any data"
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val utilities = Utilities()
 
         when (format) {
@@ -81,7 +75,6 @@ class DetailsActivity : AppCompatActivity() {
                         binding.wifiButton.visibility = View.VISIBLE
                         binding.wifiButton.setOnClickListener { openWifiSettings() }
                     }
-
                     Barcode.TYPE_URL -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_url_24)
                         binding.typeText.setText(R.string.url)
@@ -91,15 +84,14 @@ class DetailsActivity : AppCompatActivity() {
                             decryptedText
                         )
                         binding.launchButton.setOnClickListener {
-                            utilities.customTabBuilder(this, Uri.parse(decryptedText))
+                            utilities.customTabBuilder(requireContext(), Uri.parse(decryptedText))
                         }
                         val openAutomatically =
                             sharedPreferences.getBoolean("open_url_preference", false)
                         if (openAutomatically) {
-                            utilities.customTabBuilder(this, Uri.parse(decryptedText))
+                            utilities.customTabBuilder(requireContext(), Uri.parse(decryptedText))
                         }
                     }
-
                     Barcode.TYPE_TEXT -> {
                         binding.decodedText.text = title
                         if (title!!.startsWith("upi://pay")) {
@@ -113,7 +105,6 @@ class DetailsActivity : AppCompatActivity() {
                             binding.launchButton.setOnClickListener { shareData(title) }
                         }
                     }
-
                     Barcode.TYPE_PHONE -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_call_24)
                         binding.typeText.setText(R.string.phone)
@@ -127,7 +118,6 @@ class DetailsActivity : AppCompatActivity() {
                             )
                         }
                     }
-
                     Barcode.TYPE_GEO -> {
                         val longLat = others?.split(",")
                         val latitude = longLat?.get(0)
@@ -141,18 +131,17 @@ class DetailsActivity : AppCompatActivity() {
                                 Uri.parse(String.format("geo:%s,%s", latitude, longitude))
                             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                             mapIntent.setPackage("com.google.android.apps.maps")
-                            if (packageManager != null) {
+                            if (requireActivity().packageManager != null) {
                                 startActivity(mapIntent)
                             } else {
                                 Toast.makeText(
-                                    this,
+                                    requireContext(),
                                     "Google Maps is not installed on your device",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
                         }
                     }
-
                     Barcode.TYPE_SMS -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_sms_24)
                         binding.typeText.setText(R.string.sms)
@@ -163,7 +152,6 @@ class DetailsActivity : AppCompatActivity() {
                             shareData(decryptedText ?: "")
                         }
                     }
-
                     else -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_question_mark_24)
                         binding.typeText.setText(R.string.raw)
@@ -174,7 +162,6 @@ class DetailsActivity : AppCompatActivity() {
                     }
                 }
             }
-
             Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E, Barcode.FORMAT_EAN_8, Barcode.FORMAT_EAN_13, Barcode.TYPE_ISBN -> {
                 binding.typeIcon.setImageResource(R.drawable.outline_product_24)
                 binding.typeText.text = "Product"
@@ -183,12 +170,11 @@ class DetailsActivity : AppCompatActivity() {
                 binding.extraInfo.setText(R.string.productMessage)
                 binding.launchButton.setOnClickListener {
                     utilities.customTabBuilder(
-                        this,
+                        requireContext(),
                         Uri.parse("https://www.google.com/search?q=$title")
                     )
                 }
             }
-
             else -> {
                 binding.typeIcon.setImageResource(R.drawable.outline_barcode_24)
                 binding.typeText.text = "Barcode"
@@ -198,13 +184,11 @@ class DetailsActivity : AppCompatActivity() {
                 }
             }
         }
-
         binding.copyButton.setOnClickListener {
-            Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Copied to clipboard", Toast.LENGTH_SHORT).show()
             val text = binding.decodedText.text.toString()
             copyData((text))
         }
-
         binding.shareButton.setOnClickListener {
             shareData(
                 (binding.decodedText.text.toString())
@@ -215,7 +199,7 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun copyData(text: String) {
         val clipboardManager =
-            getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            requireActivity().getSystemService(AppCompatActivity.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText("copied", text)
         clipboardManager.setPrimaryClip(clipData)
     }
@@ -239,6 +223,11 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun openWifiSettings() {
         startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

@@ -59,9 +59,10 @@ android {
 dependencies {
 
     implementation 'androidx.preference:preference-ktx:1.2.0'
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.test:runner:1.5.2'
+    implementation 'androidx.preference:preference:1.2.0'
     testImplementation 'junit:junit:4.13.2'
     def camerax_version = "1.2.2"
     def fragment_version = "1.5.6"

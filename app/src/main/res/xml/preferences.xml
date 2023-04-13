@@ -1,44 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="save_scans_preference"
-        android:summary="Add scanned data to history"
-        android:title="Scan history" />
+    <PreferenceCategory
+        android:key="theme_category"
+        android:title="Themes">
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="vibration_preference"
-        android:summary="Vibrate on successful scan"
-        android:title="Vibration effect" />
+        <ListPreference
+            android:defaultValue="4"
+            android:dialogTitle="Theme"
+            android:entries="@array/theme_types"
+            android:entryValues="@array/pref_num"
+            android:key="@string/theme_preference_key"
+            android:summary="@string/apply_theme_pref_summary"
+            android:title="Select theme" />
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="open_url_preference"
-        android:summary="Open the url automatically after successful scan"
-        android:title="Automatically open URL" />
+    </PreferenceCategory>
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="front_cam_preference"
-        android:summary="By default rear camera will be used"
-        android:title="Use front camera" />
+    <PreferenceCategory
+        android:key="camera_and_others"
+        android:title="Camera and Others">
 
-    <Preference
-        android:key="feedback_preference"
-        android:summary="Report technical issues or suggest new features"
-        android:title="Send feedback">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="mailto:yatikapps@outlook.com">
-            <extra
-                android:name="android.intent.extra.SUBJECT"
-                android:value="Feedback" />
-            <extra
-                android:name="android.intent.extra.TEXT"
-                android:value="Text of Feedback" />
-        </intent>
-    </Preference>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="save_scans_preference"
+            android:summary="Add scanned data to history"
+            android:title="Scan history" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="vibration_preference"
+            android:summary="Vibrate on successful scan"
+            android:title="Vibration effect" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="open_url_preference"
+            android:summary="Open the url automatically after successful scan"
+            android:title="Automatically open URL" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="front_cam_preference"
+            android:summary="By default rear camera will be used"
+            android:title="Use front camera" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="help_category"
+        android:title="Help">
+
+        <Preference
+            android:key="feedback_preference"
+            android:summary="Report technical issues or suggest new features"
+            android:title="Send feedback">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="mailto:yatikapps@outlook.com">
+                <extra
+                    android:name="android.intent.extra.SUBJECT"
+                    android:value="Feedback" />
+                <extra
+                    android:name="android.intent.extra.TEXT"
+                    android:value="Text of Feedback" />
+            </intent>
+        </Preference>
+
+        <Preference
+            android:key="version_preference"
+            android:summary="2.1.0"
+            android:title="App version" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

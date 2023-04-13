@@ -2,4 +2,5 @@
 
 <resources>
     <attr name="mainSheetIconColor" format="color" />
+    <attr name="semiTransparent" format="color" />
 </resources>
