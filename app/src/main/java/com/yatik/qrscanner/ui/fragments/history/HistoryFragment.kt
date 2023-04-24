@@ -69,6 +69,7 @@ class HistoryFragment : Fragment() {
                     Utilities().vibrateIfAllowed(requireContext(), true, 250)
                     true
                 }
+
                 else -> false
             }
         }

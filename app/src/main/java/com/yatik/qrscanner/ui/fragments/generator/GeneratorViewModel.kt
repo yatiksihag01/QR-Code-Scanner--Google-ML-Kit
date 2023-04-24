@@ -53,6 +53,7 @@ class GeneratorViewModel @Inject constructor(
                         QR_WIDTH_HEIGHT
                     )
                 }
+
                 Barcode.TYPE_WIFI -> {
                     val wifiString =
                         "WIFI:S:${generatorData.ssid};T:${generatorData.securityType};P:${generatorData.password};"
@@ -63,6 +64,7 @@ class GeneratorViewModel @Inject constructor(
                         QR_WIDTH_HEIGHT
                     )
                 }
+
                 Barcode.TYPE_URL -> {
                     bitMatrix = MultiFormatWriter().encode(
                         generatorData.url,
@@ -71,6 +73,7 @@ class GeneratorViewModel @Inject constructor(
                         QR_WIDTH_HEIGHT
                     )
                 }
+
                 Barcode.TYPE_SMS -> {
                     bitMatrix = MultiFormatWriter().encode(
                         "smsto:${generatorData.phone}:${generatorData.message}",
@@ -78,6 +81,7 @@ class GeneratorViewModel @Inject constructor(
                         QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT
                     )
                 }
+
                 Barcode.TYPE_PHONE -> {
                     bitMatrix = MultiFormatWriter().encode(
                         "tel:${generatorData.phone}",
@@ -86,6 +90,7 @@ class GeneratorViewModel @Inject constructor(
                         QR_WIDTH_HEIGHT
                     )
                 }
+
                 else -> bitMatrix = EAN13Writer().encode(
                     generatorData.barcodeNumber,
                     BarcodeFormat.EAN_13,

@@ -54,6 +54,7 @@ fun ratingDialog(context: Context) {
                 intent.data = Uri.parse(Constants.SUPPORT_MAIL)
                 context.startActivity(intent)
             }
+
             in 4.0..5.0 -> {
                 dialog.dismiss()
                 context.startActivity(
@@ -64,6 +65,7 @@ fun ratingDialog(context: Context) {
                 )
 //                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.GALAXY_STORE)))
             }
+
             else -> {
                 Toast.makeText(context, "Can't rate 0 ⭐", Toast.LENGTH_SHORT).show()
             }

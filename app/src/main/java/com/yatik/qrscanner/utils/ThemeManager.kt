@@ -1,9 +1,9 @@
 package com.yatik.qrscanner.utils
 
 import android.app.Activity
-import android.content.res.Configuration
 import androidx.preference.PreferenceManager
 import com.yatik.qrscanner.R
+import com.yatik.qrscanner.utils.Utilities.Companion.isSystemThemeLight
 
 class ThemeManager {
 
@@ -32,11 +32,6 @@ class ThemeManager {
                 }
             }
         }
-
-        private fun isSystemThemeLight(activity: Activity): Boolean =
-            activity.resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_NO
-
     }
 
 }

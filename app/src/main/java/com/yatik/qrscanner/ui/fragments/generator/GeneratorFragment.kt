@@ -104,6 +104,7 @@ class GeneratorFragment : Fragment() {
                     saveImage()
                     true
                 }
+
                 else -> false
             }
         }
@@ -126,6 +127,7 @@ class GeneratorFragment : Fragment() {
                 ) -> {
                     generatorViewModel.saveImageToGallery()
                 }
+
                 else -> {
                     requestPermissionLauncher.launch(
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -162,6 +164,7 @@ class GeneratorFragment : Fragment() {
                 binding.barcodeInfoTv.text = generatorData.text
                 binding.barcodeTypeTv.text = getString(R.string.text)
             }
+
             Barcode.TYPE_WIFI -> {
                 val info = "SSID: ${generatorData.ssid}\n\n" +
                         "Security: ${generatorData.securityType}\n\n" +
@@ -169,24 +172,29 @@ class GeneratorFragment : Fragment() {
                 binding.barcodeInfoTv.text = info
                 binding.barcodeTypeTv.text = getString(R.string.wifi)
             }
+
             Barcode.TYPE_URL -> {
                 binding.barcodeInfoTv.text = generatorData.url
                 binding.barcodeTypeTv.text = getString(R.string.url)
             }
+
             Barcode.TYPE_SMS -> {
                 val info = "Phone: ${generatorData.phone}\n\n" +
                         "Message: ${generatorData.message}"
                 binding.barcodeInfoTv.text = info
                 binding.barcodeTypeTv.text = getString(R.string.sms)
             }
+
             Barcode.TYPE_PHONE -> {
                 binding.barcodeInfoTv.text = generatorData.phone
                 binding.barcodeTypeTv.text = getString(R.string.phone)
             }
+
             Barcode.FORMAT_EAN_13 -> {
                 binding.barcodeInfoTv.text = generatorData.barcodeNumber
                 binding.barcodeTypeTv.text = getString(R.string.ean)
             }
+
             else -> binding.barcodeInfoTv.text = getString(R.string.no_data)
         }
     }

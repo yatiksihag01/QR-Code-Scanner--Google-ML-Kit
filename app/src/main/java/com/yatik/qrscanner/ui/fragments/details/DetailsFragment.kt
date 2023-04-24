@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -20,12 +21,15 @@ import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentDetailsBinding
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Utilities
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailsFragment : Fragment() {
 
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
     private val args: DetailsFragmentArgs by navArgs()
+    private val detailsViewModel: DetailsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,7 +63,6 @@ class DetailsFragment : Fragment() {
         val others = barcodeData.others
 
         val rawValue = title ?: "Sorry, this QR code doesn't contain any data"
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val utilities = Utilities()
 
         when (format) {
@@ -75,23 +78,12 @@ class DetailsFragment : Fragment() {
                         binding.wifiButton.visibility = View.VISIBLE
                         binding.wifiButton.setOnClickListener { openWifiSettings() }
                     }
+
                     Barcode.TYPE_URL -> {
-                        binding.typeIcon.setImageResource(R.drawable.outline_url_24)
-                        binding.typeText.setText(R.string.url)
-                        binding.decodedText.text = String.format(
-                            "Title: %s\n\nUrl: %s",
-                            title,
-                            decryptedText
-                        )
-                        binding.launchButton.setOnClickListener {
-                            utilities.customTabBuilder(requireContext(), Uri.parse(decryptedText))
-                        }
-                        val openAutomatically =
-                            sharedPreferences.getBoolean("open_url_preference", false)
-                        if (openAutomatically) {
-                            utilities.customTabBuilder(requireContext(), Uri.parse(decryptedText))
-                        }
+                        if (!decryptedText.isNullOrBlank())
+                            setUrlView(decryptedText)
                     }
+
                     Barcode.TYPE_TEXT -> {
                         binding.decodedText.text = title
                         if (title!!.startsWith("upi://pay")) {
@@ -105,6 +97,7 @@ class DetailsFragment : Fragment() {
                             binding.launchButton.setOnClickListener { shareData(title) }
                         }
                     }
+
                     Barcode.TYPE_PHONE -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_call_24)
                         binding.typeText.setText(R.string.phone)
@@ -118,6 +111,7 @@ class DetailsFragment : Fragment() {
                             )
                         }
                     }
+
                     Barcode.TYPE_GEO -> {
                         val longLat = others?.split(",")
                         val latitude = longLat?.get(0)
@@ -142,6 +136,7 @@ class DetailsFragment : Fragment() {
                             }
                         }
                     }
+
                     Barcode.TYPE_SMS -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_sms_24)
                         binding.typeText.setText(R.string.sms)
@@ -152,6 +147,7 @@ class DetailsFragment : Fragment() {
                             shareData(decryptedText ?: "")
                         }
                     }
+
                     else -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_question_mark_24)
                         binding.typeText.setText(R.string.raw)
@@ -162,6 +158,7 @@ class DetailsFragment : Fragment() {
                     }
                 }
             }
+
             Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E, Barcode.FORMAT_EAN_8, Barcode.FORMAT_EAN_13, Barcode.TYPE_ISBN -> {
                 binding.typeIcon.setImageResource(R.drawable.outline_product_24)
                 binding.typeText.text = "Product"
@@ -175,6 +172,7 @@ class DetailsFragment : Fragment() {
                     )
                 }
             }
+
             else -> {
                 binding.typeIcon.setImageResource(R.drawable.outline_barcode_24)
                 binding.typeText.text = "Barcode"
@@ -196,6 +194,42 @@ class DetailsFragment : Fragment() {
         }
     }
 
+    private fun setUrlView(url: String) {
+
+        var title: String? = "fetching..."
+        val utilities = Utilities()
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+
+        binding.typeIcon.setImageResource(R.drawable.outline_url_24)
+        binding.typeText.setText(R.string.url)
+        val mainUrl: String = if (!url.startsWith("http")) "https://$url"
+        else url
+
+        detailsViewModel.getUrlPreview(mainUrl)
+        detailsViewModel.urlPreviewResource.observe(viewLifecycleOwner) { resource ->
+            if (!resource.data?.title.isNullOrBlank())
+                title = resource.data?.title
+            else if (!resource.message.isNullOrBlank()) {
+                title = ""
+                Toast.makeText(
+                    requireContext(), "${resource.message} to fetch title", Toast.LENGTH_SHORT
+                ).show()
+            }
+            binding.decodedText.text = String.format(
+                "Title: %s\n\nUrl: %s",
+                title, mainUrl
+            )
+        }
+        binding.launchButton.setOnClickListener {
+            utilities.customTabBuilder(requireContext(), Uri.parse(mainUrl))
+        }
+        val openAutomatically =
+            sharedPreferences.getBoolean("open_url_preference", false)
+        if (openAutomatically) {
+            utilities.customTabBuilder(requireContext(), Uri.parse(mainUrl))
+        }
+    }
+
 
     private fun copyData(text: String) {
         val clipboardManager =
@@ -203,7 +237,6 @@ class DetailsFragment : Fragment() {
         val clipData = ClipData.newPlainText("copied", text)
         clipboardManager.setPrimaryClip(clipData)
     }
-
 
     private fun shareData(text: String) {
         val sendIntent = Intent()
@@ -213,7 +246,6 @@ class DetailsFragment : Fragment() {
         val shareIntent = Intent.createChooser(sendIntent, null)
         startActivity(shareIntent)
     }
-
 
     private fun payViaUPI(ID: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ID))

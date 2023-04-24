@@ -4,6 +4,8 @@ import com.yatik.qrscanner.repository.BarcodeDataRepository
 import com.yatik.qrscanner.repository.DefaultBarcodeDataRepository
 import com.yatik.qrscanner.repository.DefaultGeneratorRepository
 import com.yatik.qrscanner.repository.GeneratorRepository
+import com.yatik.qrscanner.ui.fragments.details.DefaultDetailsRepository
+import com.yatik.qrscanner.ui.fragments.details.DetailsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,5 +27,11 @@ abstract class RepositoryModule {
     abstract fun bindGeneratorRepository(
         defaultGeneratorRepository: DefaultGeneratorRepository
     ): GeneratorRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUrlPreviewRepository(
+        defaultDetailsRepository: DefaultDetailsRepository
+    ): DetailsRepository
 
 }

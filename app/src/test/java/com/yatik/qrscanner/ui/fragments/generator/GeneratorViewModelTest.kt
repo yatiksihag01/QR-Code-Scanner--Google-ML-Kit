@@ -12,6 +12,7 @@ import com.yatik.qrscanner.models.GeneratorData
 import com.yatik.qrscanner.repository.GeneratorRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -33,10 +34,11 @@ class GeneratorViewModelTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setup() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(testDispatcher)
         fakeGeneratorRepository = mock(GeneratorRepository::class.java)
         generatorViewModel = GeneratorViewModel(fakeGeneratorRepository)
         mockedStaticBmp = mockStatic(Bitmap::class.java)

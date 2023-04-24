@@ -61,8 +61,8 @@ class BarcodeListAdapter : RecyclerView.Adapter<BarcodeListAdapter.BarcodeDataVi
 
         tvTitle.text = barcodeData.title?.let {
             if (it.isEmpty()) barcodeData.decryptedText
-            else if (it.length < 13) it
-            else it.substring(0, 12)
+            else if (it.length < 51) it
+            else "${it.substring(0, 47)}..."
         }
 
         when (format) {

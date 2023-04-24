@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -52,7 +53,7 @@ class HomeFragment : Fragment() {
 
     private var isImageSelected = false
 
-    private var mChoosePhoto: ActivityResultLauncher<String>? = null
+    private lateinit var pickVisualMedia: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private var mCameraProvider: ProcessCameraProvider? = null
     private lateinit var mCameraProviderFuture: ListenableFuture<ProcessCameraProvider>
@@ -80,8 +81,8 @@ class HomeFragment : Fragment() {
         requestCameraPermission()
 
         mCameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
-        mChoosePhoto =
-            registerForActivityResult(ActivityResultContracts.GetContent()) { result: Uri? ->
+        pickVisualMedia =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { result: Uri? ->
                 if (result != null) {
                     isImageSelected = true
                     val image: InputImage
@@ -239,7 +240,13 @@ class HomeFragment : Fragment() {
                     BottomSheetBehavior.STATE_EXPANDED
                 } else BottomSheetBehavior.STATE_COLLAPSED
         }
-        binding.buttonGallery.setOnClickListener { mChoosePhoto!!.launch("image/*") }
+        binding.buttonGallery.setOnClickListener {
+            pickVisualMedia.launch(
+                PickVisualMediaRequest(
+                    ActivityResultContracts.PickVisualMedia.ImageOnly
+                )
+            )
+        }
         binding.buttonHistory.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_historyFragment)
         }
