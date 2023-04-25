@@ -73,19 +73,19 @@ class Utilities {
         val darkBlue = activity.getString(R.string.dark_blue_int_val)
         val lightGreen = activity.getString(R.string.light_green_int_val)
         val darkGreen = activity.getString(R.string.dark_green_int_val)
+        val systemDefault = activity.getString(R.string.system_default_int_val)
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(activity)
         val currentTheme = sharedPref.getString(
             activity.getString(R.string.theme_preference_key),
-            activity.getString(R.string.light_blue_int_val)
+            activity.getString(R.string.system_default_int_val)
         )
         when (currentTheme) {
             lightBlue -> lightBars(true, window)
             darkBlue -> lightBars(false, window)
             lightGreen -> lightBars(true, window)
             darkGreen -> lightBars(false, window)
-            else -> {
-                if (isSystemThemeLight(activity))
-                    lightBars(true, window)
+            systemDefault -> {
+                if (isSystemThemeLight(activity)) lightBars(true, window)
                 else lightBars(false, window)
             }
         }

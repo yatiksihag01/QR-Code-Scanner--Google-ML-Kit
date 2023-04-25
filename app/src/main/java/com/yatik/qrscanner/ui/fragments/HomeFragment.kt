@@ -118,7 +118,8 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         binding.zoomInfo.text = getString(R.string.initial_zoom)
-        binding.buttonFlash.setImageResource(R.drawable.outline_flash_off_28)
+        binding.buttonFlash.setIconResource(R.drawable.outline_flash_off_28)
+        Log.d("check", "resumed")
         if (isCameraPermissionGranted()) {
             setupCamera()
         }
@@ -146,6 +147,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupCamera() {
+        mCameraProvider?.unbindAll()
         mCameraProviderFuture.addListener({
             try {
                 mCameraProvider = mCameraProviderFuture.get()
@@ -310,10 +312,10 @@ class HomeFragment : Fragment() {
             if (mCamera.cameraInfo.hasFlashUnit()) {
                 if (mCamera.cameraInfo.torchState.value == TorchState.OFF) {
                     mCamera.cameraControl.enableTorch(true)
-                    binding.buttonFlash.setImageResource(R.drawable.outline_flash_on_28)
+                    binding.buttonFlash.setIconResource(R.drawable.outline_flash_on_28)
                 } else {
                     mCamera.cameraControl.enableTorch(false)
-                    binding.buttonFlash.setImageResource(R.drawable.outline_flash_off_28)
+                    binding.buttonFlash.setIconResource(R.drawable.outline_flash_off_28)
                 }
             } else {
                 Toast.makeText(

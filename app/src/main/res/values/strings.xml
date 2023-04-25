@@ -5,7 +5,7 @@
     <string name="permissionDeniedMessageSaveImage">In order to save image, app needs to access device storage. Please click Allow -> Permissions -> Files and media -> Allow access to media only</string>
     <string name="deleteAllWarning">"You're going to delete all items and you won't be able to revert changes. Are you sure to delete all items?"</string>
     <string name="productMessage">Press launch button to retrieve product details.</string>
-    <string name="Wifi"><![CDATA[<font color=\'#89B3F7\'>Wifi</font>]]></string>
+    <string name="Wifi">WiFi</string>
     <string name="text">Text</string>
     <string name="url">Url</string>
     <string name="sms">SMS</string>
@@ -55,6 +55,9 @@
     <string name="dark_green_int_val">3</string>
     <string name="system_default_int_val">4</string>
     <string name="create_qr">Create QR</string>
+    <string name="Copy">Copy</string>
+    <string name="share">Share</string>
+    <string name="launch">Launch</string>
 
 
     <string-array name="theme_types">

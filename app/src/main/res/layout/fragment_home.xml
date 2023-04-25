@@ -71,12 +71,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_flash"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:contentDescription="Flash Off"
-                android:src="@drawable/outline_flash_off_28"
+                app:icon="@drawable/outline_flash_off_28"
+                app:iconSize="28dp"
+                app:iconGravity="top"
+                app:iconTint="?mainSheetIconColor"
+                android:backgroundTint="?colorPrimaryVariant"
                 app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_25"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -88,12 +92,16 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_begin="103dp" />
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_history"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:contentDescription="History"
-                android:src="@drawable/outline_history_28"
+                app:icon="@drawable/outline_history_28"
+                app:iconSize="28dp"
+                app:iconGravity="top"
+                app:iconTint="?mainSheetIconColor"
+                android:backgroundTint="?colorPrimaryVariant"
                 app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_mid"
                 app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_25"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -105,12 +113,16 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_gallery"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:backgroundTint="?colorPrimaryVariant"
+                app:icon="@drawable/outline_attach_file"
+                app:iconSize="30dp"
+                app:iconGravity="top"
+                app:iconTint="?mainSheetIconColor"
                 android:contentDescription="Pick image from gallery"
-                android:src="@drawable/outline_attach_file"
                 app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_75"
                 app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_mid"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -122,12 +134,16 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.75" />
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_create_qr"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:backgroundTint="?colorPrimaryVariant"
                 android:contentDescription="Settings button"
-                android:src="@drawable/draw_28"
+                app:icon="@drawable/draw_28"
+                app:iconSize="28dp"
+                app:iconGravity="top"
+                app:iconTint="?mainSheetIconColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_75"
                 app:layout_constraintTop_toTopOf="parent" />

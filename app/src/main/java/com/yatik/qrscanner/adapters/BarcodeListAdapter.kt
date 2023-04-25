@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.models.BarcodeData
@@ -46,7 +47,7 @@ class BarcodeListAdapter : RecyclerView.Adapter<BarcodeListAdapter.BarcodeDataVi
         val itemView = holder.itemView
 
         val icon: ImageView = itemView.findViewById(R.id.history_icon)
-        val deleteButton: ImageView = itemView.findViewById(R.id.delete_button)
+        val deleteButton: MaterialButton = itemView.findViewById(R.id.delete_button)
         val typeText: TextView = itemView.findViewById(R.id.type_text_history)
         val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val date: TextView = itemView.findViewById(R.id.dateTime)
@@ -56,7 +57,6 @@ class BarcodeListAdapter : RecyclerView.Adapter<BarcodeListAdapter.BarcodeDataVi
         val title = barcodeData.title
         val dateTime = barcodeData.dateTime
 
-        deleteButton.setImageResource(R.drawable.outline_delete_24)
         date.text = "· $dateTime"
 
         tvTitle.text = barcodeData.title?.let {
