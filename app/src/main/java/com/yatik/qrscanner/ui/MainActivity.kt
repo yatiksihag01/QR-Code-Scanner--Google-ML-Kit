@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         updateTheme(this@MainActivity)
         setContentView(R.layout.activity_main)
-        Utilities().hideSystemBars(window, this, true)
+        Utilities().setSystemBars(window, this, true)
     }
 
 }

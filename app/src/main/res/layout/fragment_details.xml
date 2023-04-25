@@ -105,40 +105,50 @@
                 app:layout_constraintTop_toBottomOf="@+id/decoded_text_layout"
                 app:layout_constraintVertical_bias="0.0">
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/copy_button"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="@dimen/marginEight"
-                    android:layout_marginBottom="@dimen/marginEight"
-                    android:contentDescription="copy"
-                    android:src="@drawable/outline_content_copy_32"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Copy"
+                    app:icon="@drawable/outline_content_copy_32"
+                    app:iconSize="28dp"
+                    app:iconGravity="top"
+                    android:backgroundTint="?colorPrimaryVariant"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/share_button"
                     app:layout_constraintHorizontal_bias="0.08"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0"
+                    android:contentDescription="@string/Copy"
                     tools:ignore="HardcodedText" />
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/share_button"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:contentDescription="share"
-                    android:src="@drawable/outline_share_32"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/outline_share_32"
+                    app:iconGravity="top"
+                    app:iconSize="28dp"
+                    android:text="@string/share"
+                    android:backgroundTint="?colorPrimaryVariant"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/share"
                     tools:ignore="HardcodedText" />
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/wifi_button"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:contentDescription="open wifi settings"
-                    android:src="@drawable/outline_wifi_32"
+                    android:text="@string/Wifi"
+                    app:icon="@drawable/outline_wifi_32"
+                    app:iconGravity="top"
+                    app:iconSize="28dp"
+                    android:backgroundTint="?colorPrimaryVariant"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -147,16 +157,20 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="HardcodedText" />
 
-                <ImageButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/launch_button"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="launch"
-                    android:src="@drawable/outline_launch_32"
+                    android:text="@string/launch"
+                    app:icon="@drawable/outline_launch_32"
+                    app:iconGravity="top"
+                    app:iconSize="28dp"
+                    android:backgroundTint="?colorPrimaryVariant"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="launch"
                     tools:ignore="HardcodedText" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

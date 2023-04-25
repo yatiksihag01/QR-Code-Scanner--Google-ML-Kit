@@ -27,7 +27,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         updateTheme(this@SettingsActivity)
         setContentView(R.layout.activity_settings)
-        Utilities().hideSystemBars(window, this@SettingsActivity, false)
+        Utilities().setSystemBars(window, this@SettingsActivity, false)
 
         val settingsToolbar = findViewById<MaterialToolbar>(R.id.settingsToolbar)
         settingsToolbar.setNavigationOnClickListener {

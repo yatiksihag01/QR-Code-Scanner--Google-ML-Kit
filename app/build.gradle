@@ -16,8 +16,8 @@ android {
         applicationId "com.yatik.qrscanner"
         minSdk 23
         targetSdk 33
-        versionCode 14
-        versionName "2.1.1"
+        versionCode 17
+        versionName "2.1.4"
 
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.yatik.qrscanner.HiltTestRunner"
@@ -61,11 +61,12 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.activity:activity-ktx:1.7.1'
     implementation 'androidx.test:runner:1.5.2'
     implementation 'androidx.preference:preference:1.2.0'
     testImplementation 'junit:junit:4.13.2'
     def camerax_version = "1.2.2"
-    def fragment_version = "1.5.6"
+    def fragment_version = "1.5.7"
     def nav_version = "2.5.3"
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -113,6 +114,11 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:4.5.0"
+
     //Custom Chrome Tabs
     implementation 'androidx.browser:browser:1.5.0'
 
@@ -134,6 +140,9 @@ dependencies {
     // zxing for QR code generation
     implementation 'com.google.zxing:core:3.4.1'
 
+    // Jsoup to parse HTML response
+    implementation 'org.jsoup:jsoup:1.15.4'
+
     // Turbine to test Flow
     testImplementation 'app.cash.turbine:turbine:0.12.1'
     androidTestImplementation 'app.cash.turbine:turbine:0.12.1'
@@ -145,6 +154,9 @@ dependencies {
     // Hilt for testing
     debugImplementation 'com.google.dagger:hilt-android-testing:2.44'
     kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.44'
+
+    // MockWebServer
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.6.0"
 
     // Mockito
     testImplementation 'org.mockito:mockito-core:4.1.0'

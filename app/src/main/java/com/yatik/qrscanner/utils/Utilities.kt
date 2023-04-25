@@ -1,11 +1,14 @@
 package com.yatik.qrscanner.utils
 
+import android.app.Activity
 import android.content.Context
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.view.Window
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
@@ -51,9 +54,13 @@ class Utilities {
                     )
                 )
         }
+
+        fun isSystemThemeLight(activity: Activity): Boolean =
+            activity.resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_NO
     }
 
-    fun hideSystemBars(window: android.view.Window, context: Context, hideStatusBar: Boolean) {
+    fun setSystemBars(window: Window, activity: Activity, hideStatusBar: Boolean) {
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         // Configure the behavior of the hidden system bars
         windowInsetsController.systemBarsBehavior =
@@ -62,41 +69,45 @@ class Utilities {
         if (hideStatusBar) {
             windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
         }
-        val lightBlue = context.getString(R.string.light_blue_int_val)
-        val darkBlue = context.getString(R.string.dark_blue_int_val)
-        val lightGreen = context.getString(R.string.light_green_int_val)
-        val darkGreen = context.getString(R.string.dark_green_int_val)
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+        val lightBlue = activity.getString(R.string.light_blue_int_val)
+        val darkBlue = activity.getString(R.string.dark_blue_int_val)
+        val lightGreen = activity.getString(R.string.light_green_int_val)
+        val darkGreen = activity.getString(R.string.dark_green_int_val)
+        val systemDefault = activity.getString(R.string.system_default_int_val)
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(activity)
         val currentTheme = sharedPref.getString(
-            context.getString(R.string.theme_preference_key),
-            context.getString(R.string.light_blue_int_val)
+            activity.getString(R.string.theme_preference_key),
+            activity.getString(R.string.system_default_int_val)
         )
         when (currentTheme) {
-            lightBlue -> {
-                windowInsetsController.isAppearanceLightStatusBars = true
-                windowInsetsController.isAppearanceLightNavigationBars = true
-            }
-            darkBlue -> {
-                windowInsetsController.isAppearanceLightStatusBars = false
-                windowInsetsController.isAppearanceLightNavigationBars = false
-            }
-            lightGreen -> {
-                windowInsetsController.isAppearanceLightStatusBars = true
-                windowInsetsController.isAppearanceLightNavigationBars = true
-            }
-            darkGreen -> {
-                windowInsetsController.isAppearanceLightStatusBars = false
-                windowInsetsController.isAppearanceLightNavigationBars = false
+            lightBlue -> lightBars(true, window)
+            darkBlue -> lightBars(false, window)
+            lightGreen -> lightBars(true, window)
+            darkGreen -> lightBars(false, window)
+            systemDefault -> {
+                if (isSystemThemeLight(activity)) lightBars(true, window)
+                else lightBars(false, window)
             }
         }
         window.navigationBarColor =
-            context.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant)
+            activity.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant)
 
         // Make navigation bar transparent
 //        window.setFlags(
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 //        )
+    }
+
+    private fun lightBars(makeBarsLight: Boolean, window: Window) {
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        if (makeBarsLight) {
+            windowInsetsController.isAppearanceLightStatusBars = true
+            windowInsetsController.isAppearanceLightNavigationBars = true
+        } else {
+            windowInsetsController.isAppearanceLightStatusBars = false
+            windowInsetsController.isAppearanceLightNavigationBars = false
+        }
     }
 
     fun vibrateIfAllowed(context: Context, isVibrationAllowed: Boolean, timeInMillis: Long) {
@@ -191,6 +202,7 @@ class Utilities {
                 Barcode.TYPE_TEXT -> {
                     title = barcode.displayValue
                 }
+
                 Barcode.TYPE_PHONE -> {
                     title = barcode.phone?.number
                 }

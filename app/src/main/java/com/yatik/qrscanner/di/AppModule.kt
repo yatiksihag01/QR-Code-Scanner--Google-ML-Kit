@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.yatik.qrscanner.database.BarcodeDao
 import com.yatik.qrscanner.database.BarcodeRoomDataBase
+import com.yatik.qrscanner.database.UrlPreviewDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +31,11 @@ object AppModule {
     fun provideBarcodeDao(database: BarcodeRoomDataBase): BarcodeDao {
         return database.barcodeDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideUrlPreviewDao(
+        database: BarcodeRoomDataBase
+    ): UrlPreviewDao = database.urlPreviewDao()
 
 }

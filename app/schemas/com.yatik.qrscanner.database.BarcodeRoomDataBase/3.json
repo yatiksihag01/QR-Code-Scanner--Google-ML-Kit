@@ -1,0 +1,109 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "834a7327b520decd2dc5296568955061",
+    "entities": [
+      {
+        "tableName": "barcode_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`format` INTEGER NOT NULL DEFAULT 256, `type` INTEGER NOT NULL, `title` TEXT, `decryptedText` TEXT, `others` TEXT, `dateTime` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "format",
+            "columnName": "format",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "256"
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "decryptedText",
+            "columnName": "decryptedText",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "others",
+            "columnName": "others",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dateTime",
+            "columnName": "dateTime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "url_info_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`main_url` TEXT NOT NULL, `title` TEXT, `description` TEXT, `image_url` TEXT, PRIMARY KEY(`main_url`))",
+        "fields": [
+          {
+            "fieldPath": "mainUrl",
+            "columnName": "main_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "main_url"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '834a7327b520decd2dc5296568955061')"
+    ]
+  }
+}
