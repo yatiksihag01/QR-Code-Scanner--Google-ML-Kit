@@ -23,19 +23,22 @@ This simple QR code scanner is capable of scanning many types of QR codes and ba
 
 ## ⭐Features
 
-- Users can scan 13 types of QR Codes/Barcodes
-- Users can save the scanned data
-- You can either choose photos from gallery or use camera
-- Options to automatically open Urls after scanning
+- Users can scan 13 types of QR Codes/Barcodes.
+- Users can save the scanned data.
+- You can either choose photos from gallery or use camera.
+- Options to automatically open Urls after scanning.
+- Users can generate their own barcodes/QR codes.
 
 
 ## 🔬Tools & Technologies
 
-- Android Studio, Kotlin
-- Room Database to store scanned barcodes
-- Hilt for dependency injection
-- CameraX API to scan QR codes/Barcodes
-- Unit tests for ViewModels, Room Database
+- Android Studio, Kotlin.
+- Room Database to store scanned barcodes.
+- Hilt for dependency injection.
+- CameraX API to scan QR codes/Barcodes.
+- Zxing to create QR/Barcodes.
+- Retrofit, Jsoup to get Url preview.
+- Unit tests for ViewModels, Room Database.
 
 ## 😊Contribution
 
