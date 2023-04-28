@@ -1,17 +1,25 @@
 
 # QR-Scanner---Google-ML-Kit-MVVM
 
-This QR Scanner app uses Google's Barcode Scanner ML Kit to scan QR codes using camerax api. Users can also choose QR codes from the gallery.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/110741464/235096912-a2506530-e7fe-4b81-9a4d-d47404cd4f81.png" width="128" />
+</p>
+
+This simple QR code scanner is capable of scanning many types of QR codes and barcodes. The app supports a variety of QR code formats, including URLs, Wi-Fi, text, and UPI codes, among others. Additionally, users can generate their own QR codes and barcodes with the app. Currently, the app is available in four different themes: light-blue, light-green, dark-blue, and dark-green.
 
 ## 📷Screenshots
 
 | Home Page | Settings Page |
-| --------- | ------------- | 
-| ![QR1_4_720_330](https://user-images.githubusercontent.com/110741464/224722229-5c22840b-181d-451b-b68c-82b85fa3fe04.jpg) | ![settings_activity_720_332](https://user-images.githubusercontent.com/110741464/224762822-5f791437-5056-4d18-8714-09fbb7375685.jpg) |
+| --------- | ------------- |
+| <img src="https://user-images.githubusercontent.com/110741464/235060129-41c48722-af68-4df7-bb0b-396d89a2aad8.png" width="370dp"> | <img src="https://user-images.githubusercontent.com/110741464/235094406-92bc2ba1-1842-421e-a805-3e318b437639.jpg" width="350dp"> |
 
 | Details Page | Saved data |
-| ---------------- | ---------- |
-| ![DetailsActivity_720_331](https://user-images.githubusercontent.com/110741464/220064084-6d729787-f61d-4ea2-b2fe-e8fe6689813b.png) | ![history_frag_720_331](https://user-images.githubusercontent.com/110741464/220063115-0d66273d-4a66-434b-ad58-2b742cdb9868.png) |
+| -----------  | ---------- |
+| <img src="https://user-images.githubusercontent.com/110741464/235092560-a2a768d5-8f15-43bd-95ca-2fce2c6f6292.jpg" width="350dp"> | <img src="https://user-images.githubusercontent.com/110741464/235092564-250c30de-9f44-4ee0-a57d-2e44b4de9950.jpg" width="350dp"> |
+
+| Generate QR | Light Theme |
+| ----------  | ----------- |
+| <img src="https://user-images.githubusercontent.com/110741464/235093158-c0b469b8-b784-4065-b6db-ee814e118dc0.jpg" width="350dp"> | <img src="https://user-images.githubusercontent.com/110741464/235094026-f08269b8-808d-4950-acd9-500f60ebf789.jpg" width="350dp"> |
 
 ## ⭐Features
 
@@ -43,7 +51,7 @@ We appreciate your help in improving this project!
 
 ## 😎Google Play
 <a href="https://play.google.com/store/apps/details?id=com.yatik.qrscanner">
-  <img src="https://user-images.githubusercontent.com/110741464/202079928-27ef816f-99a1-47b3-a0ff-f4de1ca7437e.png" alt="Google Play" width="400" height="200">
+  <img src="https://user-images.githubusercontent.com/110741464/202079928-27ef816f-99a1-47b3-a0ff-f4de1ca7437e.png" alt="Google Play" width="400">
 </a>
 
 ## ✍️Authors
