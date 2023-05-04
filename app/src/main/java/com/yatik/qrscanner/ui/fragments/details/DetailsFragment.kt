@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
+import com.bumptech.glide.Glide
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentDetailsBinding
@@ -163,8 +164,6 @@ class DetailsFragment : Fragment() {
                 binding.typeIcon.setImageResource(R.drawable.outline_product_24)
                 binding.typeText.text = "Product"
                 binding.decodedText.text = title
-                binding.extraInfo.visibility = View.VISIBLE
-                binding.extraInfo.setText(R.string.productMessage)
                 binding.launchButton.setOnClickListener {
                     utilities.customTabBuilder(
                         requireContext(),
@@ -196,7 +195,6 @@ class DetailsFragment : Fragment() {
 
     private fun setUrlView(url: String) {
 
-        var title: String? = "fetching..."
         val utilities = Utilities()
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
@@ -204,21 +202,33 @@ class DetailsFragment : Fragment() {
         binding.typeText.setText(R.string.url)
         val mainUrl: String = if (!url.startsWith("http")) "https://$url"
         else url
+        binding.decodedText.text = mainUrl
+
+        binding.previewDetails.visibility = View.VISIBLE
+        binding.urlContent.text = getString(R.string.fetching)
+        binding.urlTextView.text = mainUrl
+        binding.urlTextView.setOnClickListener {
+            utilities.customTabBuilder(requireContext(), Uri.parse(mainUrl))
+        }
 
         detailsViewModel.getUrlPreview(mainUrl)
         detailsViewModel.urlPreviewResource.observe(viewLifecycleOwner) { resource ->
+
             if (!resource.data?.title.isNullOrBlank())
-                title = resource.data?.title
+                binding.urlContent.text = resource.data?.title
             else if (!resource.message.isNullOrBlank()) {
-                title = ""
                 Toast.makeText(
-                    requireContext(), "${resource.message} to fetch title", Toast.LENGTH_SHORT
+                    requireContext(),
+                    "${resource.message}! Preview not available",
+                    Toast.LENGTH_SHORT
                 ).show()
+                binding.urlContent.text = ""
             }
-            binding.decodedText.text = String.format(
-                "Title: %s\n\nUrl: %s",
-                title, mainUrl
-            )
+
+            Glide.with(this)
+                .load(resource.data?.imageUrl)
+                .placeholder(R.drawable.broken_image_200)
+                .into(binding.previewImage)
         }
         binding.launchButton.setOnClickListener {
             utilities.customTabBuilder(requireContext(), Uri.parse(mainUrl))

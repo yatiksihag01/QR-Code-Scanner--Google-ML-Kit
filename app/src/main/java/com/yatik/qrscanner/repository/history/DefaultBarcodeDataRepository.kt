@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.repository
+package com.yatik.qrscanner.repository.history
 
 import androidx.annotation.WorkerThread
 import com.yatik.qrscanner.database.BarcodeDao

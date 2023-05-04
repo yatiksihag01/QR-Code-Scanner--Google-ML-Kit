@@ -1,6 +1,7 @@
 package com.yatik.qrscanner.repository
 
 import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.repository.history.BarcodeDataRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

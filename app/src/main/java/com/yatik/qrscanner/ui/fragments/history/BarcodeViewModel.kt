@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.yatik.qrscanner.models.BarcodeData
-import com.yatik.qrscanner.repository.BarcodeDataRepository
+import com.yatik.qrscanner.repository.history.BarcodeDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -69,7 +69,7 @@
 
         <Preference
             android:key="version_preference"
-            android:summary="2.1.4"
+            android:summary="2.2.0"
             android:title="App version" />
 
     </PreferenceCategory>

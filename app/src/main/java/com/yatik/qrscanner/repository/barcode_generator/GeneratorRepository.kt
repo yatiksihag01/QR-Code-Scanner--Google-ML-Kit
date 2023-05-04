@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.repository
+package com.yatik.qrscanner.repository.barcode_generator
 
 import android.graphics.Bitmap
 
