@@ -1,33 +1,31 @@
 package com.yatik.qrscanner.repository.history
 
-import androidx.annotation.WorkerThread
+import androidx.paging.PagingSource
 import com.yatik.qrscanner.database.BarcodeDao
 import com.yatik.qrscanner.models.BarcodeData
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class DefaultBarcodeDataRepository @Inject constructor(
-    private val barcodeDao: BarcodeDao
+    private val barcodeDao: BarcodeDao,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BarcodeDataRepository {
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    override suspend fun insert(barcodeData: BarcodeData) {
+    override suspend fun insert(barcodeData: BarcodeData) = withContext(ioDispatcher) {
         barcodeDao.insert(barcodeData)
     }
 
-    @WorkerThread
-    override suspend fun delete(barcodeData: BarcodeData) {
+    override suspend fun delete(barcodeData: BarcodeData) = withContext(ioDispatcher) {
         barcodeDao.delete(barcodeData)
     }
 
-    @WorkerThread
-    override fun getAllBarcodes(): Flow<List<BarcodeData>> {
+    override fun getAllBarcodes(): PagingSource<Int, BarcodeData> {
         return barcodeDao.getAllBarcodes()
     }
 
-    @WorkerThread
-    override suspend fun deleteAll() {
+    override suspend fun deleteAll() = withContext(ioDispatcher) {
         barcodeDao.deleteAll()
     }
 

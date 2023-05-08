@@ -122,6 +122,11 @@ dependencies {
     //Custom Chrome Tabs
     implementation 'androidx.browser:browser:1.5.0'
 
+    // Paging Components
+    implementation "androidx.paging:paging-runtime-ktx:$rootProject.paging_version"
+    implementation "androidx.room:room-paging:2.5.1"
+    testImplementation "androidx.paging:paging-common-ktx:$rootProject.paging_version"
+
     // To test coroutines
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'

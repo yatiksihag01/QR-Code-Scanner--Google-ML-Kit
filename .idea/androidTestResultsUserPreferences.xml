@@ -126,6 +126,7 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="Micromax" value="120" />
                   <entry key="Micromax&#10; Micromax E7533" value="120" />
                   <entry key="RZ8T40RFLLW" value="120" />
                   <entry key="Tests" value="360" />
