@@ -1,15 +1,12 @@
-package com.yatik.qrscanner.repository.details
+package com.yatik.qrscanner.ui.fragments.details
 
 import com.yatik.qrscanner.database.UrlPreviewDao
 import com.yatik.qrscanner.models.UrlPreviewData
 import com.yatik.qrscanner.network.UrlPreviewApi
 import com.yatik.qrscanner.utils.Resource
 import com.yatik.qrscanner.utils.connectivity.ConnectivityHelper
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import retrofit2.HttpException
 import java.io.IOException
@@ -18,32 +15,29 @@ import javax.inject.Inject
 class DefaultDetailsRepository @Inject constructor(
     private val api: UrlPreviewApi,
     private val urlPreviewDao: UrlPreviewDao,
-    private val connectivityHelper: ConnectivityHelper,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val connectivityHelper: ConnectivityHelper
 ) : DetailsRepository {
 
-    override suspend fun getUrlInfo(
+    override fun getUrlInfo(
         url: String
-    ): Flow<Resource<UrlPreviewData>> = withContext(ioDispatcher) {
-        flow {
-            emit(Resource.Loading())
-            val urlPreviewData = urlPreviewDao.getUrlInfo(url)
-            emit(
-                Resource.Loading(
-                    data = urlPreviewData
-                )
+    ): Flow<Resource<UrlPreviewData>> = flow {
+        emit(Resource.Loading())
+        val urlPreviewData = urlPreviewDao.getUrlInfo(url)
+        emit(
+            Resource.Loading(
+                data = urlPreviewData
             )
-            if (connectivityHelper.isConnectedToInternet()) {
-                fetchUrlPreview(url, urlPreviewData).collect { resource ->
-                    emit(resource)
-                }
-            } else emit(
-                Resource.Error(
-                    data = urlPreviewData,
-                    message = "No internet connection"
-                )
+        )
+        if (connectivityHelper.isConnectedToInternet()) {
+            fetchUrlPreview(url, urlPreviewData).collect { resource ->
+                emit(resource)
+            }
+        } else emit(
+            Resource.Error(
+                data = urlPreviewData,
+                message = "No internet connection"
             )
-        }
+        )
     }
 
     private suspend fun fetchUrlPreview(

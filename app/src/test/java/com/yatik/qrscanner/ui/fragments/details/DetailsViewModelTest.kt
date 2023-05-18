@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.*
 import com.yatik.qrscanner.getOrAwaitValueTest
 import com.yatik.qrscanner.models.UrlPreviewData
-import com.yatik.qrscanner.repository.details.DetailsRepository
 import com.yatik.qrscanner.utils.Resource
 import com.yatik.qrscanner.utils.TestConstants
 import com.yatik.qrscanner.utils.TestConstants.Companion.MAIN_URL

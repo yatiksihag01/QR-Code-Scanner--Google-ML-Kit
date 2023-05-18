@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.adapters.history
+package com.yatik.qrscanner.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -14,12 +14,11 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.models.BarcodeData
 
-class HistoryAdapter :
-    PagingDataAdapter<BarcodeData, HistoryAdapter.BarcodeDataViewHolder>(DiffCallback) {
+class BarcodeListAdapter : RecyclerView.Adapter<BarcodeListAdapter.BarcodeDataViewHolder>() {
 
     inner class BarcodeDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    object DiffCallback : DiffUtil.ItemCallback<BarcodeData>() {
+    private val differCallbacks = object : DiffUtil.ItemCallback<BarcodeData>() {
         override fun areItemsTheSame(oldItem: BarcodeData, newItem: BarcodeData): Boolean {
             return oldItem.id == newItem.id
         }
@@ -28,6 +27,8 @@ class HistoryAdapter :
             return oldItem == newItem
         }
     }
+
+    val differ = AsyncListDiffer(this, differCallbacks)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BarcodeDataViewHolder {
         return BarcodeDataViewHolder(
@@ -42,7 +43,7 @@ class HistoryAdapter :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: BarcodeDataViewHolder, position: Int) {
 
-        val barcodeData = getItem(position)
+        val barcodeData = differ.currentList[position]
         val itemView = holder.itemView
 
         val icon: ImageView = itemView.findViewById(R.id.history_icon)
@@ -51,20 +52,19 @@ class HistoryAdapter :
         val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val date: TextView = itemView.findViewById(R.id.dateTime)
 
-        val format = barcodeData?.format
-        val type = barcodeData?.type
-        val title = barcodeData?.title
-        val dateTime = barcodeData?.dateTime
+        val format = barcodeData.format
+        val type = barcodeData.type
+        val title = barcodeData.title
+        val dateTime = barcodeData.dateTime
 
         date.text = "· $dateTime"
 
-        if (barcodeData != null) {
-            tvTitle.text = barcodeData.title?.let {
-                if (it.isEmpty()) barcodeData.decryptedText
-                else if (it.length < 51) it
-                else "${it.substring(0, 47)}..."
-            }
+        tvTitle.text = barcodeData.title?.let {
+            if (it.isEmpty()) barcodeData.decryptedText
+            else if (it.length < 51) it
+            else "${it.substring(0, 47)}..."
         }
+
         when (format) {
             Barcode.FORMAT_QR_CODE -> {
                 when (type) {
@@ -120,19 +120,18 @@ class HistoryAdapter :
                 icon.setImageResource(R.drawable.outline_barcode_24)
             }
         }
+
         itemView.setOnClickListener {
-            onItemClickListener?.let {
-                if (barcodeData != null) {
-                    it(barcodeData)
-                }
-            }
+            onItemClickListener?.let { it(barcodeData) }
         }
+
         deleteButton.setOnClickListener {
-            onDeleteClickListener?.let {
-                if (barcodeData != null)
-                    it(barcodeData)
-            }
+            onDeleteClickListener?.let { it(barcodeData) }
         }
+    }
+
+    override fun getItemCount(): Int {
+        return differ.currentList.size
     }
 
     private var onItemClickListener: ((BarcodeData) -> Unit)? = null
@@ -144,10 +143,6 @@ class HistoryAdapter :
 
     fun setOnDeleteClickListener(listener: (BarcodeData) -> Unit) {
         onDeleteClickListener = listener
-    }
-
-    fun getItemOnPosition(position: Int): BarcodeData {
-        return getItem(position)!!
     }
 
 }

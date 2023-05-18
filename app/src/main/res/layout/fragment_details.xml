@@ -109,47 +109,47 @@
                     android:id="@+id/copy_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="?colorPrimaryVariant"
-                    android:contentDescription="@string/Copy"
                     android:text="@string/Copy"
                     app:icon="@drawable/outline_content_copy_32"
-                    app:iconGravity="top"
                     app:iconSize="28dp"
+                    app:iconGravity="top"
+                    android:backgroundTint="?colorPrimaryVariant"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/share_button"
                     app:layout_constraintHorizontal_bias="0.08"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0"
+                    android:contentDescription="@string/Copy"
                     tools:ignore="HardcodedText" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/share_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="?colorPrimaryVariant"
-                    android:contentDescription="@string/share"
-                    android:text="@string/share"
                     app:icon="@drawable/outline_share_32"
                     app:iconGravity="top"
                     app:iconSize="28dp"
+                    android:text="@string/share"
+                    android:backgroundTint="?colorPrimaryVariant"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/share"
                     tools:ignore="HardcodedText" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/wifi_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="?colorPrimaryVariant"
                     android:contentDescription="open wifi settings"
                     android:text="@string/Wifi"
-                    android:visibility="gone"
                     app:icon="@drawable/outline_wifi_32"
                     app:iconGravity="top"
                     app:iconSize="28dp"
+                    android:backgroundTint="?colorPrimaryVariant"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.822"
@@ -162,81 +162,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:backgroundTint="?colorPrimaryVariant"
-                    android:contentDescription="launch"
                     android:text="@string/launch"
                     app:icon="@drawable/outline_launch_32"
                     app:iconGravity="top"
                     app:iconSize="28dp"
+                    android:backgroundTint="?colorPrimaryVariant"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="launch"
                     tools:ignore="HardcodedText" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/preview_details"
+            <TextView
+                android:id="@+id/extra_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="30dp"
-                android:background="@drawable/decoded_text_layout_back"
-                android:padding="2dp"
+                android:padding="8dp"
+                android:textSize="16sp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/constraintLayout">
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guidelineVertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="91dp" />
-
-                <TextView
-                    android:id="@+id/urlContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="95dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="TextView"
-                    android:textIsSelectable="true"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="HardcodedText" />
-
-                <ImageView
-                    android:id="@+id/previewImage"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_margin="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/guidelineVertical"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/broken_image_200" />
-
-                <TextView
-                    android:id="@+id/urlTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="95dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="LinkView"
-                    android:textColor="#037EFF"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/guidelineVertical"
-                    app:layout_constraintTop_toBottomOf="@+id/urlContent"
-                    tools:ignore="HardcodedText" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                app:layout_constraintVertical_bias="0.06" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

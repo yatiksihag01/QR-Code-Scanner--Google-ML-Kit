@@ -5,10 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yatik.qrscanner.models.UrlPreviewData
-import com.yatik.qrscanner.repository.details.DetailsRepository
 import com.yatik.qrscanner.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,9 +21,11 @@ class DetailsViewModel @Inject constructor(
     val urlPreviewResource: LiveData<Resource<UrlPreviewData>>
         get() = _urlPreviewResource
 
-    fun getUrlPreview(url: String) = viewModelScope.launch {
+    fun getUrlPreview(url: String) = viewModelScope.launch(Dispatchers.IO) {
         repository.getUrlInfo(url).collect { resource ->
-            _urlPreviewResource.postValue(resource)
+            withContext(Dispatchers.Main) {
+                _urlPreviewResource.postValue(resource)
+            }
         }
     }
 

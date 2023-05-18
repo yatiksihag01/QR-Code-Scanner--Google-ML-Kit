@@ -9,7 +9,7 @@ import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import com.yatik.qrscanner.getOrAwaitValueTest
 import com.yatik.qrscanner.models.GeneratorData
-import com.yatik.qrscanner.repository.barcode_generator.GeneratorRepository
+import com.yatik.qrscanner.repository.GeneratorRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

@@ -1,11 +1,11 @@
 package com.yatik.qrscanner.di
 
-import com.yatik.qrscanner.repository.barcode_generator.DefaultGeneratorRepository
-import com.yatik.qrscanner.repository.barcode_generator.GeneratorRepository
-import com.yatik.qrscanner.repository.details.DefaultDetailsRepository
-import com.yatik.qrscanner.repository.details.DetailsRepository
-import com.yatik.qrscanner.repository.history.BarcodeDataRepository
-import com.yatik.qrscanner.repository.history.DefaultBarcodeDataRepository
+import com.yatik.qrscanner.repository.BarcodeDataRepository
+import com.yatik.qrscanner.repository.DefaultBarcodeDataRepository
+import com.yatik.qrscanner.repository.DefaultGeneratorRepository
+import com.yatik.qrscanner.repository.GeneratorRepository
+import com.yatik.qrscanner.ui.fragments.details.DefaultDetailsRepository
+import com.yatik.qrscanner.ui.fragments.details.DetailsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

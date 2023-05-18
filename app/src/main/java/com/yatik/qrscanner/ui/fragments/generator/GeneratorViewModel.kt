@@ -14,7 +14,7 @@ import com.google.zxing.common.BitMatrix
 import com.google.zxing.oned.EAN13Writer
 import com.google.zxing.qrcode.QRCodeWriter
 import com.yatik.qrscanner.models.GeneratorData
-import com.yatik.qrscanner.repository.barcode_generator.GeneratorRepository
+import com.yatik.qrscanner.repository.GeneratorRepository
 import com.yatik.qrscanner.utils.Constants.Companion.QR_WIDTH_HEIGHT
 import com.yatik.qrscanner.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

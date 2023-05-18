@@ -1,13 +1,11 @@
 package com.yatik.qrscanner.ui.fragments.history
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
 import com.yatik.qrscanner.models.BarcodeData
-import com.yatik.qrscanner.repository.history.BarcodeDataRepository
-import com.yatik.qrscanner.utils.Constants.Companion.ITEMS_PER_PAGE
+import com.yatik.qrscanner.repository.BarcodeDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,11 +15,9 @@ class BarcodeViewModel @Inject constructor(
     private val repository: BarcodeDataRepository
 ) : ViewModel() {
 
-    val pagingDataFlow = Pager(
-        config = PagingConfig(pageSize = ITEMS_PER_PAGE)
-    ) { repository.getAllBarcodes() }
-        .flow
-        .cachedIn(viewModelScope)
+    // As opposed to Flow, LiveData is lifecycle aware
+    fun getAllBarcodes(): LiveData<List<BarcodeData>> =
+        repository.getAllBarcodes().asLiveData()
 
     fun insert(barcodeData: BarcodeData) = viewModelScope.launch {
         repository.insert(barcodeData)

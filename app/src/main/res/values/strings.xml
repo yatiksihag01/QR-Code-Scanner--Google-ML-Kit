@@ -58,7 +58,6 @@
     <string name="Copy">Copy</string>
     <string name="share">Share</string>
     <string name="launch">Launch</string>
-    <string name="fetching">fetching...</string>
 
 
     <string-array name="theme_types">

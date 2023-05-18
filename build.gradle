@@ -19,7 +19,6 @@ ext {
     coroutines = '1.5.2'
     lifecycleVersion = '2.6.1'
     materialVersion = '1.4.0'
-    paging_version = '3.1.1'
     roomVersion = '2.5.1'
     // testing
     junitVersion = '4.13.2'

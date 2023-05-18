@@ -1,13 +1,13 @@
-package com.yatik.qrscanner.repository.history
+package com.yatik.qrscanner.repository
 
-import androidx.paging.PagingSource
 import com.yatik.qrscanner.models.BarcodeData
+import kotlinx.coroutines.flow.Flow
 
 interface BarcodeDataRepository {
 
     suspend fun insert(barcodeData: BarcodeData)
     suspend fun delete(barcodeData: BarcodeData)
-    fun getAllBarcodes(): PagingSource<Int, BarcodeData>
+    fun getAllBarcodes(): Flow<List<BarcodeData>>
     suspend fun deleteAll()
 
 }

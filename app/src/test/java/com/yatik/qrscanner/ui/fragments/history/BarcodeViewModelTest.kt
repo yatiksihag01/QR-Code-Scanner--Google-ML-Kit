@@ -1,12 +1,12 @@
 package com.yatik.qrscanner.ui.fragments.history
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.paging.PagingSource
+import androidx.lifecycle.asLiveData
 import com.google.common.truth.Truth.*
 import com.google.mlkit.vision.barcode.common.Barcode
+import com.yatik.qrscanner.getOrAwaitValueTest
 import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.repository.FakeBarcodeDataRepository
-import com.yatik.qrscanner.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -28,7 +28,7 @@ class BarcodeViewModelTest {
     private lateinit var viewModel: BarcodeViewModel
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private val barcodeData = BarcodeData(
+    val barcodeData = BarcodeData(
         Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
         "sample text", null, null, "09-02-2023 11:50:54"
     )
@@ -48,15 +48,21 @@ class BarcodeViewModelTest {
     fun `insert single barcodeData, returns size 1`() = runTest {
 
         viewModel.insert(barcodeData)
-        val resultPage = fakeRepository.getAllBarcodes().load(
-            PagingSource.LoadParams.Refresh(
-                key = null,
-                loadSize = Constants.ITEMS_PER_PAGE,
-                placeholdersEnabled = false
-            )
-        ) as PagingSource.LoadResult.Page
+        val barcodeDataList = fakeRepository.getAllBarcodes()
+            .asLiveData()
+            .getOrAwaitValueTest()
+        assertThat(barcodeDataList.size).isEqualTo(1)
+    }
 
-        assertThat(resultPage.data.size).isEqualTo(1)
+    @Test
+    fun `insert two barcodeData, returns size 2`() = runTest {
+
+        viewModel.insert(barcodeData)
+        val barcodeDataList = fakeRepository.getAllBarcodes()
+            .asLiveData()
+            .getOrAwaitValueTest()
+        assertThat(barcodeDataList.size).isEqualTo(1)
+
     }
 
     @Test
@@ -64,39 +70,23 @@ class BarcodeViewModelTest {
 
         viewModel.insert(barcodeData)
 
-        val resultPage = fakeRepository.getAllBarcodes().load(
-            PagingSource.LoadParams.Refresh(
-                key = null,
-                loadSize = Constants.ITEMS_PER_PAGE,
-                placeholdersEnabled = false
-            )
-        ) as PagingSource.LoadResult.Page
-
-        assertThat(resultPage.data[0]).isEqualTo(barcodeData)
+        val barcodeDataList = fakeRepository.getAllBarcodes()
+            .asLiveData()
+            .getOrAwaitValueTest()
+        assertThat(barcodeDataList[0]).isEqualTo(barcodeData)
 
     }
 
     @Test
-    fun `delete last barcodeData, returns size 1`() = runTest {
-
-        val barcodeData2 = BarcodeData(
-            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
-            "sample text2", null, null, "09-02-2023 11:50:54"
-        )
+    fun `delete last barcodeData, returns size 0`() = runTest {
 
         viewModel.insert(barcodeData)
-        viewModel.insert(barcodeData2)
-        viewModel.delete(barcodeData2)
+        viewModel.delete(barcodeData)
 
-        val resultPage = fakeRepository.getAllBarcodes().load(
-            PagingSource.LoadParams.Refresh(
-                key = null,
-                loadSize = Constants.ITEMS_PER_PAGE,
-                placeholdersEnabled = false
-            )
-        ) as PagingSource.LoadResult.Page
-
-        assertThat(resultPage.data.size).isEqualTo(1)
+        val barcodeDataList = fakeRepository.getAllBarcodes()
+            .asLiveData()
+            .getOrAwaitValueTest()
+        assertThat(barcodeDataList.size).isEqualTo(0)
 
     }
 
@@ -106,15 +96,20 @@ class BarcodeViewModelTest {
         viewModel.insert(barcodeData)
         viewModel.deleteAll()
 
-        val resultPage = fakeRepository.getAllBarcodes().load(
-            PagingSource.LoadParams.Refresh(
-                key = null,
-                loadSize = Constants.ITEMS_PER_PAGE,
-                placeholdersEnabled = false
-            )
-        ) as PagingSource.LoadResult.Page
+        val barcodeDataList = fakeRepository.getAllBarcodes()
+            .asLiveData()
+            .getOrAwaitValueTest()
+        assertThat(barcodeDataList.size).isEqualTo(0)
+    }
 
-        assertThat(resultPage.data.size).isEqualTo(0)
+    @Test
+    fun `getAllBarcodes() returns BarcodeData list of size one`() = runTest {
+
+        fakeRepository.insert(barcodeData)
+
+        val barcodeDataList = viewModel.getAllBarcodes()
+            .getOrAwaitValueTest()
+        assertThat(barcodeDataList.size).isEqualTo(1)
     }
 
 }

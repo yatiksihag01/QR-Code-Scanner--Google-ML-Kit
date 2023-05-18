@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.repository.details
+package com.yatik.qrscanner.ui.fragments.details
 
 import com.yatik.qrscanner.models.UrlPreviewData
 import com.yatik.qrscanner.utils.Resource
@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface DetailsRepository {
 
-    suspend fun getUrlInfo(url: String): Flow<Resource<UrlPreviewData>>
+    fun getUrlInfo(url: String): Flow<Resource<UrlPreviewData>>
 
 }

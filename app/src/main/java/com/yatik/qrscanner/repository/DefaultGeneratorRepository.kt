@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.repository.barcode_generator
+package com.yatik.qrscanner.repository
 
 import android.content.ContentValues
 import android.content.Context
