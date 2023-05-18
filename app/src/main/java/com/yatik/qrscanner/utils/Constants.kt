@@ -15,7 +15,7 @@ class Constants {
         const val SHEET_PEEK_VAL = 100
         const val QR_WIDTH_HEIGHT = 600
 
-        const val ITEMS_PER_PAGE = 10
+        const val ITEMS_PER_PAGE = 50
 
     }
 

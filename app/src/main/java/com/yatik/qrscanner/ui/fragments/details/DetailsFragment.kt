@@ -12,11 +12,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
-import com.bumptech.glide.Glide
+import coil.load
+import coil.size.Scale
+import coil.transform.RoundedCornersTransformation
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentDetailsBinding
@@ -224,11 +227,18 @@ class DetailsFragment : Fragment() {
                 ).show()
                 binding.urlContent.text = ""
             }
+            if (!resource.data?.imageUrl.isNullOrBlank())
+                binding.previewImage.load(resource.data?.imageUrl) {
+                    crossfade(true)
+                    scale(Scale.FILL)
+                    placeholder(R.drawable.broken_image_200)
+                    transformations(RoundedCornersTransformation(10.0F))
+                }
+            else binding.previewImage.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    requireContext(), R.drawable.broken_image_200
+                ))
 
-            Glide.with(this)
-                .load(resource.data?.imageUrl)
-                .placeholder(R.drawable.broken_image_200)
-                .into(binding.previewImage)
         }
         binding.launchButton.setOnClickListener {
             utilities.customTabBuilder(requireContext(), Uri.parse(mainUrl))

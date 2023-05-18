@@ -16,8 +16,8 @@ android {
         applicationId "com.yatik.qrscanner"
         minSdk 23
         targetSdk 33
-        versionCode 18
-        versionName "2.2.0"
+        versionCode 19
+        versionName "2.2.1"
 
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.yatik.qrscanner.HiltTestRunner"
@@ -59,18 +59,17 @@ android {
 dependencies {
 
     implementation 'androidx.preference:preference-ktx:1.2.0'
-    implementation 'androidx.core:core-ktx:1.10.0'
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.activity:activity-ktx:1.7.1'
     implementation 'androidx.test:runner:1.5.2'
-    implementation 'androidx.preference:preference:1.2.0'
     testImplementation 'junit:junit:4.13.2'
     def camerax_version = "1.2.2"
     def fragment_version = "1.5.7"
     def nav_version = "2.5.3"
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.guava:guava:31.1-android'
 
@@ -148,8 +147,11 @@ dependencies {
     // Jsoup to parse HTML response
     implementation 'org.jsoup:jsoup:1.15.4'
 
-    // Glide to fetch and display images
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    // Coil to fetch and display images
+    implementation 'io.coil-kt:coil:2.3.0'
+
+    // Shimmer effect
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     // Turbine to test Flow
     testImplementation 'app.cash.turbine:turbine:0.12.1'
