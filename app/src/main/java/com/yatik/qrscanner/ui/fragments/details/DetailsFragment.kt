@@ -207,8 +207,11 @@ class DetailsFragment : Fragment() {
         else url
         binding.decodedText.text = mainUrl
 
-        binding.previewDetails.visibility = View.VISIBLE
-        binding.urlContent.text = getString(R.string.fetching)
+        val shimmerContainer = binding.shimmerViewContainer
+        shimmerContainer.apply {
+            visibility = View.VISIBLE
+            startShimmer()
+        }
         binding.urlTextView.text = mainUrl
         binding.urlTextView.setOnClickListener {
             utilities.customTabBuilder(requireContext(), Uri.parse(mainUrl))
@@ -217,9 +220,19 @@ class DetailsFragment : Fragment() {
         detailsViewModel.getUrlPreview(mainUrl)
         detailsViewModel.urlPreviewResource.observe(viewLifecycleOwner) { resource ->
 
-            if (!resource.data?.title.isNullOrBlank())
+            if (!resource.data?.title.isNullOrBlank()) {
+                shimmerContainer.apply {
+                    stopShimmer()
+                    visibility = View.GONE
+                }
+                binding.previewDetails.visibility = View.VISIBLE
                 binding.urlContent.text = resource.data?.title
+            }
             else if (!resource.message.isNullOrBlank()) {
+                shimmerContainer.apply {
+                    stopShimmer()
+                    visibility = View.GONE
+                }
                 Toast.makeText(
                     requireContext(),
                     "${resource.message}! Preview not available",
