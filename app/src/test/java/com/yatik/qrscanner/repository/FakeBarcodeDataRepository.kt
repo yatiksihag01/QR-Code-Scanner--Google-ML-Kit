@@ -1,8 +1,9 @@
 package com.yatik.qrscanner.repository
 
+import androidx.paging.PagingSource
+import com.yatik.qrscanner.FakePagingSource
 import com.yatik.qrscanner.models.BarcodeData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.yatik.qrscanner.repository.history.BarcodeDataRepository
 
 class FakeBarcodeDataRepository : BarcodeDataRepository {
 
@@ -18,10 +19,8 @@ class FakeBarcodeDataRepository : BarcodeDataRepository {
         _barcodeDataList.remove(barcodeData)
     }
 
-    override fun getAllBarcodes(): Flow<List<BarcodeData>> {
-        return flow {
-            emit(barcodeDataList)
-        }
+    override fun getAllBarcodes(): PagingSource<Int, BarcodeData> {
+        return FakePagingSource(barcodeDataList)
     }
 
     override suspend fun deleteAll() {

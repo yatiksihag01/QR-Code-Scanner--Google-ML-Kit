@@ -58,13 +58,13 @@
         android:layout_height="0dp"
         android:backgroundTint="?colorPrimary"
         android:contentDescription="delete item"
+        app:icon="@drawable/outline_delete_24"
+        app:iconSize="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/guideline_end"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.28"
-        app:icon="@drawable/outline_delete_24"
-        app:iconSize="28dp"
         tools:ignore="HardcodedText" />
 
     <TextView

@@ -1,4 +1,4 @@
-package com.yatik.qrscanner.ui.fragments.details
+package com.yatik.qrscanner.repository.details
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
@@ -17,6 +17,7 @@ import com.yatik.qrscanner.utils.TestConstants.Companion.SUCCESS_RESPONSE_TITLE
 import com.yatik.qrscanner.utils.connectivity.ConnectivityHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -38,6 +39,7 @@ class DefaultDetailsRepositoryTest {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+    private val testDispatcher = StandardTestDispatcher()
 
     private val mockedDao = mock(UrlPreviewDao::class.java)
     private val mockedApi = mock(UrlPreviewApi::class.java)
@@ -48,8 +50,11 @@ class DefaultDetailsRepositoryTest {
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(Dispatchers.IO)
-        repository = DefaultDetailsRepository(mockedApi, mockedDao, mockedConnectivityHelper)
+        Dispatchers.setMain(testDispatcher)
+        repository = DefaultDetailsRepository(mockedApi,
+            mockedDao, mockedConnectivityHelper,
+            testDispatcher
+        )
     }
 
     @After
@@ -59,7 +64,7 @@ class DefaultDetailsRepositoryTest {
 
     @Test
     fun `getData() returns two Loadings and then Success when remote data is successfully retrieved`() =
-        runTest {
+        runTest(testDispatcher) {
 
             val responseBody = SUCCESS_RESPONSE.toResponseBody("text/plain".toMediaTypeOrNull())
             val response = Response.success(responseBody)
@@ -101,7 +106,7 @@ class DefaultDetailsRepositoryTest {
         }
 
     @Test
-    fun `getData() returns two Loadings for server error and no internet`() = runTest {
+    fun `getData() returns two Loadings for server error and no internet`() = runTest(testDispatcher) {
 
         val urlPreviewData = UrlPreviewData(
             MAIN_URL, SUCCESS_RESPONSE_TITLE,
@@ -137,7 +142,7 @@ class DefaultDetailsRepositoryTest {
     }
 
     @Test
-    fun `getData() catches api exceptions`() = runTest {
+    fun `getData() catches api exceptions`() = runTest(testDispatcher) {
 
         val urlPreviewData = UrlPreviewData(
             MAIN_URL, SUCCESS_RESPONSE_TITLE,

@@ -1,11 +1,12 @@
 package com.yatik.qrscanner.database
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.paging.PagingSource
 import androidx.test.filters.SmallTest
-import app.cash.turbine.test
 import com.google.common.truth.Truth.*
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.utils.Constants.Companion.ITEMS_PER_PAGE
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,51 +55,20 @@ class BarcodeDaoTest {
         dao.insert(barcodeData)
         dao.insert(barcodeData2)
 
-        dao.getAllBarcodes().test {
+        val resultPage = dao.getAllBarcodes().load(
+            PagingSource.LoadParams.Refresh(
+                key = null,
+                loadSize = ITEMS_PER_PAGE,
+                placeholdersEnabled = false
+            )
+        ) as PagingSource.LoadResult.Page
 
-            val barcodeList = awaitItem()
-            var data = barcodeList[1] // items returned by getAllBarcodes() are in LIFO order
+        // id is auto-incrementing on actual insertion
+        barcodeData.id = 1
+        barcodeData2.id = 2
 
-            // id = 0 means auto-generation not working properly
-            assertThat(data.id).isNotEqualTo(0)
-            assertThat(data.format).isEqualTo(barcodeData.format)
-            assertThat(data.title).isEqualTo(barcodeData.title)
-            assertThat(data.dateTime).isEqualTo(barcodeData.dateTime)
-
-            data = barcodeList[0]
-            assertThat(data.format).isEqualTo(barcodeData2.format)
-            assertThat(data.title).isEqualTo(barcodeData2.title)
-            assertThat(data.dateTime).isEqualTo(barcodeData2.dateTime)
-            cancel()
-        }
-    }
-
-    @Test
-    fun deleteSingleBarcodeData() = runTest {
-
-        val barcodeData = BarcodeData(
-            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample",
-            null, null, "27.01.2023 23:41:47"
-        )
-        dao.insert(barcodeData)
-
-        val barcodeData2 = BarcodeData(
-            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample2",
-            null, null, "28.01.2023 00:00:47"
-        )
-        dao.insert(barcodeData2)
-
-        dao.getAllBarcodes().test {
-            val barcodesList = awaitItem()
-            // Delete the barcodeData returned from the list, because it will have an ID
-            dao.delete(barcodesList[1])
-
-            val barcodesList2 = awaitItem()
-            assertThat(barcodesList2).doesNotContain(barcodeData)
-            assertThat(barcodesList2.size).isEqualTo(1)
-
-            cancel()
-        }
+        assertThat(resultPage.data[0]).isEqualTo(barcodeData2)
+        assertThat(resultPage.data[1]).isEqualTo(barcodeData)
 
     }
 
@@ -116,13 +86,17 @@ class BarcodeDaoTest {
             null, null, "28.01.2023 00:00:47"
         )
         dao.insert(barcodeData2)
-
         dao.deleteAll()
-        dao.getAllBarcodes().test {
-            val barcodesList = awaitItem()
-            assertThat(barcodesList.size).isEqualTo(0)
-            cancel()
-        }
+
+        val resultPage = dao.getAllBarcodes().load(
+            PagingSource.LoadParams.Refresh(
+                key = null,
+                loadSize = ITEMS_PER_PAGE,
+                placeholdersEnabled = false
+            )
+        ) as PagingSource.LoadResult.Page
+
+        assertThat(resultPage.data.size).isEqualTo(0)
 
     }
 

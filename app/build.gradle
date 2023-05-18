@@ -16,8 +16,8 @@ android {
         applicationId "com.yatik.qrscanner"
         minSdk 23
         targetSdk 33
-        versionCode 17
-        versionName "2.1.4"
+        versionCode 18
+        versionName "2.2.0"
 
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.yatik.qrscanner.HiltTestRunner"
@@ -122,6 +122,11 @@ dependencies {
     //Custom Chrome Tabs
     implementation 'androidx.browser:browser:1.5.0'
 
+    // Paging Components
+    implementation "androidx.paging:paging-runtime-ktx:$rootProject.paging_version"
+    implementation "androidx.room:room-paging:2.5.1"
+    testImplementation "androidx.paging:paging-common-ktx:$rootProject.paging_version"
+
     // To test coroutines
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
@@ -142,6 +147,9 @@ dependencies {
 
     // Jsoup to parse HTML response
     implementation 'org.jsoup:jsoup:1.15.4'
+
+    // Glide to fetch and display images
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
 
     // Turbine to test Flow
     testImplementation 'app.cash.turbine:turbine:0.12.1'

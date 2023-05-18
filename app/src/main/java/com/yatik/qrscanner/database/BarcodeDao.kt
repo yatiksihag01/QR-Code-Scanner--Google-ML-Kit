@@ -1,8 +1,8 @@
 package com.yatik.qrscanner.database
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.yatik.qrscanner.models.BarcodeData
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BarcodeDao {
@@ -14,7 +14,7 @@ interface BarcodeDao {
     suspend fun delete(barcodeData: BarcodeData)
 
     @Query("SELECT * FROM barcode_table ORDER BY id DESC")
-    fun getAllBarcodes(): Flow<List<BarcodeData>>
+    fun getAllBarcodes(): PagingSource<Int, BarcodeData>
 
     @Query("DELETE FROM barcode_table")
     suspend fun deleteAll()
