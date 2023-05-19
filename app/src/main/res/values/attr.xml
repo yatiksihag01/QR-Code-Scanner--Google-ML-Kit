@@ -3,4 +3,5 @@
 <resources>
     <attr name="mainSheetIconColor" format="color" />
     <attr name="semiTransparent" format="color" />
+    <attr name="shimmerColor" format="color" />
 </resources>

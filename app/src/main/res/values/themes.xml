@@ -19,6 +19,7 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="mainSheetIconColor">#A6000000</item>
         <item name="semiTransparent">@color/semiTransparentBlack</item>
+        <item name="shimmerColor">#B3B2B2</item>
     </style>
 
     <!-- Base application theme. -->
@@ -40,6 +41,7 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="mainSheetIconColor">?attr/colorOnPrimary</item>
         <item name="semiTransparent">@color/semiTransparentWhite</item>
+        <item name="shimmerColor">#656565</item>
     </style>
 
     <style name="LightThemeGreen" parent="Theme.Material3.Light.NoActionBar">
@@ -60,6 +62,7 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="mainSheetIconColor">#A6000000</item>
         <item name="semiTransparent">@color/semiTransparentBlack</item>
+        <item name="shimmerColor">#B3B2B2</item>
     </style>
 
     <style name="DarkThemeGreen" parent="Theme.Material3.Dark.NoActionBar">
@@ -80,6 +83,7 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="mainSheetIconColor">?attr/colorOnPrimary</item>
         <item name="semiTransparent">@color/semiTransparentWhite</item>
+        <item name="shimmerColor">#656565</item>
     </style>
 
 </resources>
