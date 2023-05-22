@@ -9,7 +9,7 @@ body:
             label: "⚠️ Before posting ⚠️"
             description: All conditions are **required**. Your issue can be closed if these are checked incorrectly.
             options:
-                -   label: This is a **bug**, not a question or an enhancement.
+                -   label: This is a **bug**, not a question/support or an enhancement.
                     required: true
                 -   label: I've [searched for similar issues](https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/issues) and didn't find a duplicate.
                     required: true
