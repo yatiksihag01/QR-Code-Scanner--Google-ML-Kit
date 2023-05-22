@@ -1,0 +1,44 @@
+name: Feature Request
+description: Suggest an idea to help improve QR Code Scanner
+labels: enhancement
+title: "[FEATURE REQUEST] - "
+
+body:
+  - type: checkboxes
+    id: before-posting
+    attributes:
+      label: "⚠️ Before posting ⚠️"
+      description: All conditions are **required**. Your issue can be closed if these are checked incorrectly.
+      options:
+        - label: This is a **enhancement**, not a question or an bug.
+          required: true
+        - label: I've [searched for similar issues](https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/issues) and didn't find a duplicate.
+          required: true
+        - label: I've written a clear and descriptive title for this issue.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        **Please describe your feature request clearly and concisely**
+
+  - type: textarea
+    attributes:
+      label: Feature Description
+      description: Provide a brief description of the feature you'd like to see implemented
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Motivation
+      description: Explain why this feature is important and how it will enhance the user experience
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Alternatives
+      description: Discuss any alternative solutions or features you've considered
+    validations:
+      required: false
