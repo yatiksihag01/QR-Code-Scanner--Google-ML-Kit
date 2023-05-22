@@ -1,0 +1,36 @@
+name: Support Request
+description: Ask for help or support related to QR Code Scanner
+labels: question
+title: "[SUPPORT REQUEST] - "
+
+body:
+  - type: checkboxes
+    id: before-posting
+    attributes:
+      label: "⚠️ Before posting ⚠️"
+      description: All conditions are **required**. Your issue can be closed if these are checked incorrectly.
+      options:
+        - label: This is a **question**, not a enhancement or an bug.
+          required: true
+        - label: I've [searched for similar issues](https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/issues) and didn't find a duplicate.
+          required: true
+        - label: I've written a clear and descriptive title for this issue.
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        **Please describe your support/question request clearly and concisely**
+
+  - type: textarea
+    attributes:
+      label: Issue Description
+      description: Provide a brief description of the problem you are facing
+    validations:
+      required: true
+
+  - type: input
+    id: android-version
+    attributes:
+      label: Android version
+    validations:
+      required: true
