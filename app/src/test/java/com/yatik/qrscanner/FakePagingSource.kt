@@ -4,7 +4,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.yatik.qrscanner.models.BarcodeData
 
-class FakePagingSource(private val barcodeDataList: List<BarcodeData>) : PagingSource<Int, BarcodeData>() {
+class FakePagingSource(private val barcodeDataList: List<BarcodeData>) :
+    PagingSource<Int, BarcodeData>() {
 
     override fun getRefreshKey(state: PagingState<Int, BarcodeData>): Int? {
         return null

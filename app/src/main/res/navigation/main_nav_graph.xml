@@ -65,5 +65,10 @@
         <argument
             android:name="barcodeData"
             app:argType="com.yatik.qrscanner.models.BarcodeData" />
+        <action
+            android:id="@+id/action_detailsFragment_to_generatorFragment"
+            app:destination="@id/generatorFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_left" />
     </fragment>
 </navigation>

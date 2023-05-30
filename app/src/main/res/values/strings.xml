@@ -59,6 +59,8 @@
     <string name="share">Share</string>
     <string name="launch">Launch</string>
     <string name="fetching">fetching...</string>
+    <string name="create">Create</string>
+    <string name="create_qr_notif_message">Click here to create QR Code</string>
 
 
     <string-array name="theme_types">

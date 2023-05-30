@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
 import coil.load
@@ -23,6 +24,8 @@ import coil.transform.RoundedCornersTransformation
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentDetailsBinding
+import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.models.GeneratorData
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Utilities
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,18 +72,31 @@ class DetailsFragment : Fragment() {
         val rawValue = title ?: "Sorry, this QR code doesn't contain any data"
         val utilities = Utilities()
 
+        binding.detailsToQrButton.setOnClickListener {
+            val bundle = Bundle().apply {
+                putParcelable("GeneratorData", barcodeDataToGeneratorData(barcodeData))
+            }
+            findNavController().navigate(
+                R.id.action_detailsFragment_to_generatorFragment,
+                bundle
+            )
+        }
+
         when (format) {
             Barcode.FORMAT_QR_CODE -> {
                 when (valueType) {
                     Barcode.TYPE_WIFI -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_wifi_24)
-                        binding.typeText.text = "Wifi"
+                        binding.typeText.text = "WiFi"
                         binding.decodedText.text = String.format(
                             "SSID: %s\n\nPassword: %s\n\nType: %s", title, decryptedText, others
                         )
-                        binding.launchButton.visibility = View.GONE
-                        binding.wifiButton.visibility = View.VISIBLE
-                        binding.wifiButton.setOnClickListener { openWifiSettings() }
+                        binding.launchButton.icon = AppCompatResources.getDrawable(
+                            requireContext(),
+                            R.drawable.outline_wifi_32
+                        )
+                        binding.launchButton.text = getString(R.string.wifi)
+                        binding.launchButton.setOnClickListener { openWifiSettings() }
                     }
 
                     Barcode.TYPE_URL -> {
@@ -212,7 +228,9 @@ class DetailsFragment : Fragment() {
             visibility = View.VISIBLE
             startShimmer()
         }
-        binding.urlTextView.text = mainUrl
+        binding.urlTextView.text =
+            if (mainUrl.length <= 50) mainUrl
+            else "${mainUrl.substring(0, 47)}..."
         binding.urlTextView.setOnClickListener {
             utilities.customTabBuilder(requireContext(), Uri.parse(mainUrl))
         }
@@ -227,8 +245,7 @@ class DetailsFragment : Fragment() {
                 }
                 binding.previewDetails.visibility = View.VISIBLE
                 binding.urlContent.text = resource.data?.title
-            }
-            else if (!resource.message.isNullOrBlank()) {
+            } else if (!resource.message.isNullOrBlank()) {
                 shimmerContainer.apply {
                     stopShimmer()
                     visibility = View.GONE
@@ -250,7 +267,8 @@ class DetailsFragment : Fragment() {
             else binding.previewImage.setImageDrawable(
                 AppCompatResources.getDrawable(
                     requireContext(), R.drawable.broken_image_200
-                ))
+                )
+            )
 
         }
         binding.launchButton.setOnClickListener {
@@ -294,5 +312,19 @@ class DetailsFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
+
+    lateinit var barcodeData: BarcodeData
+    private fun barcodeDataToGeneratorData(barcodeData: BarcodeData): GeneratorData =
+        GeneratorData(
+            type = barcodeData.type,
+            text = barcodeData.title,
+            url = barcodeData.decryptedText,
+            ssid = barcodeData.title,
+            securityType = barcodeData.others,
+            password = barcodeData.decryptedText,
+            phone = barcodeData.title,
+            message = barcodeData.decryptedText,
+            barcodeNumber = barcodeData.title
+        )
 
 }

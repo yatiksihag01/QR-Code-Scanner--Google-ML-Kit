@@ -51,7 +51,8 @@ class DefaultDetailsRepositoryTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        repository = DefaultDetailsRepository(mockedApi,
+        repository = DefaultDetailsRepository(
+            mockedApi,
             mockedDao, mockedConnectivityHelper,
             testDispatcher
         )
@@ -106,40 +107,42 @@ class DefaultDetailsRepositoryTest {
         }
 
     @Test
-    fun `getData() returns two Loadings for server error and no internet`() = runTest(testDispatcher) {
+    fun `getData() returns two Loadings for server error and no internet`() =
+        runTest(testDispatcher) {
 
-        val urlPreviewData = UrlPreviewData(
-            MAIN_URL, SUCCESS_RESPONSE_TITLE,
-            SUCCESS_RESPONSE_DESCRIPTION, SUCCESS_RESPONSE_IMAGE_URL
-        )
+            val urlPreviewData = UrlPreviewData(
+                MAIN_URL, SUCCESS_RESPONSE_TITLE,
+                SUCCESS_RESPONSE_DESCRIPTION, SUCCESS_RESPONSE_IMAGE_URL
+            )
 
-        val responseBody = RESPONSE_ON_ERROR_CODE.toResponseBody("text/plain".toMediaTypeOrNull())
-        val response = Response.error<ResponseBody>(ERROR_RESPONSE_CODE, responseBody)
+            val responseBody =
+                RESPONSE_ON_ERROR_CODE.toResponseBody("text/plain".toMediaTypeOrNull())
+            val response = Response.error<ResponseBody>(ERROR_RESPONSE_CODE, responseBody)
 
-        `when`(mockedConnectivityHelper.isConnectedToInternet()).thenReturn(true)
-        `when`(mockedApi.getUrlPreview(MAIN_URL)).thenReturn(response)
-        `when`(mockedDao.getUrlInfo(MAIN_URL)).thenReturn(urlPreviewData)
+            `when`(mockedConnectivityHelper.isConnectedToInternet()).thenReturn(true)
+            `when`(mockedApi.getUrlPreview(MAIN_URL)).thenReturn(response)
+            `when`(mockedDao.getUrlInfo(MAIN_URL)).thenReturn(urlPreviewData)
 
-        `when`(mockedDao.deleteUrlInfo(urlPreviewData)).thenAnswer { }
-        `when`(mockedDao.upsertUrlInfo(urlPreviewData)).thenAnswer { }
+            `when`(mockedDao.deleteUrlInfo(urlPreviewData)).thenAnswer { }
+            `when`(mockedDao.upsertUrlInfo(urlPreviewData)).thenAnswer { }
 
-        repository.getUrlInfo(MAIN_URL).test {
+            repository.getUrlInfo(MAIN_URL).test {
 
-            val emptyLoading = awaitItem()
-            assertThat(emptyLoading).isInstanceOf(Resource.Loading::class.java)
-            assertThat(emptyLoading.data).isNull()
-            assertThat(emptyLoading.message).isNull()
+                val emptyLoading = awaitItem()
+                assertThat(emptyLoading).isInstanceOf(Resource.Loading::class.java)
+                assertThat(emptyLoading.data).isNull()
+                assertThat(emptyLoading.message).isNull()
 
-            val loadingWithData = awaitItem()
-            assertThat(loadingWithData).isInstanceOf(Resource.Loading::class.java)
-            assertThat(loadingWithData.data?.title).isEqualTo(SUCCESS_RESPONSE_TITLE)
-            assertThat(loadingWithData.data?.description).isEqualTo(SUCCESS_RESPONSE_DESCRIPTION)
-            assertThat(loadingWithData.data?.imageUrl).isEqualTo(SUCCESS_RESPONSE_IMAGE_URL)
+                val loadingWithData = awaitItem()
+                assertThat(loadingWithData).isInstanceOf(Resource.Loading::class.java)
+                assertThat(loadingWithData.data?.title).isEqualTo(SUCCESS_RESPONSE_TITLE)
+                assertThat(loadingWithData.data?.description).isEqualTo(SUCCESS_RESPONSE_DESCRIPTION)
+                assertThat(loadingWithData.data?.imageUrl).isEqualTo(SUCCESS_RESPONSE_IMAGE_URL)
 
-            awaitComplete()
-            cancel()
+                awaitComplete()
+                cancel()
+            }
         }
-    }
 
     @Test
     fun `getData() catches api exceptions`() = runTest(testDispatcher) {
