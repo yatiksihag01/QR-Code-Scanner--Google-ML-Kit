@@ -313,7 +313,6 @@ class DetailsFragment : Fragment() {
         _binding = null
     }
 
-    lateinit var barcodeData: BarcodeData
     private fun barcodeDataToGeneratorData(barcodeData: BarcodeData): GeneratorData =
         GeneratorData(
             type = barcodeData.type,
