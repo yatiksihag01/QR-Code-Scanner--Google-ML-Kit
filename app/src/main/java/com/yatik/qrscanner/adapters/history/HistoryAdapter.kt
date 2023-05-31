@@ -58,12 +58,13 @@ class HistoryAdapter :
 
         date.text = "· $dateTime"
 
-        if (barcodeData != null) {
-            tvTitle.text = barcodeData.title?.let {
-                if (it.isEmpty()) barcodeData.decryptedText
-                else if (it.length < 51) it
-                else "${it.substring(0, 47)}..."
-            }
+        tvTitle.text = barcodeData?.title?.let {
+            if (it.isEmpty()) {
+                val text = barcodeData.decryptedText.toString()
+                if (text.length <= 50) text
+                else "${text.substring(0, 47)}..."
+            } else if (it.length <= 50) it
+            else "${it.substring(0, 47)}..."
         }
         when (format) {
             Barcode.FORMAT_QR_CODE -> {

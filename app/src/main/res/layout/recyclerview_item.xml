@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/history_icon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:padding="12dp"
         app:layout_constraintBottom_toTopOf="@id/line1"
         app:layout_constraintEnd_toStartOf="@id/guideline_start"
@@ -54,8 +54,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/delete_button"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:backgroundTint="?colorPrimary"
         android:contentDescription="delete item"
         app:icon="@drawable/outline_delete_24"

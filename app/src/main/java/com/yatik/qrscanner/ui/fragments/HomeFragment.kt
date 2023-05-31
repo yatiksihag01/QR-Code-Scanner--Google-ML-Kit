@@ -1,9 +1,7 @@
 package com.yatik.qrscanner.ui.fragments
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -35,8 +33,8 @@ import com.yatik.qrscanner.ui.SettingsActivity
 import com.yatik.qrscanner.ui.fragments.history.BarcodeViewModel
 import com.yatik.qrscanner.utils.Constants
 import com.yatik.qrscanner.utils.Constants.Companion.SHEET_PEEK_VAL
+import com.yatik.qrscanner.utils.PermissionHelper
 import com.yatik.qrscanner.utils.Utilities
-import com.yatik.qrscanner.utils.noPermissionDialog
 import com.yatik.qrscanner.utils.ratingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
@@ -54,13 +52,13 @@ class HomeFragment : Fragment() {
     private var isImageSelected = false
 
     private lateinit var pickVisualMedia: ActivityResultLauncher<PickVisualMediaRequest>
-    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private var mCameraProvider: ProcessCameraProvider? = null
     private lateinit var mCameraProviderFuture: ListenableFuture<ProcessCameraProvider>
 
     private val barcodeViewModel: BarcodeViewModel by viewModels()
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private val utilities = Utilities()
+    private val permissionHelper = PermissionHelper()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,7 +76,7 @@ class HomeFragment : Fragment() {
             utilities.calculatePeekHeight(requireContext(), SHEET_PEEK_VAL)
         bottomSheetBehavior.isHideable = false
 
-        requestCameraPermission()
+        permissionHelper.requestCameraPermission(requireContext(), this)
 
         mCameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         pickVisualMedia =
@@ -93,9 +91,7 @@ class HomeFragment : Fragment() {
                         image = InputImage.fromFilePath(requireContext(), result)
                         scanner.process(image)
                             .addOnSuccessListener { barcodes: List<Barcode> ->
-                                processResult(
-                                    barcodes
-                                )
+                                processResult(barcodes)
                             }
                             .addOnFailureListener { e: Exception ->
                                 // Task failed with an exception
@@ -119,30 +115,8 @@ class HomeFragment : Fragment() {
         super.onResume()
         binding.zoomInfo.text = getString(R.string.initial_zoom)
         binding.buttonFlash.setIconResource(R.drawable.outline_flash_off_28)
-        Log.d("check", "resumed")
-        if (isCameraPermissionGranted()) {
+        if (permissionHelper.isCameraPermissionGranted(requireContext())) {
             setupCamera()
-        }
-    }
-
-    private fun isCameraPermissionGranted(): Boolean = ContextCompat.checkSelfPermission(
-        requireContext(),
-        Manifest.permission.CAMERA
-    ) == PackageManager.PERMISSION_GRANTED
-
-    private fun requestCameraPermission() {
-        if (!isCameraPermissionGranted()) {
-            requestPermissionLauncher = registerForActivityResult(
-                ActivityResultContracts.RequestPermission()
-            ) { isGranted: Boolean ->
-                if (!isGranted) {
-                    val message = resources.getString(R.string.permissionDeniedMessageCam)
-                    noPermissionDialog(requireContext(), message)
-                }
-            }
-            requestPermissionLauncher.launch(
-                Manifest.permission.CAMERA
-            )
         }
     }
 
@@ -236,12 +210,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun setBottomSheetButtons() {
-        binding.dragHandle.setOnClickListener {
-            bottomSheetBehavior.state =
-                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                    BottomSheetBehavior.STATE_EXPANDED
-                } else BottomSheetBehavior.STATE_COLLAPSED
-        }
         binding.buttonGallery.setOnClickListener {
             pickVisualMedia.launch(
                 PickVisualMediaRequest(
