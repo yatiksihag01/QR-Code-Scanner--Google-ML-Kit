@@ -4,6 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.*
 import com.yatik.qrscanner.getOrAwaitValueTest
 import com.yatik.qrscanner.models.UrlPreviewData
+import com.yatik.qrscanner.models.food.Nutriments
+import com.yatik.qrscanner.models.food.NutriscoreData
+import com.yatik.qrscanner.models.food.Product
 import com.yatik.qrscanner.repository.details.DetailsRepository
 import com.yatik.qrscanner.utils.Resource
 import com.yatik.qrscanner.utils.TestConstants
@@ -20,6 +23,7 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 
@@ -32,9 +36,16 @@ class DetailsViewModelTest {
     private lateinit var viewModel: DetailsViewModel
     private val mockedRepository = mock(DetailsRepository::class.java)
     private val testDispatcher = UnconfinedTestDispatcher()
+
     private val urlPreviewData = UrlPreviewData(
         MAIN_URL, TestConstants.SUCCESS_RESPONSE_TITLE,
         TestConstants.SUCCESS_RESPONSE_DESCRIPTION, TestConstants.SUCCESS_RESPONSE_IMAGE_URL
+    )
+    private val product = Product(
+        nutriments = Nutriments(energy = 2250),
+        nutriscoreData = NutriscoreData(),
+        nutritionGrades = "a",
+        productName = "Biscuit"
     )
 
     @Before
@@ -60,6 +71,19 @@ class DetailsViewModelTest {
         val resource = viewModel.urlPreviewResource.getOrAwaitValueTest()
         assertThat(resource).isInstanceOf(Resource.Success::class.java)
         assertThat(resource.data).isNotNull()
+        assertThat(resource.message).isNull()
+    }
+
+    @Test
+    fun `getFoodDetails() should update foodProductResource`() = runTest(testDispatcher) {
+
+        `when`(mockedRepository.getFoodDetails(anyString())).thenReturn(
+            flowOf(Resource.Success(product))
+        )
+        viewModel.getFoodDetails("123")
+        val resource = viewModel.foodProductResource.getOrAwaitValueTest()
+        assertThat(resource).isInstanceOf(Resource.Success::class.java)
+        assertThat(resource.data!!.productName).isEqualTo("Biscuit")
         assertThat(resource.message).isNull()
     }
 

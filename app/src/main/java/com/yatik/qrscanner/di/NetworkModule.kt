@@ -2,6 +2,7 @@ package com.yatik.qrscanner.di
 
 import android.content.Context
 import com.yatik.qrscanner.network.UrlPreviewApi
+import com.yatik.qrscanner.network.food.FoodApi
 import com.yatik.qrscanner.utils.connectivity.ConnectivityHelper
 import com.yatik.qrscanner.utils.connectivity.DefaultConnectivityHelper
 import dagger.Module
@@ -9,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Credentials
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,9 +30,15 @@ object NetworkModule {
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .connectTimeout(5, TimeUnit.SECONDS)
+            .authenticator { _, response ->
+                val credential = Credentials.basic("off", "off")
+                response.request.newBuilder()
+                    .header("Authorization", credential)
+                    .build()
+            }
             .build()
         return Retrofit.Builder()
-            .baseUrl("https://localhost/")
+            .baseUrl("https://world.openfoodfacts.net/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
@@ -41,6 +49,12 @@ object NetworkModule {
     fun provideUrlPreviewApi(
         retrofit: Retrofit
     ): UrlPreviewApi = retrofit.create(UrlPreviewApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFoodApi(
+        retrofit: Retrofit
+    ): FoodApi = retrofit.create(FoodApi::class.java)
 
     @Provides
     fun provideConnectivityHelper(
