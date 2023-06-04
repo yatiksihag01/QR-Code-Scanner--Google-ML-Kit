@@ -62,7 +62,7 @@ fun ratingDialog(context: Context) {
                     context.packageManager.getInstallSourceInfo(context.packageName).installingPackageName
                 } else {
                     @Suppress("Deprecation")
-                    context.packageManager.getInstallerPackageName("")
+                    context.packageManager.getInstallerPackageName(context.packageName)
                 }
                 if (installer == "com.sec.android.app.samsungapps")
                     redirectToStore(context, Constants.GALAXY_STORE)
