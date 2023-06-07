@@ -52,7 +52,10 @@ class FoodDaoTest {
             nutriments = Nutriments(),
             nutriscoreData = NutriscoreData(),
             nutritionGrades = "e",
-            productName = "sample_product"
+            productName = "sample_product",
+            frontImageSmall = "https://openfoodfacts.org/sample_image",
+            brands = "Sample brand",
+            quantity = "250 grams"
         )
 
         val barcode = "123456789123"

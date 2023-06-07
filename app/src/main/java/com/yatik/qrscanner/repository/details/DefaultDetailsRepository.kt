@@ -71,7 +71,7 @@ class DefaultDetailsRepository @Inject constructor(
                         data = urlPreviewDao.getUrlInfo(url)!!
                     )
                 )
-            }
+            } else emit(Resource.Error(message = "Error response"))
         } catch (e: HttpException) {
             e.printStackTrace()
             emit(
@@ -158,13 +158,9 @@ class DefaultDetailsRepository @Inject constructor(
             val foodResponse = foodApi.getFoodDetails(barcode)
             if (foodResponse.isSuccessful) {
                 foodResponse.body()?.let {
-                    emit(
-                        Resource.Success(
-                            data = it
-                        )
-                    )
+                    emit(Resource.Success(data = it))
                 }
-            }
+            } else emit(Resource.Error("Product not found"))
         } catch (e: HttpException) {
             e.printStackTrace()
             emit(

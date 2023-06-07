@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "edba6b0a94a79a833c72fbe5e1920882",
+    "identityHash": "ccdbe743469b21b6fae3b1518c33bc84",
     "entities": [
       {
         "tableName": "barcode_table",
@@ -101,7 +101,7 @@
       },
       {
         "tableName": "food_product",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`nutriments` TEXT, `nutriscore_data` TEXT, `nutrition_grade` TEXT, `product_name` TEXT, `id` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`nutriments` TEXT, `nutriscore_data` TEXT, `nutrition_grade` TEXT, `product_name` TEXT NOT NULL, `image_front_small_url` TEXT, `brands` TEXT NOT NULL, `quantity` TEXT NOT NULL, `id` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "nutriments",
@@ -125,7 +125,25 @@
             "fieldPath": "productName",
             "columnName": "product_name",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "frontImageSmall",
+            "columnName": "image_front_small_url",
+            "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "brands",
+            "columnName": "brands",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "TEXT",
+            "notNull": true
           },
           {
             "fieldPath": "barcode",
@@ -153,7 +171,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'edba6b0a94a79a833c72fbe5e1920882')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ccdbe743469b21b6fae3b1518c33bc84')"
     ]
   }
 }

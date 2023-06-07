@@ -18,16 +18,25 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.size.Scale
 import coil.transform.RoundedCornersTransformation
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
+import com.yatik.qrscanner.adapters.food.FoodTableAdapter
 import com.yatik.qrscanner.databinding.FragmentDetailsBinding
 import com.yatik.qrscanner.models.BarcodeData
-import com.yatik.qrscanner.models.GeneratorData
+import com.yatik.qrscanner.models.food.Product
 import com.yatik.qrscanner.ui.MainActivity
+import com.yatik.qrscanner.utils.Resource
 import com.yatik.qrscanner.utils.Utilities
+import com.yatik.qrscanner.utils.foodTableRowsList
+import com.yatik.qrscanner.utils.getNovaInfo
+import com.yatik.qrscanner.utils.getNutriInfo
+import com.yatik.qrscanner.utils.mappers.barcodeDataToGeneratorData
+import com.yatik.qrscanner.utils.setNovaColor
+import com.yatik.qrscanner.utils.setNutriColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -70,7 +79,6 @@ class DetailsFragment : Fragment() {
         val others = barcodeData.others
 
         val rawValue = title ?: "Sorry, this QR code doesn't contain any data"
-        val utilities = Utilities()
 
         binding.detailsToQrButton.setOnClickListener {
             val bundle = Bundle().apply {
@@ -180,15 +188,8 @@ class DetailsFragment : Fragment() {
             }
 
             Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E, Barcode.FORMAT_EAN_8, Barcode.FORMAT_EAN_13, Barcode.TYPE_ISBN -> {
-                binding.typeIcon.setImageResource(R.drawable.outline_product_24)
-                binding.typeText.text = "Product"
-                binding.decodedText.text = title
-                binding.launchButton.setOnClickListener {
-                    utilities.customTabBuilder(
-                        requireContext(),
-                        Uri.parse("https://www.google.com/search?q=$title")
-                    )
-                }
+                setProductView(barcodeData)
+
             }
 
             else -> {
@@ -281,6 +282,49 @@ class DetailsFragment : Fragment() {
         }
     }
 
+    private fun setProductView(barcodeData: BarcodeData) {
+
+        val barcode = barcodeData.title
+        binding.typeIcon.setImageResource(R.drawable.outline_product_24)
+        binding.typeText.text = getString(R.string.product)
+        binding.decodedText.text = barcode
+        binding.launchButton.setOnClickListener {
+            Utilities().customTabBuilder(
+                requireContext(),
+                Uri.parse("https://www.google.com/search?q=$barcode")
+            )
+        }
+
+        val shimmerContainer = binding.shimmerFoodViewContainer
+        shimmerContainer.visibility = View.VISIBLE
+        shimmerContainer.startShimmer()
+
+        detailsViewModel.getFoodDetails(barcode.toString())
+        detailsViewModel.foodProductResource.observe(viewLifecycleOwner) { resource ->
+            val data = resource.data
+            when (resource) {
+                is Resource.Loading -> {
+                    if (data != null) {
+                        shimmerContainer.stopShimmer()
+                        shimmerContainer.visibility = View.GONE
+                        attachProductData(data)
+                    }
+                }
+
+                is Resource.Success -> {
+                    shimmerContainer.stopShimmer()
+                    shimmerContainer.visibility = View.GONE
+                    data?.let { attachProductData(it) }
+                }
+
+                else -> {
+                    shimmerContainer.stopShimmer()
+                    shimmerContainer.visibility = View.GONE
+                    Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     private fun copyData(text: String) {
         val clipboardManager =
@@ -313,17 +357,51 @@ class DetailsFragment : Fragment() {
         _binding = null
     }
 
-    private fun barcodeDataToGeneratorData(barcodeData: BarcodeData): GeneratorData =
-        GeneratorData(
-            type = barcodeData.type,
-            text = barcodeData.title,
-            url = barcodeData.decryptedText,
-            ssid = barcodeData.title,
-            securityType = barcodeData.others,
-            password = barcodeData.decryptedText,
-            phone = barcodeData.title,
-            message = barcodeData.decryptedText,
-            barcodeNumber = barcodeData.title
+    private fun attachProductData(product: Product) {
+
+        val foodDetailsParent = binding.foodDetailsParentLayout
+        val foodDetails = binding.foodDetails
+
+        foodDetailsParent.visibility = View.VISIBLE
+        setProductPreview(product)
+
+        foodDetails.novaRatingInfo.text = getNovaInfo(
+            requireContext(),
+            product.nutriments?.novaGroup
         )
+        foodDetails.nutriScoreInfo.text = getNutriInfo(
+            requireContext(),
+            product.nutriscoreData?.grade
+        )
+
+        setNovaColor(
+            requireContext(),
+            foodDetails.novaMainRatingTv,
+            product.nutriments?.novaGroup
+        )
+        setNutriColor(
+            requireContext(),
+            foodDetails.nutriScoreRatingTv,
+            product.nutriscoreData?.grade
+        )
+
+        val recyclerView = binding.foodDetails.foodTableRecyclerView
+        val adapter = FoodTableAdapter(foodTableRowsList(product))
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setProductPreview(product: Product) {
+        binding.foodDetails.productFrontImg.load(product.frontImageSmall) {
+            crossfade(true)
+            scale(Scale.FILL)
+            placeholder(R.drawable.broken_image_200)
+            transformations(RoundedCornersTransformation(10.0F))
+        }
+        binding.foodDetails.productName.text = product.productName
+        binding.foodDetails.productBrandAndServingQuantity.text =
+            "${product.brands} · ${product.quantity}"
+    }
 
 }

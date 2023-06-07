@@ -10,7 +10,10 @@ fun productEntityToProduct(
         nutriments = productEntity.nutriments,
         nutriscoreData = productEntity.nutriscoreData,
         nutritionGrades = productEntity.nutritionGrades,
-        productName = productEntity.productName
+        productName = productEntity.productName,
+        frontImageSmall = productEntity.frontImageSmall,
+        brands = productEntity.brands,
+        quantity = productEntity.quantity
     )
 }
 
@@ -23,7 +26,10 @@ fun productToProductEntity(
         nutriments = product.nutriments,
         nutriscoreData = product.nutriscoreData,
         nutritionGrades = product.nutritionGrades,
-        productName = product.productName,
+        productName = product.productName ?: "Product name not found",
+        frontImageSmall = product.frontImageSmall,
+        brands = product.brands ?: "Brand name unavailable",
+        quantity = product.quantity ?: "unknown quantity",
         barcode = barcode,
         timestamp = timestamp
     )

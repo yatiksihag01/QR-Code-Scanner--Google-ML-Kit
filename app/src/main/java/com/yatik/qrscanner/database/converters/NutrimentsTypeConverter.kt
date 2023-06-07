@@ -2,6 +2,7 @@ package com.yatik.qrscanner.database.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.yatik.qrscanner.models.food.Nutriments
 
 class NutrimentsTypeConverter {
@@ -16,6 +17,11 @@ class NutrimentsTypeConverter {
     @TypeConverter
     fun toNutriments(json: String?): Nutriments? {
         if (json == null) return null
-        return gson.fromJson(json, Nutriments::class.java)
+        return try {
+            gson.fromJson(json, Nutriments::class.java)
+        } catch (e: JsonSyntaxException) {
+            e.printStackTrace()
+            null
+        }
     }
 }

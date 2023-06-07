@@ -11,5 +11,9 @@ data class Product(
     @SerializedName("nutrition_grades")
     val nutritionGrades: String? = null,
     @SerializedName("product_name")
-    val productName: String? = null
+    val productName: String? = null,
+    @SerializedName("image_front_small_url")
+    val frontImageSmall: String? = null,
+    val brands: String? = null,
+    val quantity: String? = null
 )

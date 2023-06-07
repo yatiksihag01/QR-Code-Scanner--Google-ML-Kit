@@ -8,6 +8,8 @@ data class Nutriments(
     val carbohydrates: Number? = null,
     @SerializedName("carbohydrates_100g")
     val carbohydrates100g: Number? = null,
+    @SerializedName("carbohydrates_serving")
+    val carbohydratesServing: Number? = null,
     @SerializedName("carbohydrates_unit")
     val carbohydratesUnit: String? = null,
     @SerializedName("carbohydrates_value")
@@ -19,23 +21,19 @@ data class Nutriments(
     val energyKcal: Number? = null,
     @SerializedName("energy-kcal_100g")
     val energyKcal100g: Number? = null,
+    @SerializedName("energy-kcal_serving")
+    val energyKcalServing: Number? = null,
     @SerializedName("energy-kcal_unit")
     val energyKcalUnit: String? = null,
     @SerializedName("energy-kcal_value")
     val energyKcalValue: Number? = null,
-    @SerializedName("energy-kcal_value_computed")
-    val energyKcalValueComputed: Number? = null,
-    @SerializedName("energy_100g")
-    val energy100g: Number? = null,
-    @SerializedName("energy_unit")
-    val energyUnit: String? = null,
-    @SerializedName("energy_value")
-    val energyValue: Number? = null,
 
     // Fat
     val fat: Number? = null,
     @SerializedName("fat_100g")
     val fat100g: Number? = null,
+    @SerializedName("fat_serving")
+    val fatServing: Number? = null,
     @SerializedName("fat_unit")
     val fatUnit: String? = null,
     @SerializedName("fat_value")
@@ -49,16 +47,19 @@ data class Nutriments(
     @SerializedName("nova-group_serving")
     val novaGroupServing: Int? = null,
 
-    // Nutrition Score
-    @SerializedName("nutrition-score-fr")
-    val nutritionScoreFr: Number? = null,
-    @SerializedName("nutrition-score-fr_100g")
-    val nutritionScoreFr100g: Number? = null,
+    // Fiber
+    val fiber: Number? = null,
+    @SerializedName("fiber_100g")
+    val fiber100g: Number? = null,
+    @SerializedName("fiber_serving")
+    val fiberServing: Number? = null,
 
     // Proteins
     val proteins: Number? = null,
     @SerializedName("proteins_100g")
     val proteins100g: Number? = null,
+    @SerializedName("proteins_serving")
+    val proteinsServing: Number? = null,
     @SerializedName("proteins_unit")
     val proteinsUnit: String? = null,
     @SerializedName("proteins_value")
@@ -68,6 +69,8 @@ data class Nutriments(
     val salt: Number? = null,
     @SerializedName("salt_100g")
     val salt100g: Number? = null,
+    @SerializedName("salt_serving")
+    val saltServing: Number? = null,
     @SerializedName("salt_unit")
     val saltUnit: String? = null,
     @SerializedName("salt_value")
@@ -87,6 +90,8 @@ data class Nutriments(
     val sodium: Number? = null,
     @SerializedName("sodium_100g")
     val sodium100g: Number? = null,
+    @SerializedName("sodium_serving")
+    val sodiumServing: Number? = null,
     @SerializedName("sodium_unit")
     val sodiumUnit: String? = null,
     @SerializedName("sodium_value")
@@ -96,6 +101,8 @@ data class Nutriments(
     val sugars: Number? = null,
     @SerializedName("sugars_100g")
     val sugars100g: Number? = null,
+    @SerializedName("sugars_serving")
+    val sugarServing: Number? = null,
     @SerializedName("sugars_unit")
     val sugarsUnit: String? = null,
     @SerializedName("sugars_value")

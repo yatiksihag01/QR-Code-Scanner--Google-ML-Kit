@@ -24,7 +24,16 @@ data class ProductEntity(
     val nutritionGrades: String? = null,
 
     @ColumnInfo(name = "product_name")
-    val productName: String? = null,
+    val productName: String,
+
+    @ColumnInfo(name = "image_front_small_url")
+    val frontImageSmall: String? = null,
+
+    @ColumnInfo(name = "brands")
+    val brands: String,
+
+    @ColumnInfo(name = "quantity")
+    val quantity: String,
 
     @ColumnInfo("id")
     @PrimaryKey(autoGenerate = false)

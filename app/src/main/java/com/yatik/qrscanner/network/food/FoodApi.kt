@@ -13,7 +13,7 @@ interface FoodApi {
         @Path("barcode")
         barcode: String,
         @Query("fields")
-        fields: String = "product_name,nutriscore_data,nutriments,nutrition_grades"
+        fields: String = "product_name,nutriscore_data,nutriments,nutrition_grades,image_front_small_url,brands,quantity"
     ): Response<FoodResponse>
 
 }

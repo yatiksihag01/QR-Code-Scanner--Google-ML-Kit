@@ -61,6 +61,23 @@
     <string name="fetching">fetching...</string>
     <string name="create">Create</string>
     <string name="create_qr_notif_message">Click here to create QR Code</string>
+    <string name="nova_1_info">Unprocessed or minimally processed food</string>
+    <string name="nova_2_info">Processed culinary ingredients</string>
+    <string name="nova_3_info">Processed food</string>
+    <string name="nova_4_info">Ultra-processed food</string>
+    <string name="nutri_score_a">Very good nutritional quality</string>
+    <string name="nutri_score_b">Good nutritional quality</string>
+    <string name="nutri_score_c">Average nutritional quality</string>
+    <string name="nutri_score_d">Poor nutritional quality</string>
+    <string name="nutri_score_e">Bad nutritional quality</string>
+    <string name="nutri_score_unknown">Nutritional quality not available</string>
+    <string name="nova_unknown_info">Nova rating not available</string>
+    <string name="nutrition_type">Nutrition Type</string>
+    <string name="per_100g_100ml">Per 100g/100ml</string>
+    <string name="per_serving">Per Serving</string>
+    <string name="product_name_unavailable">Product name unavailable</string>
+    <string name="nova_group">Nova Group</string>
+    <string name="nutri_score">Nutri-Score</string>
 
 
     <string-array name="theme_types">

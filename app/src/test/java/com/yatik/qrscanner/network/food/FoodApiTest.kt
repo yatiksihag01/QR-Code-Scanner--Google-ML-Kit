@@ -74,9 +74,30 @@ class FoodApiTest {
         assertThat(response.body()!!.statusVerbose).isEqualTo("product found")
 
         assertThat(response.body()!!.product!!.productName).isEqualTo("Biscuit")
-        assertThat(response.body()!!.product!!.nutriments!!.fat!!.toInt()).isEqualTo(32)
         assertThat(response.body()!!.product!!.nutritionGrades).isEqualTo("d")
-        assertThat(response.body()!!.product!!.nutriscoreData!!.energy!!.toInt()).isEqualTo(2270)
+
+        assertThat(response.body()!!.product!!.nutriments!!.carbohydrates100g!!.toInt()).isEqualTo(
+            54
+        )
+        assertThat(response.body()!!.product!!.nutriments!!.carbohydratesServing!!.toDouble()).isEqualTo(
+            8.1
+        )
+
+        assertThat(response.body()!!.product!!.nutriments!!.energyKcal100g!!.toInt()).isEqualTo(544)
+        assertThat(response.body()!!.product!!.nutriments!!.energyKcalServing!!.toDouble()).isEqualTo(
+            81.6
+        )
+
+        assertThat(response.body()!!.product!!.nutriments!!.proteins100g!!.toDouble()).isEqualTo(8.1)
+        assertThat(response.body()!!.product!!.nutriments!!.proteinsServing!!.toDouble()).isEqualTo(
+            1.22
+        )
+
+        assertThat(response.body()!!.product!!.nutriments!!.fat100g!!.toInt()).isEqualTo(32)
+
+        assertThat(response.body()!!.product!!.brands).isEqualTo("Sample brand")
+        assertThat(response.body()!!.product!!.quantity).isEqualTo("270 g")
+        assertThat(response.body()!!.product!!.frontImageSmall).isEqualTo("https://")
     }
 
 }

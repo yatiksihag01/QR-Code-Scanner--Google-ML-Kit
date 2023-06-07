@@ -117,7 +117,7 @@ class DefaultDetailsRepositoryTest {
         }
 
     @Test
-    fun `getData() returns two Loadings for server error and no internet`() =
+    fun `getData() returns two Loadings and one Error for server error and no internet`() =
         runTest(testDispatcher) {
 
             val urlPreviewData = UrlPreviewData(
@@ -148,6 +148,11 @@ class DefaultDetailsRepositoryTest {
                 assertThat(loadingWithData.data?.title).isEqualTo(SUCCESS_RESPONSE_TITLE)
                 assertThat(loadingWithData.data?.description).isEqualTo(SUCCESS_RESPONSE_DESCRIPTION)
                 assertThat(loadingWithData.data?.imageUrl).isEqualTo(SUCCESS_RESPONSE_IMAGE_URL)
+
+                val errorWithMessage = awaitItem()
+                assertThat(errorWithMessage).isInstanceOf(Resource.Error::class.java)
+                assertThat(errorWithMessage.data).isNull()
+                assertThat(errorWithMessage.message).isNotEmpty()
 
                 awaitComplete()
                 cancel()
@@ -192,13 +197,19 @@ class DefaultDetailsRepositoryTest {
                 nutriments = Nutriments(energy = 2250),
                 nutriscoreData = NutriscoreData(),
                 nutritionGrades = "a",
-                productName = "pBiscuit"
+                productName = "pBiscuit",
+                frontImageSmall = "https://openfoodfacts.org/sample_image",
+                brands = "Sample brand",
+                quantity = "250 grams"
             )
             val productEntity = ProductEntity(
                 nutriments = Nutriments(energy = 3000),
                 nutriscoreData = product.nutriscoreData,
                 nutritionGrades = product.nutritionGrades,
                 productName = "pEBiscuit",
+                frontImageSmall = "https://openfoodfacts.org/sample_image",
+                brands = "Sample brand",
+                quantity = "250 grams",
                 barcode = barcodeString,
                 timestamp = 123456789123
             )
