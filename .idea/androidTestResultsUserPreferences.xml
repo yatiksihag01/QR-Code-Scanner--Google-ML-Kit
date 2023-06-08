@@ -17,6 +17,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-915493230">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Micromax&#10; Micromax E7533" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="adb-BS7533M4KN012100011-Ab52g6._adb-tls-connect._tcp" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-375518960">
           <value>
             <AndroidTestResultsTableState>
@@ -132,6 +146,20 @@
                   <entry key="Tests" value="360" />
                   <entry key="adb-BS7533M4KN012100011-Ab52g6._adb-tls-connect._tcp" value="120" />
                   <entry key="samsung&#10; SM-A135F" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="2137451824">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Micromax&#10; Micromax E7533" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="adb-BS7533M4KN012100011-Ab52g6._adb-tls-connect._tcp" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>

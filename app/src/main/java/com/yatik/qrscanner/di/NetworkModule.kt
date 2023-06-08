@@ -2,6 +2,7 @@ package com.yatik.qrscanner.di
 
 import android.content.Context
 import com.yatik.qrscanner.network.UrlPreviewApi
+import com.yatik.qrscanner.network.food.FoodApi
 import com.yatik.qrscanner.utils.connectivity.ConnectivityHelper
 import com.yatik.qrscanner.utils.connectivity.DefaultConnectivityHelper
 import dagger.Module
@@ -30,7 +31,7 @@ object NetworkModule {
             .connectTimeout(5, TimeUnit.SECONDS)
             .build()
         return Retrofit.Builder()
-            .baseUrl("https://localhost/")
+            .baseUrl("https://world.openfoodfacts.org/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
@@ -41,6 +42,12 @@ object NetworkModule {
     fun provideUrlPreviewApi(
         retrofit: Retrofit
     ): UrlPreviewApi = retrofit.create(UrlPreviewApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFoodApi(
+        retrofit: Retrofit
+    ): FoodApi = retrofit.create(FoodApi::class.java)
 
     @Provides
     fun provideConnectivityHelper(

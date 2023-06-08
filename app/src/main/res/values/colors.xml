@@ -33,4 +33,8 @@
     <color name="semiTransparentWhite">#80FFFFFF</color>
     <color name="semiTransparentBlack">#99000000</color>
 
+    <!-- Others -->
+    <color name="yellow">#FFCC00</color>
+    <color name="orange">#FF6600</color>
+
 </resources>
