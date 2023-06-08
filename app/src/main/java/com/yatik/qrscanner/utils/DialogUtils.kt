@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.view.ViewGroup
 import android.view.Window
@@ -57,13 +58,15 @@ fun ratingDialog(context: Context) {
 
             in 4.0..5.0 -> {
                 dialog.dismiss()
-                context.startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(Constants.PLAY_STORE)
-                    )
-                )
-//                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.GALAXY_STORE)))
+                val installer: String? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    context.packageManager.getInstallSourceInfo(context.packageName).installingPackageName
+                } else {
+                    @Suppress("Deprecation")
+                    context.packageManager.getInstallerPackageName(context.packageName)
+                }
+                if (installer == "com.sec.android.app.samsungapps")
+                    redirectToStore(context, Constants.GALAXY_STORE)
+                else redirectToStore(context, Constants.PLAY_STORE)
             }
 
             else -> {
@@ -82,6 +85,15 @@ fun ratingDialog(context: Context) {
     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     dialog.show()
 
+}
+
+private fun redirectToStore(context: Context, storeLink: String) {
+    context.startActivity(
+        Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(storeLink)
+        )
+    )
 }
 
 fun noPermissionDialog(context: Context, message: String) {
