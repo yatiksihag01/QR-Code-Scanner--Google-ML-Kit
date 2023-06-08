@@ -112,7 +112,7 @@ class DefaultDetailsRepository @Inject constructor(
             flow {
                 emit(Resource.Loading())
                 val currentTime = System.currentTimeMillis()
-                var timestamp = currentTime - 20 * 60 * 1000
+                var timestamp = currentTime - 25 * 60 * 60 * 1000
                 val dbProduct = foodDao.getProduct(barcode)
                 val product: Product? = dbProduct?.let { productEntityToProduct(it) }
 
@@ -123,7 +123,7 @@ class DefaultDetailsRepository @Inject constructor(
 
                 val elapsedTime = currentTime - timestamp
 
-                if (connectivityHelper.isConnectedToInternet() && elapsedTime > 15 * 60 * 1000) {
+                if (connectivityHelper.isConnectedToInternet() && elapsedTime > 24 * 60 * 60 * 1000) {
                     fetchFoodDetails(barcode).collect { resource ->
                         when (resource) {
                             is Resource.Success -> {

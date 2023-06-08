@@ -10,7 +10,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Credentials
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,15 +29,9 @@ object NetworkModule {
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .connectTimeout(5, TimeUnit.SECONDS)
-            .authenticator { _, response ->
-                val credential = Credentials.basic("off", "off")
-                response.request.newBuilder()
-                    .header("Authorization", credential)
-                    .build()
-            }
             .build()
         return Retrofit.Builder()
-            .baseUrl("https://world.openfoodfacts.net/")
+            .baseUrl("https://world.openfoodfacts.org/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

@@ -19,13 +19,8 @@ fun foodTableRowsList(product: Product): List<TableRowData> {
         if (product.nutriscoreData?.isBeverage == 1 || product.nutriscoreData?.isWater == 1) "mL"
         else "grams"
 
-    val energyKcal100g =
-        if (nutriments.energyKcal100g.toString().isBlank()) "   --   "
-        else "${nutriments.energyKcal100g} kcal"
-
-    val energyServing =
-        if (nutriments.energyKcalServing.toString().isBlank()) "   --   "
-        else "${nutriments.energyKcalServing} kcal"
+    val energyKcal100g = setValOrDash(nutriments.energyKcal100g.toString(), "kcal")
+    val energyServing = setValOrDash(nutriments.energyKcalServing.toString(), "kcal")
 
     val carb100g = setValOrDash(nutriments.carbohydrates100g.toString(), unit)
     val carbServing = setValOrDash(nutriments.carbohydratesServing.toString(), unit)
@@ -60,9 +55,13 @@ fun foodTableRowsList(product: Product): List<TableRowData> {
     )
 }
 
-
+/**
+ * Returns "--" if give value is [isNullOrBlank] or -1
+ *
+ * else returns "value unit" e.g. "520 kcal"
+ */
 private fun setValOrDash(value: String?, unit: String): String {
-    return if (value.isNullOrBlank()) "   --   "
+    return if (value.isNullOrBlank() || value == "-1") "   --   "
     else "$value $unit"
 }
 
@@ -109,3 +108,10 @@ fun setNutriColor(context: Context, textView: TextView, value: String?) {
         else -> textView.setBackgroundColor(getColor(textView, R.attr.semiTransparent))
     }
 }
+
+fun isBookBarcode(barcode: String): Boolean =
+    barcode.startsWith("978")
+
+fun handleMalformedNutrimentsJson(malformedJson: String): String =
+    malformedJson.replace("unit\":,", "unit\":\"   --   \",")
+        .replace(":,", ":-1,")

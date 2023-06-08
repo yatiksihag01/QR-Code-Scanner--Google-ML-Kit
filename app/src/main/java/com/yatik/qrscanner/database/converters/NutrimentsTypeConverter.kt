@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.yatik.qrscanner.models.food.Nutriments
+import com.yatik.qrscanner.utils.handleMalformedNutrimentsJson
 
 class NutrimentsTypeConverter {
 
@@ -21,7 +22,13 @@ class NutrimentsTypeConverter {
             gson.fromJson(json, Nutriments::class.java)
         } catch (e: JsonSyntaxException) {
             e.printStackTrace()
-            null
+            val correctedJson = handleMalformedNutrimentsJson(json)
+            if (correctedJson == json) null
+            else gson.fromJson(
+                handleMalformedNutrimentsJson(json),
+                Nutriments::class.java
+            )
         }
     }
+
 }

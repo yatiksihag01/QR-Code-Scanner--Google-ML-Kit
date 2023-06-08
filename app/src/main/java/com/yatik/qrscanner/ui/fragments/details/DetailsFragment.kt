@@ -34,6 +34,7 @@ import com.yatik.qrscanner.utils.Utilities
 import com.yatik.qrscanner.utils.foodTableRowsList
 import com.yatik.qrscanner.utils.getNovaInfo
 import com.yatik.qrscanner.utils.getNutriInfo
+import com.yatik.qrscanner.utils.isBookBarcode
 import com.yatik.qrscanner.utils.mappers.barcodeDataToGeneratorData
 import com.yatik.qrscanner.utils.setNovaColor
 import com.yatik.qrscanner.utils.setNutriColor
@@ -294,6 +295,7 @@ class DetailsFragment : Fragment() {
                 Uri.parse("https://www.google.com/search?q=$barcode")
             )
         }
+        if (!barcode.isNullOrBlank() && isBookBarcode(barcode)) return
 
         val shimmerContainer = binding.shimmerFoodViewContainer
         shimmerContainer.visibility = View.VISIBLE

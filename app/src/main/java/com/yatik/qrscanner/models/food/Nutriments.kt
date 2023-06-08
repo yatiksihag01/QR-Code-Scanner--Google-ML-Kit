@@ -1,7 +1,9 @@
 package com.yatik.qrscanner.models.food
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class Nutriments(
 
     // Carbohydrate
