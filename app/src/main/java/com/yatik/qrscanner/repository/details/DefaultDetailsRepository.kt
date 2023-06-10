@@ -7,6 +7,7 @@ import com.yatik.qrscanner.models.food.FoodResponse
 import com.yatik.qrscanner.models.food.Product
 import com.yatik.qrscanner.network.UrlPreviewApi
 import com.yatik.qrscanner.network.food.FoodApi
+import com.yatik.qrscanner.utils.Constants.Companion.PRODUCT_CACHE_TIME
 import com.yatik.qrscanner.utils.Resource
 import com.yatik.qrscanner.utils.connectivity.ConnectivityHelper
 import com.yatik.qrscanner.utils.mappers.productEntityToProduct
@@ -112,7 +113,7 @@ class DefaultDetailsRepository @Inject constructor(
             flow {
                 emit(Resource.Loading())
                 val currentTime = System.currentTimeMillis()
-                var timestamp = currentTime - 25 * 60 * 60 * 1000
+                var timestamp = currentTime - (PRODUCT_CACHE_TIME + 60 * 60 * 1000)
                 val dbProduct = foodDao.getProduct(barcode)
                 val product: Product? = dbProduct?.let { productEntityToProduct(it) }
 
@@ -123,7 +124,7 @@ class DefaultDetailsRepository @Inject constructor(
 
                 val elapsedTime = currentTime - timestamp
 
-                if (connectivityHelper.isConnectedToInternet() && elapsedTime > 24 * 60 * 60 * 1000) {
+                if (connectivityHelper.isConnectedToInternet() && elapsedTime > PRODUCT_CACHE_TIME) {
                     fetchFoodDetails(barcode).collect { resource ->
                         when (resource) {
                             is Resource.Success -> {
@@ -143,8 +144,8 @@ class DefaultDetailsRepository @Inject constructor(
                             else -> emit(Resource.Error(message = resource.message!!))
                         }
                     }
-                } else if (connectivityHelper.isConnectedToInternet() && elapsedTime < 15 * 60 * 1000) {
-                    product?.let { emit(Resource.Success(data = it)) }
+                } else if (elapsedTime <= PRODUCT_CACHE_TIME) {
+                    emit(Resource.Success(data = product!!))
                 } else {
                     emit(Resource.Error(message = "No internet connection", data = product))
                 }

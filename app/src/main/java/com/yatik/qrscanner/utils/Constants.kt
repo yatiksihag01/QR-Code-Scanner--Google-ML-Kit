@@ -17,6 +17,9 @@ class Constants {
 
         const val ITEMS_PER_PAGE = 50
 
+        /** 24 hours in millis */
+        const val PRODUCT_CACHE_TIME: Long = 24 * 60 * 60 * 1000
+
     }
 
 }
