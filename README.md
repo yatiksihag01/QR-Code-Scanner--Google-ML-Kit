@@ -1,41 +1,41 @@
-
 # QR-Scanner---Google-ML-Kit-MVVM
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/110741464/235096912-a2506530-e7fe-4b81-9a4d-d47404cd4f81.png" width="128" />
-</p>
+[![CodeFactor](https://www.codefactor.io/repository/github/yatiksihag01/qr-scanner---google-ml-kit-mvvm/badge/master)](https://www.codefactor.io/repository/github/yatiksihag01/qr-scanner---google-ml-kit-mvvm/overview/master)
 
-This simple QR code scanner is capable of scanning many types of QR codes and barcodes. The app supports a variety of QR code formats, including URLs, Wi-Fi, text, and UPI codes, among others. Additionally, users can generate their own QR codes and barcodes with the app. Currently, the app is available in four different themes: light-blue, light-green, dark-blue, and dark-green.
+This simple QR code scanner is capable of scanning and generating many types of QR codes and barcodes. The app supports a variety of QR code formats, including URLs, Wi-Fi, text, and UPI codes, among others. Additionally, users can generate their own QR codes and barcodes with the app. Currently, the app is available in four different themes: light-blue, light-green, dark-blue, and dark-green.
 
 ## 📷Screenshots
 
-| Home Page | Settings Page |
-| --------- | ------------- |
-| <img src="https://user-images.githubusercontent.com/110741464/235060129-41c48722-af68-4df7-bb0b-396d89a2aad8.png" width="370dp"> | <img src="https://user-images.githubusercontent.com/110741464/235094406-92bc2ba1-1842-421e-a805-3e318b437639.jpg" width="350dp"> |
+| Home Page | Settings Page | Details Page |
+| --------- | ------------- | ------------ |
+| <img src="https://user-images.githubusercontent.com/110741464/235060129-41c48722-af68-4df7-bb0b-396d89a2aad8.png" width="300dp"> | <img src="https://user-images.githubusercontent.com/110741464/235094406-92bc2ba1-1842-421e-a805-3e318b437639.jpg" width="300dp"> | <img src="https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/assets/110741464/223cca2f-db6c-4bb5-a653-da53e45310ba" width="300dp"> |
 
-| Details Page | Saved data |
-| -----------  | ---------- |
-| <img src="https://user-images.githubusercontent.com/110741464/235092560-a2a768d5-8f15-43bd-95ca-2fce2c6f6292.jpg" width="350dp"> | <img src="https://user-images.githubusercontent.com/110741464/235092564-250c30de-9f44-4ee0-a57d-2e44b4de9950.jpg" width="350dp"> |
+| Generate QR | Saved data | Light Theme |
+| ----------- | ---------- | ----------- |
+| <img src="https://user-images.githubusercontent.com/110741464/235093158-c0b469b8-b784-4065-b6db-ee814e118dc0.jpg" width="300dp"> | <img src="https://user-images.githubusercontent.com/110741464/235092564-250c30de-9f44-4ee0-a57d-2e44b4de9950.jpg" width="300dp"> | <img src="https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/assets/110741464/9ba62e67-64ab-4617-9167-19d23d2e558e" width="300dp"> |
 
-| Generate QR | Light Theme |
-| ----------  | ----------- |
-| <img src="https://user-images.githubusercontent.com/110741464/235093158-c0b469b8-b784-4065-b6db-ee814e118dc0.jpg" width="350dp"> | <img src="https://user-images.githubusercontent.com/110741464/235094026-f08269b8-808d-4950-acd9-500f60ebf789.jpg" width="350dp"> |
+| URL Preview | Food Facts | App Icon |
+| ----------  | ---------- | -------- |
+| <img src="https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/assets/110741464/102257c8-7689-4801-98df-70d84df53017" width="300dp"> | <img src="https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/assets/110741464/9018d8c6-6e48-43de-a6e2-ce55137fa089" width="300dp"> | <img src="https://user-images.githubusercontent.com/110741464/235096912-a2506530-e7fe-4b81-9a4d-d47404cd4f81.png" width="300dp"> |
 
 ## ⭐Features
 
-- Users can scan 13 types of QR Codes/Barcodes
-- Users can save the scanned data
-- You can either choose photos from gallery or use camera
-- Options to automatically open Urls after scanning
-
+- Users can scan 13 types of QR Codes/Barcodes.
+- Users can save the scanned data.
+- You can either choose photos from gallery or use camera.
+- Options to automatically open Urls after scanning.
+- Scan food item barcode to get nutriments.
 
 ## 🔬Tools & Technologies
 
-- Android Studio, Kotlin
-- Room Database to store scanned barcodes
-- Hilt for dependency injection
-- CameraX API to scan QR codes/Barcodes
-- Unit tests for ViewModels, Room Database
+- Android Studio, Kotlin,
+- Room Database to store scanned barcodes,
+- Hilt for dependency injection,
+- CameraX API to scan QR codes/Barcodes,
+- Unit tests for ViewModels, Room Database,
+- Open Food Facts API for food details,
+- ZXing library to create QR/Barcodes,
+- Json HTML parser for URL previews.
 
 ## 😊Contribution
 
@@ -50,9 +50,8 @@ Contributions to this project are always welcome. If you find any bugs or have s
 We appreciate your help in improving this project!
 
 ## 😎Google Play
-<a href="https://play.google.com/store/apps/details?id=com.yatik.qrscanner">
-  <img src="https://user-images.githubusercontent.com/110741464/202079928-27ef816f-99a1-47b3-a0ff-f4de1ca7437e.png" alt="Google Play" width="400">
-</a>
+
+[<img alt="Get it on Google Play" height="150" src="https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/assets/110741464/82c62b20-8349-44b6-abf8-fb56f7ecec7c">](https://play.google.com/store/apps/details?id=com.yatik.qrscanner)
 
 ## ✍️Authors
 
