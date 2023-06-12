@@ -21,7 +21,7 @@ steps:
     inputs:
       secureFile: 'upload_keystore.jks'
     name: keystore
-  
+
   - script: |
       echo "Setting up keystore properties"
       echo "storePassword=${KEYSTORE_PASSWORD}" >> $(Build.SourcesDirectory)/keystore.properties
