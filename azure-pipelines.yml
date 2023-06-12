@@ -7,7 +7,7 @@ variables:
   - group: KeystoreVariableGroup
 
 pool:
-  vmImage: 'macos-latest'
+  vmImage: 'windows-latest'
 
 steps:
   - task: JavaToolInstaller@0
@@ -19,7 +19,7 @@ steps:
   - task: DownloadSecureFile@1
     displayName: 'Download Keystore File'
     inputs:
-      secureFile: 'upload_keystore.jks'
+      secureFile: 'upload-keystore.jks'
     name: keystore
 
   - script: |
