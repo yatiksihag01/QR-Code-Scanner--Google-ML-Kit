@@ -34,7 +34,6 @@ steps:
     inputs:
       workingDirectory: '$(Build.SourcesDirectory)'
       gradleWrapperFile: 'gradlew'
-      options: '-Xmx3072m'
       publishJUnitResults: true
       testResultsFiles: '**/TEST-*.xml'
       tasks: 'clean build'
