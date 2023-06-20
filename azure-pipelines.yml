@@ -40,7 +40,7 @@ steps:
 
   - script: |
       echo "Creating AAB and mapping.txt files"
-      cp $(Build.SourcesDirectory)/app/build/outputs/bundle/release/app-release.aab $(Build.ArtifactStagingDirectory)/app.aab
+      cp $(Build.SourcesDirectory)/app/release/app-release.aab $(Build.ArtifactStagingDirectory)/app-release.aab
       cp $(Build.SourcesDirectory)/app/build/outputs/mapping/release/mapping.txt $(Build.ArtifactStagingDirectory)/mapping.txt
     displayName: 'Copy AAB and mapping.txt files'
 
