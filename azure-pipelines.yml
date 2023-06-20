@@ -36,7 +36,7 @@ steps:
       gradleWrapperFile: 'gradlew'
       publishJUnitResults: true
       testResultsFiles: '**/TEST-*.xml'
-      tasks: 'clean build'
+      tasks: ':app:bundleRelease'
 
   - script: |
       echo "Creating AAB and mapping.txt files"
