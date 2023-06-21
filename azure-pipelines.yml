@@ -30,7 +30,7 @@ steps:
       tasks: ':app:bundleRelease'
       publishJUnitResults: true
       testResultsFiles: '**/TEST-*.xml'
-    
+
   - task: CmdLine@2
     displayName: 'Signing and aligning AAB file'
     inputs:
