@@ -22,27 +22,34 @@ steps:
       secureFile: 'upload-keystore.jks'
     name: keystore
 
-  - script: |
-      echo "Setting up keystore properties"
-      echo "storePassword=${KEYSTORE_PASSWORD}" >> $(Build.SourcesDirectory)/keystore.properties
-      echo "keyPassword=${KEY_PASSWORD}" >> $(Build.SourcesDirectory)/keystore.properties
-      echo "keyAlias=${KEY_ALIAS}" >> $(Build.SourcesDirectory)/keystore.properties
-    displayName: 'Setup Keystore Properties'
-
   - task: Gradle@3
     displayName: 'Build and Sign'
     inputs:
       workingDirectory: '$(Build.SourcesDirectory)'
       gradleWrapperFile: 'gradlew'
+      tasks: ':app:bundleRelease'
       publishJUnitResults: true
       testResultsFiles: '**/TEST-*.xml'
-      tasks: 'clean build'
 
-  - script: |
-      echo "Creating AAB and mapping.txt files"
-      cp $(Build.SourcesDirectory)/app/release/app-release.aab $(Build.ArtifactStagingDirectory)/app-release.aab
-      cp $(Build.SourcesDirectory)/app/build/outputs/mapping/release/mapping.txt $(Build.ArtifactStagingDirectory)/mapping.txt
-    displayName: 'Copy AAB and mapping.txt files'
+  - task: CmdLine@2
+    displayName: 'Signing and aligning AAB file'
+    inputs:
+      script: |
+        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore "$(keystore.secureFilePath)" -storepass "$(KEYSTORE_PASSWORD)" -keypass "$(KEY_PASSWORD)" "$(system.defaultworkingdirectory)/app/build/outputs/bundle/release/app-release.aab" "$(KEY_ALIAS)"
+
+  - task: CopyFiles@2
+    displayName: 'Copying AAB'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)/app/build/outputs/bundle/release/'
+      Contents: '**'
+      TargetFolder: '$(build.ArtifactStagingDirectory)'
+
+  - task: CopyFiles@2
+    displayName: 'Copying mapping.txt'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)/app/build/outputs/mapping/release/'
+      Contents: 'mapping.txt'
+      TargetFolder: '$(build.ArtifactStagingDirectory)'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifacts'
