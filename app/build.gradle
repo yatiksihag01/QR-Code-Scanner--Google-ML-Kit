@@ -16,8 +16,8 @@ android {
         applicationId "com.yatik.qrscanner"
         minSdk 23
         targetSdk 33
-        versionCode 21
-        versionName "2.2.3"
+        versionCode 22
+        versionName "2.2.4"
 
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.yatik.qrscanner.HiltTestRunner"
@@ -65,8 +65,8 @@ dependencies {
     implementation 'androidx.test:runner:1.5.2'
     testImplementation 'junit:junit:4.13.2'
     def camerax_version = "1.2.3"
-    def fragment_version = "1.5.7"
-    def nav_version = "2.5.3"
+    def fragment_version = "1.6.0"
+    def nav_version = "2.6.0"
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
