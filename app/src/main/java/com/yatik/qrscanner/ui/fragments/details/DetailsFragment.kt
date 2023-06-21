@@ -205,11 +205,11 @@ class DetailsFragment : Fragment() {
         binding.copyButton.setOnClickListener {
             Toast.makeText(requireContext(), "Copied to clipboard", Toast.LENGTH_SHORT).show()
             val text = binding.decodedText.text.toString()
-            copyData((text))
+            copyData(text)
         }
         binding.shareButton.setOnClickListener {
             shareData(
-                (binding.decodedText.text.toString())
+                binding.decodedText.text.toString()
             )
         }
     }

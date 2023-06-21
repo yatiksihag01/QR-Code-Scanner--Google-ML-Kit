@@ -1,0 +1,59 @@
+trigger:
+  branches:
+    include:
+      - master
+
+variables:
+  - group: KeystoreVariableGroup
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '11'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
+
+  - task: DownloadSecureFile@1
+    displayName: 'Download Keystore File'
+    inputs:
+      secureFile: 'upload-keystore.jks'
+    name: keystore
+
+  - task: Gradle@3
+    displayName: 'Build and Sign'
+    inputs:
+      workingDirectory: '$(Build.SourcesDirectory)'
+      gradleWrapperFile: 'gradlew'
+      tasks: ':app:bundleRelease'
+      publishJUnitResults: true
+      testResultsFiles: '**/TEST-*.xml'
+
+  - task: CmdLine@2
+    displayName: 'Signing and aligning AAB file'
+    inputs:
+      script: |
+        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore "$(keystore.secureFilePath)" -storepass "$(KEYSTORE_PASSWORD)" -keypass "$(KEY_PASSWORD)" "$(system.defaultworkingdirectory)/app/build/outputs/bundle/release/app-release.aab" "$(KEY_ALIAS)"
+
+  - task: CopyFiles@2
+    displayName: 'Copying AAB'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)/app/build/outputs/bundle/release/'
+      Contents: '**'
+      TargetFolder: '$(build.ArtifactStagingDirectory)'
+
+  - task: CopyFiles@2
+    displayName: 'Copying mapping.txt'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)/app/build/outputs/mapping/release/'
+      Contents: 'mapping.txt'
+      TargetFolder: '$(build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifacts'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'BuildArtifacts'
+      publishLocation: 'Container'
