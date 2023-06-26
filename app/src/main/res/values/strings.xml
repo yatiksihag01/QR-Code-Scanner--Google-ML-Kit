@@ -78,6 +78,10 @@
     <string name="product_name_unavailable">Product name unavailable</string>
     <string name="nova_group">Nova Group</string>
     <string name="nutri_score">Nutri-Score</string>
+    <string name="food_product_get_nutriments">Food product? Get nutriments</string>
+    <string name="cancel">Cancel</string>
+    <string name="get_nutriments_message">If the scanned barcode corresponds to a food item, you can retrieve detailed information about the product from the OpenFoodFacts database. Please note that the accuracy of this data may vary.</string>
+    <string name="get_details">Get Details</string>
 
 
     <string-array name="theme_types">

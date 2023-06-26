@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/get_food_details_button"
+        android:icon="@drawable/food_icon_24"
+        android:title="@string/food_product_get_nutriments"
+        app:showAsAction="always" />
+</menu>

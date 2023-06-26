@@ -7,6 +7,22 @@ import com.yatik.qrscanner.R
 import com.yatik.qrscanner.models.food.Product
 import com.yatik.qrscanner.models.food.TableRowData
 
+/*
+ * Copyright 2023 Yatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 fun foodTableRowsList(product: Product): List<TableRowData> {
 
     if (product.nutriments == null)
@@ -56,14 +72,13 @@ fun foodTableRowsList(product: Product): List<TableRowData> {
 }
 
 /**
- * Returns "--" if give value is [isNullOrBlank] or -1
+ * Returns "--" if the given value is [isNullOrBlank], "null", or "-1".
  *
- * else returns "value unit" e.g. "520 kcal"
+ * Otherwise, returns the "value" followed by the "unit", for example, "520 kcal".
  */
-private fun setValOrDash(value: String?, unit: String): String {
-    return if (value.isNullOrBlank() || value == "-1") "   --   "
+private fun setValOrDash(value: String?, unit: String): String =
+    if (value.isNullOrBlank() || value == "null" || value == "-1") "   --   "
     else "$value $unit"
-}
 
 fun getNovaInfo(context: Context, value: Int?): String {
     return when (value) {
