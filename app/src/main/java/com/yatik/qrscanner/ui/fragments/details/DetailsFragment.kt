@@ -3,6 +3,7 @@ package com.yatik.qrscanner.ui.fragments.details
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,8 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -31,6 +34,7 @@ import com.yatik.qrscanner.models.food.Product
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Resource
 import com.yatik.qrscanner.utils.Utilities
+import com.yatik.qrscanner.utils.Utilities.Companion.makeButtonTextTeal
 import com.yatik.qrscanner.utils.foodTableRowsList
 import com.yatik.qrscanner.utils.getNovaInfo
 import com.yatik.qrscanner.utils.getNutriInfo
@@ -47,6 +51,7 @@ class DetailsFragment : Fragment() {
     private val binding get() = _binding!!
     private val args: DetailsFragmentArgs by navArgs()
     private val detailsViewModel: DetailsViewModel by viewModels()
+    private var isClickedGetDetails = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +72,18 @@ class DetailsFragment : Fragment() {
             startActivity(requireActivity().intent)
         }
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("isClickedGetDetails", isClickedGetDetails)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        isClickedGetDetails = savedInstanceState?.getBoolean("isClickedGetDetails") ?: false
+        if (isClickedGetDetails)
+            showNutriments(args.barcodeData.title.toString())
     }
 
     @SuppressLint("SetTextI18n")
@@ -93,6 +110,7 @@ class DetailsFragment : Fragment() {
 
         when (format) {
             Barcode.FORMAT_QR_CODE -> {
+                binding.detailsToolbar.menu.removeItem(R.id.get_food_details_button)
                 when (valueType) {
                     Barcode.TYPE_WIFI -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_wifi_24)
@@ -194,6 +212,7 @@ class DetailsFragment : Fragment() {
             }
 
             else -> {
+                binding.detailsToolbar.menu.removeItem(R.id.get_food_details_button)
                 binding.typeIcon.setImageResource(R.drawable.outline_barcode_24)
                 binding.typeText.text = "Barcode"
                 binding.decodedText.text = title
@@ -295,37 +314,21 @@ class DetailsFragment : Fragment() {
                 Uri.parse("https://www.google.com/search?q=$barcode")
             )
         }
-        if (!barcode.isNullOrBlank() && isBookBarcode(barcode)) return
-
-        val shimmerContainer = binding.shimmerFoodViewContainer
-        shimmerContainer.visibility = View.VISIBLE
-        shimmerContainer.startShimmer()
-
-        detailsViewModel.getFoodDetails(barcode.toString())
-        detailsViewModel.foodProductResource.observe(viewLifecycleOwner) { resource ->
-            val data = resource.data
-            when (resource) {
-                is Resource.Loading -> {
-                    if (data != null) {
-                        shimmerContainer.stopShimmer()
-                        shimmerContainer.visibility = View.GONE
-                        attachProductData(data)
+        if (!barcode.isNullOrBlank() && isBookBarcode(barcode))
+            binding.detailsToolbar.menu.removeItem(R.id.get_food_details_button)
+        else {
+            binding.detailsToolbar.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.get_food_details_button -> {
+                        showNutrimentsDialog(barcode.toString())
+                        true
                     }
-                }
 
-                is Resource.Success -> {
-                    shimmerContainer.stopShimmer()
-                    shimmerContainer.visibility = View.GONE
-                    data?.let { attachProductData(it) }
-                }
-
-                else -> {
-                    shimmerContainer.stopShimmer()
-                    shimmerContainer.visibility = View.GONE
-                    Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                    else -> false
                 }
             }
         }
+
     }
 
     private fun copyData(text: String) {
@@ -354,9 +357,56 @@ class DetailsFragment : Fragment() {
         startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+    private fun showNutriments(barcode: String) {
+        binding.detailsToolbar.menu.removeItem(R.id.get_food_details_button)
+        val shimmerContainer = binding.shimmerFoodViewContainer
+        shimmerContainer.visibility = View.VISIBLE
+        shimmerContainer.startShimmer()
+
+        detailsViewModel.getFoodDetails(barcode)
+        detailsViewModel.foodProductResource.observe(viewLifecycleOwner) { resource ->
+            val data = resource.data
+            when (resource) {
+                is Resource.Loading ->
+                    if (data != null) {
+                        shimmerContainer.stopShimmer()
+                        shimmerContainer.visibility = View.GONE
+                        attachProductData(data)
+                    }
+
+                is Resource.Success -> {
+                    shimmerContainer.stopShimmer()
+                    shimmerContainer.visibility = View.GONE
+                    data?.let { attachProductData(it) }
+                }
+
+                else -> {
+                    shimmerContainer.stopShimmer()
+                    shimmerContainer.visibility = View.GONE
+                    Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun showNutrimentsDialog(barcode: String) {
+        val builder = AlertDialog.Builder(requireContext()).apply {
+
+            setTitle(getString(R.string.food_product_get_nutriments))
+            setMessage(getString(R.string.get_nutriments_message) + "\n")
+            setNegativeButton(context.getString(R.string.cancel)) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+
+            setPositiveButton(getString(R.string.get_details)) { _: DialogInterface?, _: Int ->
+                isClickedGetDetails = true
+                showNutriments(barcode)
+            }
+        }
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawable(
+            ContextCompat.getDrawable(requireContext(), R.drawable.dialog_background)
+        )
+        dialog.show()
+        dialog.makeButtonTextTeal(requireContext())
     }
 
     private fun attachProductData(product: Product) {
@@ -365,7 +415,7 @@ class DetailsFragment : Fragment() {
         val foodDetails = binding.foodDetails
 
         foodDetailsParent.visibility = View.VISIBLE
-        setProductPreview(product)
+        setProductPreviewImage(product)
 
         foodDetails.novaRatingInfo.text = getNovaInfo(
             requireContext(),
@@ -394,7 +444,7 @@ class DetailsFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setProductPreview(product: Product) {
+    private fun setProductPreviewImage(product: Product) {
         binding.foodDetails.productFrontImg.load(product.frontImageSmall) {
             crossfade(true)
             scale(Scale.FILL)
@@ -404,6 +454,11 @@ class DetailsFragment : Fragment() {
         binding.foodDetails.productName.text = product.productName
         binding.foodDetails.productBrandAndServingQuantity.text =
             "${product.brands} · ${product.quantity}"
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

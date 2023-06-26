@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/arrow_back_28"
+            app:menu="@menu/details_menu"
             app:title="Scanned Data"
             app:titleCentered="true" />
     </com.google.android.material.appbar.AppBarLayout>

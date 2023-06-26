@@ -56,14 +56,13 @@ fun foodTableRowsList(product: Product): List<TableRowData> {
 }
 
 /**
- * Returns "--" if give value is [isNullOrBlank] or -1
+ * Returns "--" if the given value is [isNullOrBlank], "null", or "-1".
  *
- * else returns "value unit" e.g. "520 kcal"
+ * Otherwise, returns the "value" followed by the "unit", for example, "520 kcal".
  */
-private fun setValOrDash(value: String?, unit: String): String {
-    return if (value.isNullOrBlank() || value == "-1") "   --   "
+private fun setValOrDash(value: String?, unit: String): String =
+    if (value.isNullOrBlank() || value == "null" || value == "-1") "   --   "
     else "$value $unit"
-}
 
 fun getNovaInfo(context: Context, value: Int?): String {
     return when (value) {
