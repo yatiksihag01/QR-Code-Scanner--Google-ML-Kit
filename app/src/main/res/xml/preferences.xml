@@ -4,7 +4,7 @@
 
     <PreferenceCategory
         android:key="theme_category"
-        android:title="Themes">
+        android:title="@string/pref_themes">
 
         <ListPreference
             android:defaultValue="4"
@@ -13,43 +13,43 @@
             android:entryValues="@array/pref_num"
             android:key="@string/theme_preference_key"
             android:summary="@string/apply_theme_pref_summary"
-            android:title="Select theme" />
+            android:title="@string/select_theme_settings_title" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="camera_and_others"
-        android:title="Camera and Others">
+        android:title="@string/pref_camera_and_others">
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="save_scans_preference"
-            android:summary="Add scanned data to history"
-            android:title="Scan history" />
+            android:summary="@string/scan_history_settings_summary"
+            android:title="@string/scan_history_settings_title" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="vibration_preference"
-            android:summary="Vibrate on successful scan"
-            android:title="Vibration effect" />
+            android:summary="@string/vibration_effect_settings_summary"
+            android:title="@string/vibration_effect_settings_title" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="open_url_preference"
-            android:summary="Open the url automatically after successful scan"
-            android:title="Automatically open URL" />
+            android:summary="@string/auto_open_url_summary"
+            android:title="@string/auto_open_url_title" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="front_cam_preference"
-            android:summary="By default rear camera will be used"
-            android:title="Use front camera" />
+            android:summary="@string/default_cam_settings_summary"
+            android:title="@string/cam_settings_title" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="help_category"
-        android:title="Help">
+        android:title="@string/help">
 
         <Preference
             android:key="feedback_preference"
@@ -69,8 +69,7 @@
 
         <Preference
             android:key="version_preference"
-            android:summary="2.2.1"
-            android:title="App version" />
+            android:title="@string/app_version" />
 
     </PreferenceCategory>
 

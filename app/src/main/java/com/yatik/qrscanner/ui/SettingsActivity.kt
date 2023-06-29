@@ -2,9 +2,14 @@ package com.yatik.qrscanner.ui
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PackageInfoFlags
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.yatik.qrscanner.R
@@ -59,6 +64,14 @@ class SettingsActivity : AppCompatActivity() {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.preferences, null)
+            val versionPref = findPreference<Preference>("version_preference")
+            try {
+                val packageManager = requireActivity().packageManager
+                versionPref!!.summary =
+                    packageManager.getPackageInfoCompat(requireActivity().packageName).versionName
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         override fun onResume() {
@@ -79,6 +92,16 @@ class SettingsActivity : AppCompatActivity() {
             super.onPause()
             preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
         }
+
+        private fun PackageManager.getPackageInfoCompat(
+            packageName: String,
+            flags: Int = 0
+        ): PackageInfo =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                getPackageInfo(packageName, PackageInfoFlags.of(flags.toLong()))
+            } else {
+                @Suppress("DEPRECATION") getPackageInfo(packageName, flags)
+            }
 
     }
 
