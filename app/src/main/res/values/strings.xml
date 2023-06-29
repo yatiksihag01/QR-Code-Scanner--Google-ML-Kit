@@ -1,10 +1,5 @@
 <resources>
     <string name="app_name">QR Scanner</string>
-    <string name="permissionDeniedMessageCam">In order to work properly, app needs access to camera. Please click Allow -> Permissions -> Camera -> Allow only while using the app</string>
-    <string name="permissionDeniedMessageStorage">In order to pick gallery image, app needs to access device storage. Please click Allow -> Permissions -> Files and media -> Allow access to media only</string>
-    <string name="permissionDeniedMessageSaveImage">In order to save image, app needs to access device storage. Please click Allow -> Permissions -> Files and media -> Allow access to media only</string>
-    <string name="deleteAllWarning">"You're going to delete all items and you won't be able to revert changes. Are you sure to delete all items?"</string>
-    <string name="productMessage">Press launch button to retrieve product details.</string>
     <string name="Wifi">WiFi</string>
     <string name="text">Text</string>
     <string name="url">Url</string>
@@ -28,6 +23,11 @@
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
+    <string name="permissionDeniedMessageCam">In order to work properly, app needs access to camera. Please click Allow -> Permissions -> Camera -> Allow only while using the app</string>
+    <string name="permissionDeniedMessageStorage">In order to pick gallery image, app needs to access device storage. Please click Allow -> Permissions -> Files and media -> Allow access to media only</string>
+    <string name="permissionDeniedMessageSaveImage">In order to save image, app needs to access device storage. Please click Allow -> Permissions -> Files and media -> Allow access to media only</string>
+    <string name="deleteAllWarning">"You're going to delete all items and you won't be able to revert changes. Are you sure to delete all items?"</string>
+    <string name="productMessage">Press launch button to retrieve product details.</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
@@ -54,6 +54,7 @@
     <string name="light_green_int_val">2</string>
     <string name="dark_green_int_val">3</string>
     <string name="system_default_int_val">4</string>
+
     <string name="create_qr">Create QR</string>
     <string name="Copy">Copy</string>
     <string name="share">Share</string>
@@ -61,6 +62,9 @@
     <string name="fetching">fetching...</string>
     <string name="create">Create</string>
     <string name="create_qr_notif_message">Click here to create QR Code</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Food Facts -->
     <string name="nova_1_info">Unprocessed or minimally processed food</string>
     <string name="nova_2_info">Processed culinary ingredients</string>
     <string name="nova_3_info">Processed food</string>
@@ -79,9 +83,23 @@
     <string name="nova_group">Nova Group</string>
     <string name="nutri_score">Nutri-Score</string>
     <string name="food_product_get_nutriments">Food product? Get nutriments</string>
-    <string name="cancel">Cancel</string>
     <string name="get_nutriments_message">If the scanned barcode corresponds to a food item, you can retrieve detailed information about the product from the OpenFoodFacts database. Please note that the accuracy of this data may vary.</string>
+
+    <!-- Settings Preferences -->
     <string name="get_details">Get Details</string>
+    <string name="app_version">App version</string>
+    <string name="help">Help</string>
+    <string name="default_cam_settings_summary">By default rear camera will be used</string>
+    <string name="cam_settings_title">Use front camera</string>
+    <string name="auto_open_url_title">Automatically open URL</string>
+    <string name="auto_open_url_summary">Open the url automatically after successful scan</string>
+    <string name="vibration_effect_settings_title">Vibration effect</string>
+    <string name="vibration_effect_settings_summary">Vibrate on successful scan</string>
+    <string name="scan_history_settings_title">Scan history</string>
+    <string name="scan_history_settings_summary">Add scanned data to history</string>
+    <string name="pref_camera_and_others">Camera and Others</string>
+    <string name="pref_themes">Themes</string>
+    <string name="select_theme_settings_title">Select theme</string>
 
 
     <string-array name="theme_types">
