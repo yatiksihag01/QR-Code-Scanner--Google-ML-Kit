@@ -51,7 +51,7 @@ We appreciate your help in improving this project!
 
 ## 😎Google Play
 
-[<img alt="Get it on Google Play" height="150" src="https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/assets/110741464/82c62b20-8349-44b6-abf8-fb56f7ecec7c">](https://play.google.com/store/apps/details?id=com.yatik.qrscanner)
+[<img alt="Get it on Google Play" height="150" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png">](https://play.google.com/store/apps/details?id=com.yatik.qrscanner)
 
 ## ✍️Authors
 
