@@ -51,6 +51,34 @@ steps:
       Contents: 'mapping.txt'
       TargetFolder: '$(build.ArtifactStagingDirectory)'
 
+  - task: CmdLine@2
+    displayName: 'Download bundletool'
+    inputs:
+      script: |
+        curl -L -o "$(Build.SourcesDirectory)/bundletool-all-1.15.1.jar" -z "$(Build.SourcesDirectory)/bundletool-all-1.15.1.jar" https://github.com/google/bundletool/releases/download/1.15.1/bundletool-all-1.15.1.jar
+
+  - task: CmdLine@2
+    displayName: 'Extract APK using bundletool'
+    inputs:
+      script: |
+        java -jar $(Build.SourcesDirectory)/bundletool-all-1.15.1.jar build-apks \
+          --bundle="$(Build.SourcesDirectory)/app/build/outputs/bundle/release/app-release.aab" \
+          --output="$(Build.SourcesDirectory)/app/build/outputs/apk/release/app.apks" \
+          --ks="$(keystore.secureFilePath)" \
+          --ks-pass=pass:$(KEYSTORE_PASSWORD) \
+          --ks-key-alias=$(KEY_ALIAS) \
+          --key-pass=pass:$(KEY_PASSWORD)
+        java -jar $(Build.SourcesDirectory)/bundletool-all-1.15.1.jar extract-apks \
+          --apks="$(Build.SourcesDirectory)/app/build/outputs/apk/release/app.apks" \
+          --output-dir="$(Build.SourcesDirectory)/app/build/outputs/apk/release"
+
+  - task: CopyFiles@2
+    displayName: 'Copying APK'
+    inputs:
+      SourceFolder: '$(Build.SourcesDirectory)/app/build/outputs/apk/release/'
+      Contents: '*.apk'
+      TargetFolder: '$(build.ArtifactStagingDirectory)'
+
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifacts'
     inputs:
