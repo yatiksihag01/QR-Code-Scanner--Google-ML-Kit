@@ -76,7 +76,7 @@ steps:
     displayName: 'Copying APK'
     inputs:
       SourceFolder: '$(Build.SourcesDirectory)/app/build/outputs/apk/release/'
-      Contents: 'app.apks'
+      Contents: '*.apk'
       TargetFolder: '$(build.ArtifactStagingDirectory)/APK'
 
   - task: CopyFiles@2
