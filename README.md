@@ -53,6 +53,8 @@ We appreciate your help in improving this project!
 
 [<img alt="Get it on Google Play" height="150" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png">](https://play.google.com/store/apps/details?id=com.yatik.qrscanner)
 
+[<img alt="Get it on Galaxy Store" height="100" src="https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/assets/110741464/9a7ba466-60a9-4a8d-9637-5e1d6f1a0633">](https://galaxy.store/yatikqr)
+
 ## ✍️Authors
 
 - [@yatiksihag01](https://github.com/yatiksihag01)
