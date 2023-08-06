@@ -1,8 +1,25 @@
+/*
+ * Copyright 2023 Yatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.yatik.qrscanner.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,6 +47,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentHomeBinding
 import com.yatik.qrscanner.ui.SettingsActivity
+import com.yatik.qrscanner.ui.cropper.ImageCropperActivity
 import com.yatik.qrscanner.ui.fragments.history.BarcodeViewModel
 import com.yatik.qrscanner.utils.Constants
 import com.yatik.qrscanner.utils.Constants.Companion.SHEET_PEEK_VAL
@@ -40,22 +58,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.util.concurrent.ExecutionException
 
-/*
- * Copyright 2023 Yatik
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
@@ -64,8 +66,6 @@ class HomeFragment : Fragment() {
 
     private var _mCamera: Camera? = null
     private val mCamera get() = _mCamera!!
-
-    private var isImageSelected = false
 
     private lateinit var pickVisualMedia: ActivityResultLauncher<PickVisualMediaRequest>
     private var mCameraProvider: ProcessCameraProvider? = null
@@ -91,37 +91,28 @@ class HomeFragment : Fragment() {
         bottomSheetBehavior.peekHeight =
             utilities.calculatePeekHeight(requireContext(), SHEET_PEEK_VAL)
         bottomSheetBehavior.isHideable = false
-
         permissionHelper.requestCameraPermission(requireContext(), this)
 
         mCameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        val cropImageLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == ImageCropperActivity.RESULT_CODE_SCAN) {
+                    val data = result.data
+                    val croppedUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        data?.getParcelableExtra(ImageCropperActivity.ITEM_NAME, Uri::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        data?.getParcelableExtra(ImageCropperActivity.ITEM_NAME)
+                    }
+                    processUri(croppedUri!!)
+                }
+            }
         pickVisualMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { result: Uri? ->
                 if (result != null) {
-                    isImageSelected = true
-                    val image: InputImage
-                    val options = BarcodeScannerOptions.Builder()
-                        .build()
-                    val scanner = BarcodeScanning.getClient(options)
-                    try {
-                        image = InputImage.fromFilePath(requireContext(), result)
-                        scanner.process(image)
-                            .addOnSuccessListener { barcodes: List<Barcode> ->
-                                processResult(barcodes)
-                            }
-                            .addOnFailureListener { e: Exception ->
-                                // Task failed with an exception
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Failed to scan.",
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                                e.printStackTrace()
-                            }
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
+                    val intent = Intent(requireActivity(), ImageCropperActivity::class.java)
+                    intent.putExtra(ImageCropperActivity.URI_NAME, result.toString())
+                    cropImageLauncher.launch(intent)
                 }
             }
         setBottomSheetButtons()
@@ -195,6 +186,41 @@ class HomeFragment : Fragment() {
         flashControl()
     }
 
+    private fun processUri(imageUri: Uri) {
+        binding.homeProgressBar.visibility = View.VISIBLE
+        val options = BarcodeScannerOptions.Builder()
+            .build()
+        val scanner = BarcodeScanning.getClient(options)
+        try {
+            val image = InputImage.fromFilePath(requireContext(), imageUri)
+            scanner.process(image)
+                .addOnSuccessListener { barcodes: List<Barcode> ->
+                    if (barcodes.isEmpty()) {
+                        binding.homeProgressBar.visibility = View.GONE
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.barcode_not_found),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@addOnSuccessListener
+                    }
+                    processResult(barcodes)
+                }
+                .addOnFailureListener { e: Exception ->
+                    // Task failed with an exception
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.barcode_not_found),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    binding.homeProgressBar.visibility = View.GONE
+                    e.printStackTrace()
+                }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
     private fun processResult(barcodes: List<Barcode>) {
         if (barcodes.isNotEmpty()) {
             mCameraProvider?.unbindAll()
@@ -203,10 +229,7 @@ class HomeFragment : Fragment() {
             val isVibrationAllowed = sharedPreferences.getBoolean("vibration_preference", true)
             utilities.vibrateIfAllowed(requireContext(), isVibrationAllowed, 100)
             sendRequiredData(barcodes[0])
-            isImageSelected = false
-        } else if (isImageSelected) {
-            Toast.makeText(requireContext(), "Failed to scan", Toast.LENGTH_SHORT).show()
-            isImageSelected = false
+            binding.homeProgressBar.visibility = View.GONE
         }
     }
 

@@ -68,6 +68,15 @@
         </Preference>
 
         <Preference
+            android:key="source_code_preference"
+            android:summary="@string/source_code_preference_summary"
+            android:title="@string/source_code">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/tree/master/app" />
+        </Preference>
+
+        <Preference
             android:key="version_preference"
             android:title="@string/app_version" />
 

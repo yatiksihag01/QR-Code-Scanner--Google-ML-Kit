@@ -70,7 +70,7 @@ dependencies {
     implementation 'androidx.test:runner:1.5.2'
     testImplementation 'junit:junit:4.13.2'
     def camerax_version = "1.2.3"
-    def fragment_version = "1.6.0"
+    def fragment_version = "1.6.1"
     def nav_version = "2.6.0"
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -89,7 +89,7 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
 
     // Google Barcode scanning ML-kit
-    implementation 'com.google.mlkit:barcode-scanning:17.1.0'
+    implementation 'com.google.mlkit:barcode-scanning:17.2.0'
 
     // Fragments
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
@@ -128,7 +128,7 @@ dependencies {
 
     // Paging Components
     implementation "androidx.paging:paging-runtime-ktx:$rootProject.paging_version"
-    implementation "androidx.room:room-paging:2.5.1"
+    implementation "androidx.room:room-paging:2.5.2"
     testImplementation "androidx.paging:paging-common-ktx:$rootProject.paging_version"
 
     // To test coroutines
@@ -157,6 +157,9 @@ dependencies {
 
     // Shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
+    // CanHub image cropper
+    implementation 'com.vanniktech:android-image-cropper:4.5.0'
 
     // Turbine to test Flow
     testImplementation 'app.cash.turbine:turbine:0.12.1'

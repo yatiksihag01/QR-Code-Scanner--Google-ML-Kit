@@ -14,6 +14,13 @@
     <string name="barcode">Barcode</string>
     <string name="delete_all_files">Delete all files</string>
     <string name="select_all">Select all</string>
+    <string name="crop_activity_title">Crop Image</string>
+    <string name="scan_image">Scan image</string>
+    <string name="image_loading_failed">Failed to load image</string>
+    <string name="barcode_not_found">No barcode detected</string>
+    <string name="something_went_wrong">Sorry, something went wrong</string>
+    <string name="start_scanning">Start Scanning</string>
+    <string name="select_other">Select Other</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- Preference Titles -->
@@ -88,7 +95,7 @@
     <!-- Settings Preferences -->
     <string name="get_details">Get Details</string>
     <string name="app_version">App version</string>
-    <string name="help">Help</string>
+    <string name="help">Help &amp; Feedback</string>
     <string name="default_cam_settings_summary">By default rear camera will be used</string>
     <string name="cam_settings_title">Use front camera</string>
     <string name="auto_open_url_title">Automatically open URL</string>
@@ -100,6 +107,8 @@
     <string name="pref_camera_and_others">Camera and Others</string>
     <string name="pref_themes">Themes</string>
     <string name="select_theme_settings_title">Select theme</string>
+    <string name="source_code_preference_summary">You\'ll be redirected to source code repository</string>
+    <string name="source_code">Source Code</string>
 
 
     <string-array name="theme_types">

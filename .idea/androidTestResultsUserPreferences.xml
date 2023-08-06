@@ -176,6 +176,7 @@
                   <entry key="Tests" value="360" />
                   <entry key="adb-BS7533M4KN012100011-Ab52g6._adb-tls-connect._tcp" value="120" />
                   <entry key="samsung&#10; SM-A135F" value="120" />
+                  <entry key="samsung SM-A135F" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
