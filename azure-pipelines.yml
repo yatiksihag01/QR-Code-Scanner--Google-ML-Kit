@@ -23,7 +23,7 @@ steps:
     name: keystore
 
   - task: Gradle@3
-    displayName: 'Build and Sign'
+    displayName: 'Build and Sign AAB'
     inputs:
       workingDirectory: '$(Build.SourcesDirectory)'
       gradleWrapperFile: 'gradlew'
@@ -42,18 +42,53 @@ steps:
     inputs:
       SourceFolder: '$(system.defaultworkingdirectory)/app/build/outputs/bundle/release/'
       Contents: '**'
-      TargetFolder: '$(build.ArtifactStagingDirectory)'
+      TargetFolder: '$(build.ArtifactStagingDirectory)/AAB'
 
   - task: CopyFiles@2
-    displayName: 'Copying mapping.txt'
+    displayName: 'Copying mapping.txt for AAB'
     inputs:
       SourceFolder: '$(system.defaultworkingdirectory)/app/build/outputs/mapping/release/'
       Contents: 'mapping.txt'
-      TargetFolder: '$(build.ArtifactStagingDirectory)'
+      TargetFolder: '$(build.ArtifactStagingDirectory)/AAB'
 
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifacts'
+    displayName: 'Publish AAB Artifacts'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'BuildArtifacts'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/AAB'
+      ArtifactName: 'BundleArtifacts'
+      publishLocation: 'Container'
+
+  - task: Gradle@3
+    displayName: 'Build and Sign APK'
+    inputs:
+      workingDirectory: '$(Build.SourcesDirectory)'
+      gradleWrapperFile: 'gradlew'
+      tasks: ':app:assembleRelease'
+      publishJUnitResults: false
+
+  - task: CmdLine@2
+    displayName: 'Signing APK file'
+    inputs:
+      script: |
+        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore "$(keystore.secureFilePath)" -storepass "$(KEYSTORE_PASSWORD)" -keypass "$(KEY_PASSWORD)" "$(system.defaultworkingdirectory)/app/build/outputs/apk/release/app-release-unsigned.apk" "$(KEY_ALIAS)"
+
+  - task: CopyFiles@2
+    displayName: 'Copying APK'
+    inputs:
+      SourceFolder: '$(Build.SourcesDirectory)/app/build/outputs/apk/release/'
+      Contents: '*.apk'
+      TargetFolder: '$(build.ArtifactStagingDirectory)/APK'
+
+  - task: CopyFiles@2
+    displayName: 'Copying mapping.txt for APK'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)/app/build/outputs/mapping/release/'
+      Contents: 'mapping.txt'
+      TargetFolder: '$(build.ArtifactStagingDirectory)/APK'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish APK Artifacts'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/APK'
+      ArtifactName: 'APKArtifacts'
       publishLocation: 'Container'
