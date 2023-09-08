@@ -69,7 +69,7 @@ steps:
   - task: AndroidSigning@3
     inputs:
       apkFiles: '**/*.apk'
-      apksignerKeystoreFile: '$(keystore.secureFilePath)'
+      apksignerKeystoreFile: 'upload-keystore.jks'
       apksignerKeystorePassword: '$(KEYSTORE_PASSWORD)'
       apksignerKeystoreAlias: '$(KEY_ALIAS)'
       apksignerKeyPassword: '$(KEY_PASSWORD)'
