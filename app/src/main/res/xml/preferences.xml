@@ -73,7 +73,7 @@
             android:title="@string/source_code">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/tree/master/app" />
+                android:data="https://github.com/yatiksihag01/QR-Scanner---Google-ML-Kit-MVVM/tree/master/app/src/main" />
         </Preference>
 
         <Preference

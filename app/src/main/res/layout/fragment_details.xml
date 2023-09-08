@@ -198,15 +198,15 @@
 
                 <TextView
                     android:id="@+id/urlContent"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="95dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="8dp"
                     android:text="TextView"
                     android:textIsSelectable="true"
                     android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
+                    app:layout_constraintStart_toEndOf="@+id/guidelineVertical"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="HardcodedText" />
 
@@ -224,17 +224,22 @@
 
                 <TextView
                     android:id="@+id/urlTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="95dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="LinkView"
                     android:textColor="#037EFF"
                     android:textSize="17sp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/guidelineVertical"
                     app:layout_constraintTop_toBottomOf="@+id/urlContent"
+                    android:background="?selectableItemBackground"
                     tools:ignore="HardcodedText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
