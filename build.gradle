@@ -4,11 +4,12 @@ buildscript {
 }
 
 plugins {
-    id 'com.android.application' version '7.4.2' apply false
-    id 'com.android.library' version '7.4.2' apply false
+    id 'com.android.application' version '8.1.1' apply false
+    id 'com.android.library' version '8.1.1' apply false
     id 'androidx.navigation.safeargs' version '2.5.3' apply false
     id 'org.jetbrains.kotlin.android' version '1.8.10' apply false
     id 'com.google.dagger.hilt.android' version "2.44" apply false
+    id 'com.google.devtools.ksp' version "1.8.10-1.0.9" apply false
 }
 
 ext {
@@ -19,7 +20,7 @@ ext {
     coroutines = '1.5.2'
     lifecycleVersion = '2.6.1'
     materialVersion = '1.4.0'
-    paging_version = '3.2.0'
+    paging_version = '3.2.1'
     roomVersion = '2.5.2'
     // testing
     junitVersion = '4.13.2'
