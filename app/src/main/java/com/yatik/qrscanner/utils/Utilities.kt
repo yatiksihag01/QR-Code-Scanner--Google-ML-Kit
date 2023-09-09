@@ -1,32 +1,3 @@
-package com.yatik.qrscanner.utils
-
-import android.app.Activity
-import android.content.Context
-import android.content.res.Configuration
-import android.net.Uri
-import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
-import android.view.Window
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.preference.PreferenceManager
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.yatik.qrscanner.R
-import com.yatik.qrscanner.models.BarcodeData
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
-
 /*
  * Copyright 2023 Yatik
  *
@@ -42,6 +13,40 @@ import java.util.*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.yatik.qrscanner.utils
+
+import android.app.Activity
+import android.content.Context
+import android.content.res.Configuration
+import android.net.Uri
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
+import android.view.Window
+import android.widget.Toast
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.preference.PreferenceManager
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.common.InputImage
+import com.yatik.qrscanner.R
+import com.yatik.qrscanner.models.BarcodeData
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class Utilities {
 
@@ -243,6 +248,37 @@ class Utilities {
         }
 
         return BarcodeData(format, valueType, title, decryptedText, others, dateTime)
+    }
+
+    /**
+     * Processes the provided image [Uri] to detect and extract barcodes or QR codes.
+     *
+     * @param context The [Context] in which the processing is performed.
+     * @param imageUri The [Uri] of the image to be processed.
+     * @param result A callback that receives a [List] of [Barcode] objects if barcodes or QR codes
+     * are found in the image, or null if none are found.
+     */
+    fun processUri(context: Context, imageUri: Uri, result: (List<Barcode>?) -> Unit) {
+        val options = BarcodeScannerOptions.Builder().build()
+        val scanner = BarcodeScanning.getClient(options)
+        try {
+            val image = InputImage.fromFilePath(context, imageUri)
+            scanner.process(image).addOnSuccessListener { barcodes: List<Barcode> ->
+                result(barcodes)
+            }.addOnFailureListener { e: Exception ->
+                // Task failed with an exception
+                result(null)
+                e.printStackTrace()
+            }
+        } catch (e: IOException) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.something_went_wrong),
+                Toast.LENGTH_SHORT
+            ).show()
+            result(null)
+            e.printStackTrace()
+        }
     }
 
 }
