@@ -19,7 +19,6 @@ package com.yatik.qrscanner.ui.fragments
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,7 +34,7 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -47,7 +46,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentHomeBinding
 import com.yatik.qrscanner.ui.SettingsActivity
-import com.yatik.qrscanner.ui.cropper.ImageCropperActivity
+import com.yatik.qrscanner.ui.fragments.cropper.CropperFragment
 import com.yatik.qrscanner.ui.fragments.history.BarcodeViewModel
 import com.yatik.qrscanner.utils.Constants
 import com.yatik.qrscanner.utils.Constants.Companion.SHEET_PEEK_VAL
@@ -55,7 +54,6 @@ import com.yatik.qrscanner.utils.PermissionHelper
 import com.yatik.qrscanner.utils.Utilities
 import com.yatik.qrscanner.utils.ratingDialog
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.IOException
 import java.util.concurrent.ExecutionException
 
 @AndroidEntryPoint
@@ -71,14 +69,13 @@ class HomeFragment : Fragment() {
     private var mCameraProvider: ProcessCameraProvider? = null
     private lateinit var mCameraProviderFuture: ListenableFuture<ProcessCameraProvider>
 
-    private val barcodeViewModel: BarcodeViewModel by viewModels()
+    private val barcodeViewModel: BarcodeViewModel by activityViewModels()
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private val utilities = Utilities()
     private val permissionHelper = PermissionHelper()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -94,25 +91,16 @@ class HomeFragment : Fragment() {
         permissionHelper.requestCameraPermission(requireContext(), this)
 
         mCameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
-        val cropImageLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == ImageCropperActivity.RESULT_CODE_SCAN) {
-                    val data = result.data
-                    val croppedUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        data?.getParcelableExtra(ImageCropperActivity.ITEM_NAME, Uri::class.java)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        data?.getParcelableExtra(ImageCropperActivity.ITEM_NAME)
-                    }
-                    processUri(croppedUri!!)
-                }
-            }
         pickVisualMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { result: Uri? ->
                 if (result != null) {
-                    val intent = Intent(requireActivity(), ImageCropperActivity::class.java)
-                    intent.putExtra(ImageCropperActivity.URI_NAME, result.toString())
-                    cropImageLauncher.launch(intent)
+                    val bundle = Bundle().also {
+                        it.putString(CropperFragment.ARG_KEY, result.toString())
+                    }
+                    findNavController().navigate(
+                        R.id.action_homeFragment_to_cropperFragment,
+                        bundle
+                    )
                 }
             }
         setBottomSheetButtons()
@@ -151,24 +139,30 @@ class HomeFragment : Fragment() {
         val preview = Preview.Builder().build()
         val imageAnalysis = ImageAnalysis.Builder().build()
 
-        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(requireContext())) { imageProxy: ImageProxy ->
+        imageAnalysis.setAnalyzer(
+            ContextCompat.getMainExecutor(requireContext())
+        ) { imageProxy: ImageProxy ->
             val image =
                 InputImage.fromMediaImage(imageProxy.image!!, imageProxy.imageInfo.rotationDegrees)
-            val options = BarcodeScannerOptions.Builder()
-                .build()
+            val options = BarcodeScannerOptions.Builder().build()
             val scanner = BarcodeScanning.getClient(options)
             scanner.process(image)
                 .addOnSuccessListener { barcodes: List<Barcode> -> processResult(barcodes) }
                 .addOnFailureListener { e: Exception ->
                     // Task failed with an exception
-                    Toast.makeText(requireContext(), "Failed to scan.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to scan.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     e.printStackTrace()
                 }
-                .addOnCompleteListener(ContextCompat.getMainExecutor(requireContext())) { imageProxy.close() }
+                .addOnCompleteListener(
+                    ContextCompat.getMainExecutor(requireContext())
+                ) { imageProxy.close() }
         }
 
-        val sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val useFrontCam = sharedPreferences.getBoolean("front_cam_preference", false)
         val hasFrontCamera =
             mCameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
@@ -180,52 +174,21 @@ class HomeFragment : Fragment() {
         }
 
         preview.setSurfaceProvider(binding.previewView.surfaceProvider)
-        _mCamera = mCameraProvider?.bindToLifecycle(this, cameraSelector, imageAnalysis, preview)
+        _mCamera = mCameraProvider?.bindToLifecycle(
+            this,
+            cameraSelector,
+            imageAnalysis,
+            preview
+        )
 
         zoomControl()
         flashControl()
     }
 
-    private fun processUri(imageUri: Uri) {
-        binding.homeProgressBar.visibility = View.VISIBLE
-        val options = BarcodeScannerOptions.Builder()
-            .build()
-        val scanner = BarcodeScanning.getClient(options)
-        try {
-            val image = InputImage.fromFilePath(requireContext(), imageUri)
-            scanner.process(image)
-                .addOnSuccessListener { barcodes: List<Barcode> ->
-                    if (barcodes.isEmpty()) {
-                        binding.homeProgressBar.visibility = View.GONE
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.barcode_not_found),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return@addOnSuccessListener
-                    }
-                    processResult(barcodes)
-                }
-                .addOnFailureListener { e: Exception ->
-                    // Task failed with an exception
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.barcode_not_found),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding.homeProgressBar.visibility = View.GONE
-                    e.printStackTrace()
-                }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
     private fun processResult(barcodes: List<Barcode>) {
         if (barcodes.isNotEmpty()) {
             mCameraProvider?.unbindAll()
-            val sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(requireContext())
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
             val isVibrationAllowed = sharedPreferences.getBoolean("vibration_preference", true)
             utilities.vibrateIfAllowed(requireContext(), isVibrationAllowed, 100)
             sendRequiredData(barcodes[0])
@@ -243,8 +206,7 @@ class HomeFragment : Fragment() {
             putParcelable("barcodeData", barcodeData)
         }
         findNavController().navigate(
-            R.id.action_homeFragment_to_detailsFragment,
-            bundle
+            R.id.action_homeFragment_to_detailsFragment, bundle
         )
     }
 
@@ -278,8 +240,7 @@ class HomeFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(
-                Intent.EXTRA_TEXT,
-                Constants.SHARE_APP_MESSAGE
+                Intent.EXTRA_TEXT, Constants.SHARE_APP_MESSAGE
             )
             intent.type = "text/plain"
             startActivity(Intent.createChooser(intent, "Share app via"))
@@ -287,8 +248,7 @@ class HomeFragment : Fragment() {
         binding.policyButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             Utilities().customTabBuilder(
-                requireContext(),
-                Uri.parse(Constants.POLICIES_LINK)
+                requireContext(), Uri.parse(Constants.POLICIES_LINK)
             )
         }
     }

@@ -1,12 +1,3 @@
-package com.yatik.qrscanner.ui
-
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.yatik.qrscanner.R
-import com.yatik.qrscanner.utils.ThemeManager.Companion.updateTheme
-import com.yatik.qrscanner.utils.Utilities
-import dagger.hilt.android.AndroidEntryPoint
-
 /*
  * Copyright 2023 Yatik
  *
@@ -23,6 +14,20 @@ import dagger.hilt.android.AndroidEntryPoint
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.ui
+
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.os.Parcelable
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
+import com.yatik.qrscanner.R
+import com.yatik.qrscanner.ui.fragments.cropper.CropperFragment
+import com.yatik.qrscanner.utils.ThemeManager.Companion.updateTheme
+import com.yatik.qrscanner.utils.Utilities
+import dagger.hilt.android.AndroidEntryPoint
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +36,22 @@ class MainActivity : AppCompatActivity() {
         updateTheme(this@MainActivity)
         setContentView(R.layout.activity_main)
         Utilities().setSystemBars(window, this, true)
+
+        when (intent?.action) {
+            Intent.ACTION_SEND -> if (intent.type?.startsWith("image/") == true) {
+                val bundle = Bundle()
+                @Suppress("DEPRECATION")
+                (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
+                    bundle.putString(CropperFragment.ARG_KEY, it.toString())
+                    val navHostFragment =
+                        supportFragmentManager.findFragmentById(R.id.main_nav_host_fragment)
+                    val navController = navHostFragment?.findNavController()
+                    navController?.navigate(
+                        R.id.cropperFragment, bundle
+                    )
+                }
+            }
+        }
     }
 
 }

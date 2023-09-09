@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".ui.cropper.ImageCropperActivity">
+    tools:context=".ui.fragments.cropper.CropperFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/cropperToolbarLayout"
@@ -28,47 +28,73 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Image Cropper fill the remaining available height -->
+
     <com.canhub.cropper.CropImageView
         android:id="@+id/cropImageView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/scan_cropped_btn"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cropperToolbarLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/cropperToolbarLayout"
+        app:layout_constraintVertical_bias="0.41" />
+
+    <ProgressBar
+        android:id="@+id/cropper_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:progressTint="?colorSecondary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/scan_cropped_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         android:backgroundTint="@color/dark_blue"
         android:text="@string/start_scanning"
         android:textSize="16sp"
         app:cornerRadius="8dp"
         app:icon="@drawable/barcode_reader_24"
-        app:iconSize="24dp"
         app:iconGravity="textStart"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:iconSize="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/select_another_pic" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/cropperToolbarLayout" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/select_another_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cornerRadius="8dp"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/dark_blue"
         android:text="@string/select_other"
         android:textSize="16sp"
+        app:cornerRadius="8dp"
         app:icon="@drawable/ic_outline_image_28"
-        app:iconSize="24dp"
         app:iconGravity="textStart"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/scan_cropped_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:iconSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/scan_cropped_btn" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

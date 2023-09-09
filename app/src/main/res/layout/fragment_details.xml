@@ -20,8 +20,8 @@
             android:id="@+id/detailsToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/arrow_back_28"
             app:menu="@menu/details_menu"
+            app:navigationIcon="@drawable/arrow_back_28"
             app:title="Scanned Data"
             app:titleCentered="true" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -228,8 +228,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="2dp"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="?selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:text="LinkView"
@@ -239,7 +240,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/guidelineVertical"
                     app:layout_constraintTop_toBottomOf="@+id/urlContent"
-                    android:background="?selectableItemBackground"
                     tools:ignore="HardcodedText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

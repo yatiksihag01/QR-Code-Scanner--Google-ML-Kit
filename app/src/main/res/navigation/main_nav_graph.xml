@@ -25,6 +25,11 @@
             app:destination="@id/detailsFragment"
             app:enterAnim="@anim/slide_in_bottom"
             app:popEnterAnim="@anim/slide_in_left" />
+        <action
+            android:id="@+id/action_homeFragment_to_cropperFragment"
+            app:destination="@id/cropperFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:popEnterAnim="@anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
@@ -70,5 +75,19 @@
             app:destination="@id/generatorFragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/cropperFragment"
+        android:name="com.yatik.qrscanner.ui.fragments.cropper.CropperFragment"
+        android:label="fragment_cropper"
+        tools:layout="@layout/fragment_cropper">
+        <action
+            android:id="@+id/action_cropperFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_left" />
+        <argument
+            android:name="imageUri"
+            app:argType="string" />
     </fragment>
 </navigation>
