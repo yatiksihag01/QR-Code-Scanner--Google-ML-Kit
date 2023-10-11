@@ -1,11 +1,3 @@
-package com.yatik.qrscanner.utils.connectivity
-
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
-
 /*
  * Copyright 2023 Yatik
  *
@@ -21,6 +13,14 @@ import javax.inject.Inject
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.yatik.qrscanner.utils.connectivity
+
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
 class DefaultConnectivityHelper @Inject constructor(
     @ApplicationContext private val context: Context
