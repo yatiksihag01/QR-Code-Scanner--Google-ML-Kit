@@ -69,12 +69,12 @@ steps:
   - task: AndroidSigning@3
     displayName: 'Signing APK'
     inputs:
-      apkFiles: '**/*.apk'
+      apkFiles: 'app-release-unsigned.apk'
       apksignerKeystoreFile: 'upload-keystore.jks'
       apksignerKeystorePassword: '$(KEYSTORE_PASSWORD)'
       apksignerKeystoreAlias: '$(KEY_ALIAS)'
       apksignerKeyPassword: '$(KEY_PASSWORD)'
-      apksignerArguments: --out $(Build.SourcesDirectory)/app/build/outputs/apk/release/app-release.apk
+      apksignerArguments: --out $(Build.SourcesDirectory)/app/build/outputs/apk/release/app-release-signed.apk
       zipalign: true
 
   - task: CopyFiles@2

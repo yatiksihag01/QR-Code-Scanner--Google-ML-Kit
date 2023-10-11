@@ -1,3 +1,19 @@
+/*
+ * Copyright 2023 Yatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.yatik.qrscanner.ui.fragments.generator
 
 import android.Manifest
@@ -25,22 +41,6 @@ import com.yatik.qrscanner.databinding.FragmentGeneratorBinding
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Utilities.Companion.makeButtonTextTeal
 import dagger.hilt.android.AndroidEntryPoint
-
-/*
- * Copyright 2023 Yatik
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 /**
  * A fragment that generates different types of QR codes based on the
@@ -74,8 +74,7 @@ class GeneratorFragment : Fragment() {
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentGeneratorBinding.inflate(inflater, container, false)
         return binding.root
@@ -99,9 +98,7 @@ class GeneratorFragment : Fragment() {
                     .show()
             } else {
                 Toast.makeText(
-                    requireContext(),
-                    "Sorry, Unable to save this image",
-                    Toast.LENGTH_SHORT
+                    requireContext(), "Sorry, Unable to save this image", Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -138,8 +135,7 @@ class GeneratorFragment : Fragment() {
         } else {
             when (PackageManager.PERMISSION_GRANTED) {
                 ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) -> {
                     generatorViewModel.saveImageToGallery()
                 }
@@ -155,8 +151,7 @@ class GeneratorFragment : Fragment() {
 
     private fun noPermissionDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Permission Denied!")
-            .setMessage(R.string.permissionDeniedMessageSaveImage)
+        builder.setTitle("Permission Denied!").setMessage(R.string.permissionDeniedMessageSaveImage)
             .setCancelable(false)
             .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
             .setPositiveButton("Allow") { _: DialogInterface?, _: Int ->
@@ -182,9 +177,8 @@ class GeneratorFragment : Fragment() {
             }
 
             Barcode.TYPE_WIFI -> {
-                val info = "SSID: ${generatorData.ssid}\n\n" +
-                        "Security: ${generatorData.securityType}\n\n" +
-                        "Password: ${generatorData.password}"
+                val info =
+                    "SSID: ${generatorData.ssid}\n\n" + "Security: ${generatorData.securityType}\n\n" + "Password: ${generatorData.password}"
                 binding.barcodeInfoTv.text = info
                 binding.barcodeTypeTv.text = getString(R.string.wifi)
             }
@@ -195,8 +189,7 @@ class GeneratorFragment : Fragment() {
             }
 
             Barcode.TYPE_SMS -> {
-                val info = "Phone: ${generatorData.phone}\n\n" +
-                        "Message: ${generatorData.message}"
+                val info = "Phone: ${generatorData.phone}\n\n" + "Message: ${generatorData.message}"
                 binding.barcodeInfoTv.text = info
                 binding.barcodeTypeTv.text = getString(R.string.sms)
             }
@@ -206,9 +199,14 @@ class GeneratorFragment : Fragment() {
                 binding.barcodeTypeTv.text = getString(R.string.phone)
             }
 
-            Barcode.FORMAT_EAN_13 -> {
+            Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E, Barcode.FORMAT_EAN_8, Barcode.FORMAT_EAN_13, Barcode.TYPE_ISBN, Barcode.TYPE_PRODUCT -> {
                 binding.barcodeInfoTv.text = generatorData.barcodeNumber
-                binding.barcodeTypeTv.text = getString(R.string.ean)
+                binding.barcodeTypeTv.text = getString(R.string.product)
+            }
+
+            Barcode.FORMAT_CODE_128, Barcode.FORMAT_CODE_39 -> {
+                binding.barcodeInfoTv.text = generatorData.barcodeNumber
+                binding.barcodeTypeTv.text = getString(R.string.barcode)
             }
 
             else -> binding.barcodeInfoTv.text = getString(R.string.no_data)

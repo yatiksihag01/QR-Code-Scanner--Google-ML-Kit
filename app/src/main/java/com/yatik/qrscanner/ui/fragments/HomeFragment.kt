@@ -18,6 +18,7 @@ package com.yatik.qrscanner.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -73,6 +74,7 @@ class HomeFragment : Fragment() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private val utilities = Utilities()
     private val permissionHelper = PermissionHelper()
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -98,12 +100,12 @@ class HomeFragment : Fragment() {
                         it.putString(CropperFragment.ARG_KEY, result.toString())
                     }
                     findNavController().navigate(
-                        R.id.action_homeFragment_to_cropperFragment,
-                        bundle
+                        R.id.action_homeFragment_to_cropperFragment, bundle
                     )
                 }
             }
         setBottomSheetButtons()
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
     }
 
     override fun onResume() {
@@ -162,7 +164,6 @@ class HomeFragment : Fragment() {
                 ) { imageProxy.close() }
         }
 
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val useFrontCam = sharedPreferences.getBoolean("front_cam_preference", false)
         val hasFrontCamera =
             mCameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
@@ -234,7 +235,7 @@ class HomeFragment : Fragment() {
         }
         binding.ratingButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            ratingDialog(requireContext())
+            ratingDialog(requireContext()) {}
         }
         binding.shareButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
