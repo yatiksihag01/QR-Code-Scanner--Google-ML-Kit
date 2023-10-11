@@ -1,6 +1,6 @@
 # QR-Scanner---Google-ML-Kit-MVVM
 
-[![CodeFactor](https://www.codefactor.io/repository/github/yatiksihag01/qr-scanner---google-ml-kit-mvvm/badge/master)](https://www.codefactor.io/repository/github/yatiksihag01/qr-scanner---google-ml-kit-mvvm/overview/master) [![Build Status](https://dev.azure.com/yatik01/QR%20Code%20Scanner/_apis/build/status%2Fyatiksihag01.QR-Scanner---Google-ML-Kit-MVVM?branchName=master)](https://dev.azure.com/yatik01/QR%20Code%20Scanner/_build/latest?definitionId=1&branchName=release)
+[![CodeFactor](https://www.codefactor.io/repository/github/yatiksihag01/qr-code-scanner--google-ml-kit/badge)](https://www.codefactor.io/repository/github/yatiksihag01/qr-code-scanner--google-ml-kit) [![Build Status](https://dev.azure.com/yatik01/QR%20Code%20Scanner/_apis/build/status%2Fyatiksihag01.QR-Scanner---Google-ML-Kit-MVVM?branchName=master)](https://dev.azure.com/yatik01/QR%20Code%20Scanner/_build/latest?definitionId=1&branchName=release)
 
 This simple QR code scanner is capable of scanning and generating many types of QR codes and barcodes. The app supports a variety of QR code formats, including URLs, Wi-Fi, text, and UPI codes, among others. Additionally, users can generate their own QR codes and barcodes with the app. Currently, the app is available in four different themes: light-blue, light-green, dark-blue, and dark-green.
 
