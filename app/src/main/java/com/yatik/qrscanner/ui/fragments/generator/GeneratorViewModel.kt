@@ -1,29 +1,3 @@
-package com.yatik.qrscanner.ui.fragments.generator
-
-import android.graphics.Bitmap
-import android.graphics.Color
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.MultiFormatWriter
-import com.google.zxing.WriterException
-import com.google.zxing.common.BitMatrix
-import com.google.zxing.oned.EAN13Writer
-import com.google.zxing.qrcode.QRCodeWriter
-import com.yatik.qrscanner.models.GeneratorData
-import com.yatik.qrscanner.repository.barcode_generator.GeneratorRepository
-import com.yatik.qrscanner.utils.Constants.Companion.QR_WIDTH_HEIGHT
-import com.yatik.qrscanner.utils.SingleLiveEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.*
-import javax.inject.Inject
-
 /*
  * Copyright 2023 Yatik
  *
@@ -39,6 +13,34 @@ import javax.inject.Inject
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.yatik.qrscanner.ui.fragments.generator
+
+import android.graphics.Bitmap
+import android.graphics.Color
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.WriterException
+import com.google.zxing.common.BitMatrix
+import com.google.zxing.oned.EAN13Writer
+import com.google.zxing.oned.EAN8Writer
+import com.google.zxing.oned.UPCAWriter
+import com.google.zxing.oned.UPCEWriter
+import com.yatik.qrscanner.models.GeneratorData
+import com.yatik.qrscanner.repository.barcode_generator.GeneratorRepository
+import com.yatik.qrscanner.utils.Constants.Companion.QR_WIDTH_HEIGHT
+import com.yatik.qrscanner.utils.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.*
+import javax.inject.Inject
 
 @HiltViewModel
 class GeneratorViewModel @Inject constructor(
@@ -61,55 +63,51 @@ class GeneratorViewModel @Inject constructor(
         val bitMatrix: BitMatrix
         try {
             when (generatorData.type) {
-                Barcode.TYPE_TEXT -> {
-                    bitMatrix = QRCodeWriter().encode(
-                        generatorData.text,
-                        BarcodeFormat.QR_CODE,
-                        QR_WIDTH_HEIGHT,
-                        QR_WIDTH_HEIGHT
-                    )
-                }
+                Barcode.TYPE_TEXT -> bitMatrix = multiFormatWriter(generatorData.text)
+                Barcode.TYPE_WIFI -> bitMatrix = multiFormatWriter(
+                    "WIFI:S:${generatorData.ssid};T:${generatorData.securityType};P:${generatorData.password};"
+                )
 
-                Barcode.TYPE_WIFI -> {
-                    val wifiString =
-                        "WIFI:S:${generatorData.ssid};T:${generatorData.securityType};P:${generatorData.password};"
-                    bitMatrix = MultiFormatWriter().encode(
-                        wifiString,
-                        BarcodeFormat.QR_CODE,
-                        QR_WIDTH_HEIGHT,
-                        QR_WIDTH_HEIGHT
-                    )
-                }
+                Barcode.TYPE_URL -> bitMatrix = multiFormatWriter(generatorData.url)
+                Barcode.TYPE_SMS -> bitMatrix = multiFormatWriter(
+                    "smsto:${generatorData.phone}:${generatorData.message}"
+                )
 
-                Barcode.TYPE_URL -> {
-                    bitMatrix = MultiFormatWriter().encode(
-                        generatorData.url,
-                        BarcodeFormat.QR_CODE,
-                        QR_WIDTH_HEIGHT,
-                        QR_WIDTH_HEIGHT
-                    )
-                }
+                Barcode.TYPE_PHONE -> bitMatrix = multiFormatWriter(
+                    "tel:${generatorData.phone}"
+                )
 
-                Barcode.TYPE_SMS -> {
-                    bitMatrix = MultiFormatWriter().encode(
-                        "smsto:${generatorData.phone}:${generatorData.message}",
-                        BarcodeFormat.QR_CODE,
-                        QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT
-                    )
-                }
-
-                Barcode.TYPE_PHONE -> {
-                    bitMatrix = MultiFormatWriter().encode(
-                        "tel:${generatorData.phone}",
-                        BarcodeFormat.QR_CODE,
-                        QR_WIDTH_HEIGHT,
-                        QR_WIDTH_HEIGHT
-                    )
-                }
-
-                else -> bitMatrix = EAN13Writer().encode(
+                Barcode.FORMAT_EAN_13 -> bitMatrix = EAN13Writer().encode(
                     generatorData.barcodeNumber,
                     BarcodeFormat.EAN_13,
+                    QR_WIDTH_HEIGHT,
+                    QR_WIDTH_HEIGHT
+                )
+
+                Barcode.FORMAT_EAN_8 -> bitMatrix = EAN8Writer().encode(
+                    generatorData.barcodeNumber,
+                    BarcodeFormat.EAN_8,
+                    QR_WIDTH_HEIGHT,
+                    QR_WIDTH_HEIGHT
+                )
+
+                Barcode.FORMAT_UPC_A -> bitMatrix = UPCAWriter().encode(
+                    generatorData.barcodeNumber,
+                    BarcodeFormat.UPC_A,
+                    QR_WIDTH_HEIGHT,
+                    QR_WIDTH_HEIGHT
+                )
+
+                Barcode.FORMAT_UPC_E -> bitMatrix = UPCEWriter().encode(
+                    generatorData.barcodeNumber,
+                    BarcodeFormat.UPC_E,
+                    QR_WIDTH_HEIGHT,
+                    QR_WIDTH_HEIGHT
+                )
+
+                else -> bitMatrix = MultiFormatWriter().encode(
+                    generatorData.barcodeNumber,
+                    BarcodeFormat.CODE_128,
                     QR_WIDTH_HEIGHT,
                     QR_WIDTH_HEIGHT
                 )
@@ -136,11 +134,9 @@ class GeneratorViewModel @Inject constructor(
                 pixels[offset + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
             }
         }
-        _bitmap.postValue(
-            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
-                setPixels(pixels, 0, width, 0, 0, width, height)
-            }
-        )
+        _bitmap.postValue(Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+            setPixels(pixels, 0, width, 0, 0, width, height)
+        })
     }
 
     fun saveImageToGallery() = viewModelScope.launch(Dispatchers.IO) {
@@ -153,5 +149,9 @@ class GeneratorViewModel @Inject constructor(
             _imageSaved.value = result
         }
     }
+
+    private fun multiFormatWriter(content: String?): BitMatrix = MultiFormatWriter().encode(
+        content, BarcodeFormat.QR_CODE, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT
+    )
 
 }

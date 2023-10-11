@@ -1,5 +1,3 @@
-package com.yatik.qrscanner.utils.connectivity
-
 /*
  * Copyright 2023 Yatik
  *
@@ -15,6 +13,8 @@ package com.yatik.qrscanner.utils.connectivity
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.yatik.qrscanner.utils.connectivity
 
 interface ConnectivityHelper {
 

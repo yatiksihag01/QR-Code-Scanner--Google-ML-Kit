@@ -27,16 +27,31 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.utils.ThemeManager.Companion.updateTheme
 import com.yatik.qrscanner.utils.Utilities
+import com.yatik.qrscanner.utils.ratingDialog
 
 class SettingsActivity : AppCompatActivity() {
 
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                val sharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(this@SettingsActivity)
+                val shouldShowRatingDialog =
+                    sharedPreferences.getBoolean("shouldShowRatingDialog", true)
+                if (shouldShowRatingDialog) {
+                    sharedPreferences.edit().putBoolean("shouldShowRatingDialog", false).apply()
+                    ratingDialog(this@SettingsActivity) { pressedCancel ->
+                        if (pressedCancel) goToMainActivity()
+                    }
+                } else goToMainActivity()
+            }
+
+            private fun goToMainActivity() {
                 startActivity(
                     Intent(this@SettingsActivity, MainActivity::class.java)
                 )
