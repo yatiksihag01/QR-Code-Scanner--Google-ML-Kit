@@ -69,7 +69,7 @@ steps:
   - task: AndroidSigning@3
     displayName: 'Signing APK'
     inputs:
-      apkFiles: 'app-release-unsigned.apk'
+      apkFiles: '$(Build.SourcesDirectory)/app/build/outputs/apk/release/app-release-unsigned.apk'
       apksignerKeystoreFile: 'upload-keystore.jks'
       apksignerKeystorePassword: '$(KEYSTORE_PASSWORD)'
       apksignerKeystoreAlias: '$(KEY_ALIAS)'
@@ -81,7 +81,7 @@ steps:
     displayName: 'Copying APK'
     inputs:
       SourceFolder: '$(Build.SourcesDirectory)/app/build/outputs/apk/release/'
-      Contents: 'app-release.apk'
+      Contents: 'app-release-signed.apk'
       TargetFolder: '$(build.ArtifactStagingDirectory)/APK'
 
   - task: CopyFiles@2
