@@ -5,5 +5,11 @@
         android:id="@+id/delete_all"
         android:icon="@drawable/folder_delete_28"
         android:title="@string/delete_all_files"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/search_history"
+        android:icon="@drawable/search_28"
+        android:title="@string/search_history"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
 </menu>

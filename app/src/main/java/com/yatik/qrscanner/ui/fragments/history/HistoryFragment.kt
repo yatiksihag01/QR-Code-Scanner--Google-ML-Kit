@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -52,6 +53,7 @@ class HistoryFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: HistoryAdapter
+    private lateinit var searchView: SearchView
     private val barcodeViewModel: BarcodeViewModel by viewModels()
 
     override fun onCreateView(
@@ -64,6 +66,49 @@ class HistoryFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerView = binding.historyRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = HistoryAdapter()
+        recyclerView.adapter = adapter
+
+        binding.historyToolbar.setNavigationOnClickListener {
+            requireActivity().finish()
+            requireActivity().intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(requireActivity().intent)
+        }
+
+        setMenu()
+        setupSwipeAction(view)
+
+        adapter.setOnDeleteClickListener { deleteDialog(it) }
+        adapter.setOnItemClickListener { barcodeData ->
+            val bundle = Bundle().apply {
+                putParcelable("barcodeData", barcodeData)
+            }
+            findNavController().navigate(
+                R.id.action_historyFragment_to_detailsFragment,
+                bundle
+            )
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            barcodeViewModel.combinedFlow.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+            }
+        }
+        adapter.addLoadStateListener { loadState ->
+            binding.noItemInHistory.root.visibility = if (
+                loadState.source.refresh is LoadState.NotLoading
+                && loadState.append.endOfPaginationReached
+                && adapter.itemCount < 1
+            ) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun setMenu() {
+        val menu = binding.historyToolbar.menu
+        searchView = menu.findItem(R.id.search_history).actionView as SearchView
+        setupSearch(searchView)
         binding.historyToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.delete_all -> {
@@ -93,27 +138,9 @@ class HistoryFragment : Fragment() {
                 else -> false
             }
         }
-        binding.historyToolbar.setNavigationOnClickListener {
-            requireActivity().finish()
-            requireActivity().intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(requireActivity().intent)
-        }
-        recyclerView = binding.historyRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = HistoryAdapter()
-        recyclerView.adapter = adapter
+    }
 
-        adapter.setOnDeleteClickListener { deleteDialog(it) }
-        adapter.setOnItemClickListener { barcodeData ->
-            val bundle = Bundle().apply {
-                putParcelable("barcodeData", barcodeData)
-            }
-            findNavController().navigate(
-                R.id.action_historyFragment_to_detailsFragment,
-                bundle
-            )
-        }
-
+    private fun setupSwipeAction(view: View) {
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -126,13 +153,15 @@ class HistoryFragment : Fragment() {
                 return false
             }
 
+            override fun isLongPressDragEnabled(): Boolean = false
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.absoluteAdapterPosition
                 val barcodeData = adapter.getItemOnPosition(position)
                 barcodeViewModel.delete(barcodeData)
                 Snackbar.make(view, "Item deleted successfully", Snackbar.LENGTH_LONG).apply {
                     setAction("Undo") {
-                        barcodeViewModel.insert(barcodeData)
+                        barcodeViewModel.undoDeletion(barcodeData)
                     }
                     show()
                 }
@@ -141,19 +170,27 @@ class HistoryFragment : Fragment() {
         ItemTouchHelper(itemTouchHelperCallback).apply {
             attachToRecyclerView(binding.historyRecyclerView)
         }
+    }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            barcodeViewModel.pagingDataFlow.collectLatest { pagingData ->
-                adapter.submitData(pagingData)
+    private fun setupSearch(searchView: SearchView) {
+        searchView.queryHint = getString(R.string.searchHint)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(searchQuery: String?): Boolean {
+                return if (searchQuery != null) {
+                    barcodeViewModel.searchFromBarcodes("%${searchQuery}%")
+                    searchView.clearFocus()
+                    true
+                } else false
             }
-        }
-        adapter.addLoadStateListener { loadState ->
-            binding.noItemInHistory.root.visibility = if (
-                loadState.source.refresh is LoadState.NotLoading
-                && loadState.append.endOfPaginationReached
-                && adapter.itemCount < 1
-            ) View.VISIBLE else View.GONE
-        }
+
+            override fun onQueryTextChange(searchQuery: String?): Boolean {
+                return if (searchQuery != null) {
+                    barcodeViewModel.searchFromBarcodes("%${searchQuery}%")
+                    true
+                } else false
+            }
+
+        })
     }
 
     private fun deleteDialog(barcodeData: BarcodeData?) {

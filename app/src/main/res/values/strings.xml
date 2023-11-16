@@ -109,6 +109,9 @@
     <string name="select_theme_settings_title">Select theme</string>
     <string name="source_code_preference_summary">You\'ll be redirected to source code repository</string>
     <string name="source_code">Source Code</string>
+    <string name="search_history">Search history items.</string>
+    <string name="searchHint">Enter barcode data...</string>
+    <string name="no_saved_items">No barcodes found to show.</string>
 
 
     <string-array name="theme_types">
