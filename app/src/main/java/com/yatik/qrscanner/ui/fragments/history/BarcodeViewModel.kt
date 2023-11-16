@@ -1,17 +1,3 @@
-package com.yatik.qrscanner.ui.fragments.history
-
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
-import com.yatik.qrscanner.models.BarcodeData
-import com.yatik.qrscanner.repository.history.BarcodeDataRepository
-import com.yatik.qrscanner.utils.Constants.Companion.ITEMS_PER_PAGE
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
 /*
  * Copyright 2023 Yatik
  *
@@ -28,19 +14,50 @@ import javax.inject.Inject
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.ui.fragments.history
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.repository.history.BarcodeDataRepository
+import com.yatik.qrscanner.utils.Constants.Companion.ITEMS_PER_PAGE
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
 @HiltViewModel
 class BarcodeViewModel @Inject constructor(
     private val repository: BarcodeDataRepository
 ) : ViewModel() {
 
-    val pagingDataFlow = Pager(
-        config = PagingConfig(pageSize = ITEMS_PER_PAGE)
-    ) { repository.getAllBarcodes() }
-        .flow
+    private val mSearchQuery = MutableStateFlow("")
+    private val searchedPagingDataFlow =
+        MutableStateFlow<PagingData<BarcodeData>>(PagingData.empty())
+    private val pagingDataFlow = repository.getPagingDataStream(ITEMS_PER_PAGE)
         .cachedIn(viewModelScope)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val combinedFlow: Flow<PagingData<BarcodeData>> = mSearchQuery.flatMapLatest { query ->
+        if (query.isBlank()) {
+            pagingDataFlow
+        } else {
+            searchedPagingDataFlow
+        }
+    }
 
     fun insert(barcodeData: BarcodeData) = viewModelScope.launch {
         repository.insert(barcodeData)
+    }
+
+    fun undoDeletion(barcodeData: BarcodeData) = viewModelScope.launch {
+        repository.undoDeletion(barcodeData)
     }
 
     fun delete(barcodeData: BarcodeData) = viewModelScope.launch {
@@ -49,6 +66,16 @@ class BarcodeViewModel @Inject constructor(
 
     fun deleteAll() = viewModelScope.launch {
         repository.deleteAll()
+    }
+
+    fun searchFromBarcodes(searchQuery: String) = viewModelScope.launch {
+        mSearchQuery.value = searchQuery
+        if (searchQuery.isBlank()) return@launch
+        repository.searchFromBarcodes(searchQuery)
+            .cachedIn(viewModelScope)
+            .collectLatest {
+                searchedPagingDataFlow.value = it
+            }
     }
 
 }

@@ -1,9 +1,3 @@
-package com.yatik.qrscanner.database
-
-import androidx.paging.PagingSource
-import androidx.room.*
-import com.yatik.qrscanner.models.BarcodeData
-
 /*
  * Copyright 2023 Yatik
  *
@@ -20,6 +14,12 @@ import com.yatik.qrscanner.models.BarcodeData
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.database
+
+import androidx.paging.PagingSource
+import androidx.room.*
+import com.yatik.qrscanner.models.BarcodeData
+
 @Dao
 interface BarcodeDao {
 
@@ -32,7 +32,18 @@ interface BarcodeDao {
     @Query("SELECT * FROM barcode_table ORDER BY id DESC")
     fun getAllBarcodes(): PagingSource<Int, BarcodeData>
 
+    @Query("SELECT * FROM barcode_table ORDER BY id DESC LIMIT :limit OFFSET :offset")
+    suspend fun getBarcodePages(limit: Int, offset: Int): List<BarcodeData>
+
     @Query("DELETE FROM barcode_table")
     suspend fun deleteAll()
+
+    @Query(
+        "SELECT * FROM barcode_table " +
+                "WHERE title LIKE :searchQuery " +
+                "OR decryptedText LIKE :searchQuery " +
+                "ORDER BY id DESC"
+    )
+    fun searchFromBarcodes(searchQuery: String): PagingSource<Int, BarcodeData>
 
 }

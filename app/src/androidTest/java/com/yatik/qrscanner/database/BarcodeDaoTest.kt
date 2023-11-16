@@ -1,3 +1,19 @@
+/*
+ * Copyright 2023 Yatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.yatik.qrscanner.database
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -14,22 +30,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.*
 import javax.inject.Inject
 import javax.inject.Named
-
-/*
- * Copyright 2023 Yatik
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
@@ -58,16 +58,17 @@ class BarcodeDaoTest {
         dataBase.close()
     }
 
+    private val barcodeData = BarcodeData(
+        Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample",
+        null, null, "27.01.2023 23:41:47"
+    )
+    private val barcodeData2 = BarcodeData(
+        Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample2",
+        "https://example.com", null, "28.01.2023 00:00:47"
+    )
+
     @Test
     fun getAllBarcodesTest() = runTest {
-        val barcodeData = BarcodeData(
-            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample",
-            null, null, "27.01.2023 23:41:47"
-        )
-        val barcodeData2 = BarcodeData(
-            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample2",
-            null, null, "28.01.2023 00:00:47"
-        )
         dao.insert(barcodeData)
         dao.insert(barcodeData2)
 
@@ -89,18 +90,34 @@ class BarcodeDaoTest {
     }
 
     @Test
-    fun deleteAllBarcodeData() = runTest {
-
-        val barcodeData = BarcodeData(
-            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample",
-            null, null, "27.01.2023 23:41:47"
-        )
+    fun getBarcodePages() = runTest {
+        dao.insert(barcodeData2)
+        dao.insert(barcodeData2)
         dao.insert(barcodeData)
 
-        val barcodeData2 = BarcodeData(
-            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample2",
-            null, null, "28.01.2023 00:00:47"
+        dao.insert(barcodeData2)
+        dao.insert(barcodeData2)
+        dao.insert(barcodeData)
+        dao.insert(barcodeData2)
+        val initialItemReturned = BarcodeData(
+            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Initial",
+            null, null, "27.01.2023 23:41:47"
         )
+        dao.insert(initialItemReturned) // Because order is DESC by ID
+
+        var barcodesList = dao.getBarcodePages(5, 0)
+        assertThat(barcodesList.size).isEqualTo(5)
+        assertThat(barcodesList[0].title).isEqualTo(initialItemReturned.title)
+        assertThat(barcodesList[4].decryptedText).isEqualTo(barcodeData2.decryptedText)
+
+        barcodesList = dao.getBarcodePages(5, 5)
+        assertThat(barcodesList.size).isEqualTo(3)
+        assertThat(barcodesList[0].title).isEqualTo(barcodeData.title)
+    }
+
+    @Test
+    fun deleteAllBarcodeData() = runTest {
+        dao.insert(barcodeData)
         dao.insert(barcodeData2)
         dao.deleteAll()
 
@@ -114,6 +131,36 @@ class BarcodeDaoTest {
 
         assertThat(resultPage.data.size).isEqualTo(0)
 
+    }
+
+    @Test
+    fun searchFromBarcodes() = runTest {
+        dao.insert(barcodeData)
+        dao.insert(barcodeData2)
+
+        var resultPage = dao.searchFromBarcodes("Sample").load(
+            PagingSource.LoadParams.Refresh(
+                key = null,
+                loadSize = ITEMS_PER_PAGE,
+                placeholdersEnabled = false
+            )
+        ) as PagingSource.LoadResult.Page
+
+        // id is auto-incrementing on actual insertion
+        barcodeData.id = 1
+        barcodeData2.id = 2
+
+        assertThat(resultPage.data[0]).isEqualTo(barcodeData)
+
+        resultPage = dao.searchFromBarcodes("https://example.com").load(
+            PagingSource.LoadParams.Refresh(
+                key = null,
+                loadSize = ITEMS_PER_PAGE,
+                placeholdersEnabled = false
+            )
+        ) as PagingSource.LoadResult.Page
+
+        assertThat(resultPage.data[0]).isEqualTo(barcodeData2)
     }
 
 }
