@@ -1,8 +1,3 @@
-package com.yatik.qrscanner.repository.history
-
-import androidx.paging.PagingSource
-import com.yatik.qrscanner.models.BarcodeData
-
 /*
  * Copyright 2023 Yatik
  *
@@ -19,11 +14,41 @@ import com.yatik.qrscanner.models.BarcodeData
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.repository.history
+
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.paging.sources.HistoryPagingSource
+import kotlinx.coroutines.flow.Flow
+
 interface BarcodeDataRepository {
 
+    fun getPagingDataStream(itemsPerPage: Int): Flow<PagingData<BarcodeData>>
+
+    /**
+     * Use [BarcodeDataRepository.undoDeletion] if you are inserting to undo deletion as this
+     * method does not invalidates the [HistoryPagingSource].
+     */
     suspend fun insert(barcodeData: BarcodeData)
+
+    /**
+     * Inserts the given [BarcodeData] object into database and invalidates the current
+     * [HistoryPagingSource] object returned by
+     * [BarcodeDataRepository.getHistoryPagingSource] method.
+     */
+    suspend fun undoDeletion(barcodeData: BarcodeData)
+
     suspend fun delete(barcodeData: BarcodeData)
     fun getAllBarcodes(): PagingSource<Int, BarcodeData>
+
+    /**
+     * @param itemsPerPage Number of items to be returned per page.
+     *
+     * @return New instance of [HistoryPagingSource] class.
+     */
+    fun getHistoryPagingSource(itemsPerPage: Int): HistoryPagingSource
     suspend fun deleteAll()
+    fun searchFromBarcodes(searchQuery: String): Flow<PagingData<BarcodeData>>
 
 }

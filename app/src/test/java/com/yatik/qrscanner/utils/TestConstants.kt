@@ -114,6 +114,8 @@ class TestConstants {
         const val ERROR_FOOD_RESPONSE =
             "{\"code\":\"123\",\"status\":0,\"status_verbose\":\"product not found\"}"
 
+        const val ITEMS_PER_PAGE = 10
+
     }
 
 }
