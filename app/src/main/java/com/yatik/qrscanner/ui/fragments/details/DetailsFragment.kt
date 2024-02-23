@@ -238,7 +238,6 @@ class DetailsFragment : Fragment() {
             }
         }
         binding.copyButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Copied to clipboard", Toast.LENGTH_SHORT).show()
             val text = binding.decodedText.text.toString()
             copyData(text)
         }
@@ -270,6 +269,10 @@ class DetailsFragment : Fragment() {
             else "${mainUrl.substring(0, 47)}..."
         binding.urlTextView.setOnClickListener {
             utilities.customTabBuilder(requireContext(), Uri.parse(mainUrl))
+        }
+        binding.urlTextView.setOnLongClickListener {
+            copyData(mainUrl)
+            true
         }
 
         detailsViewModel.getUrlPreview(mainUrl)
@@ -352,6 +355,7 @@ class DetailsFragment : Fragment() {
             requireActivity().getSystemService(AppCompatActivity.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText("copied", text)
         clipboardManager.setPrimaryClip(clipData)
+        Toast.makeText(requireContext(), "Copied to clipboard", Toast.LENGTH_SHORT).show()
     }
 
     private fun shareData(text: String) {

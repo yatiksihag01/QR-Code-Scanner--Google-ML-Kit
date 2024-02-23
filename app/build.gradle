@@ -16,9 +16,9 @@ android {
     defaultConfig {
         applicationId "com.yatik.qrscanner"
         minSdk 23
-        targetSdk 33
-        versionCode 29
-        versionName "2.5.0"
+        targetSdk 34
+        versionCode 30
+        versionName "2.5.1"
 
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.yatik.qrscanner.HiltTestRunner"
@@ -64,17 +64,17 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.activity:activity-ktx:1.8.0'
+    implementation 'androidx.activity:activity-ktx:1.8.2'
     implementation 'androidx.test:runner:1.5.2'
     testImplementation 'junit:junit:4.13.2'
-    def camerax_version = "1.3.0"
+    def camerax_version = "1.3.1"
     def fragment_version = "1.6.2"
-    def nav_version = "2.7.5"
+    def nav_version = "2.7.7"
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.guava:guava:31.1-android'
+    implementation 'com.google.guava:guava:31.1-jre'
 
     // Navigation components
     implementation "androidx.navigation:navigation-fragment-ktx:${nav_version}"
@@ -108,7 +108,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycleVersion"
 
     // Kotlin components
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
 
@@ -122,11 +122,11 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:4.5.0"
 
     //Custom Chrome Tabs
-    implementation 'androidx.browser:browser:1.6.0'
+    implementation 'androidx.browser:browser:1.7.0'
 
     // Paging Components
     implementation "androidx.paging:paging-runtime-ktx:$rootProject.paging_version"
-    implementation "androidx.room:room-paging:2.6.0"
+    implementation "androidx.room:room-paging:2.6.1"
     testImplementation "androidx.paging:paging-common-ktx:$rootProject.paging_version"
 
     // To test coroutines

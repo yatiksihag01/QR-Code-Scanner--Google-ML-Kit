@@ -4,8 +4,8 @@ buildscript {
 }
 
 plugins {
-    id 'com.android.application' version '8.1.1' apply false
-    id 'com.android.library' version '8.1.1' apply false
+    id 'com.android.application' version '8.2.2' apply false
+    id 'com.android.library' version '8.2.2' apply false
     id 'androidx.navigation.safeargs' version '2.5.3' apply false
     id 'org.jetbrains.kotlin.android' version '1.8.10' apply false
     id 'com.google.dagger.hilt.android' version "2.44" apply false
@@ -18,7 +18,7 @@ ext {
     constraintLayoutVersion = '2.1.2'
     coreTestingVersion = '2.1.0'
     coroutines = '1.5.2'
-    lifecycleVersion = '2.6.1'
+    lifecycleVersion = '2.7.0'
     materialVersion = '1.4.0'
     paging_version = '3.2.1'
     roomVersion = '2.5.2'
