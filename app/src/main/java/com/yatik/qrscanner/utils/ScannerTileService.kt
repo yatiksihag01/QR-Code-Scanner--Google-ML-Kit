@@ -1,11 +1,3 @@
-package com.yatik.qrscanner.utils
-
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.service.quicksettings.TileService
-import androidx.annotation.RequiresApi
-
 /*
  * Copyright 2023 Yatik
  *
@@ -22,18 +14,32 @@ import androidx.annotation.RequiresApi
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.utils
+
+import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.os.Build
+import android.service.quicksettings.TileService
+import androidx.annotation.RequiresApi
+
 @RequiresApi(Build.VERSION_CODES.N)
 class ScannerTileService : TileService() {
 
+    @SuppressLint("StartActivityAndCollapseDeprecated")
     override fun onClick() {
         super.onClick()
-        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
-        if (launchIntent != null) {
-            startActivityAndCollapse(launchIntent)
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName) ?: return
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            launchIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startActivityAndCollapse(pendingIntent)
         } else {
-            val playStoreIntent = Intent(Intent.ACTION_VIEW)
-            playStoreIntent.data = Uri.parse("market://details?id=$packageName")
-            startActivityAndCollapse(playStoreIntent)
+            @Suppress("DEPRECATION")
+            startActivityAndCollapse(launchIntent)
         }
     }
 
