@@ -1,10 +1,3 @@
-package com.yatik.qrscanner.repository.details
-
-import com.yatik.qrscanner.models.UrlPreviewData
-import com.yatik.qrscanner.models.food.Product
-import com.yatik.qrscanner.utils.Resource
-import kotlinx.coroutines.flow.Flow
-
 /*
  * Copyright 2023 Yatik
  *
@@ -20,6 +13,13 @@ import kotlinx.coroutines.flow.Flow
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.yatik.qrscanner.repository.details
+
+import com.yatik.qrscanner.models.UrlPreviewData
+import com.yatik.qrscanner.models.food.Product
+import com.yatik.qrscanner.utils.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface DetailsRepository {
 
