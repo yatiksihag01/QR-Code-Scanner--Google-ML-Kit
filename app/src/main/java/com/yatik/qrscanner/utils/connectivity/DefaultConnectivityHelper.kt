@@ -19,6 +19,9 @@ package com.yatik.qrscanner.utils.connectivity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.wifi.WifiNetworkSuggestion
+import android.os.Build
+import androidx.annotation.RequiresApi
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -41,6 +44,35 @@ class DefaultConnectivityHelper @Inject constructor(
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
             else -> false
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    override fun getWiFiSuggestionsList(
+        ssid: String,
+        securityType: String,
+        password: String?
+    ): ArrayList<WifiNetworkSuggestion> {
+        val suggestions = ArrayList<WifiNetworkSuggestion>()
+        val builder = WifiNetworkSuggestion.Builder()
+        if (securityType == "Open" || password.isNullOrEmpty()) {
+            suggestions.add(
+                builder.setSsid(ssid)
+                    .build()
+            )
+        } else if (securityType == "WPA2") {
+            suggestions.add(
+                builder.setSsid(ssid)
+                    .setWpa2Passphrase(password)
+                    .build()
+            )
+        } else {
+            suggestions.add(
+                builder.setSsid(ssid)
+                    .setWpa3Passphrase(password)
+                    .build()
+            )
+        }
+        return suggestions
     }
 
 }

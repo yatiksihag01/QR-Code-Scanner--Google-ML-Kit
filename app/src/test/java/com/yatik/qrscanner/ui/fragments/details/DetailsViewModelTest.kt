@@ -1,32 +1,3 @@
-package com.yatik.qrscanner.ui.fragments.details
-
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.google.common.truth.Truth.*
-import com.yatik.qrscanner.getOrAwaitValueTest
-import com.yatik.qrscanner.models.UrlPreviewData
-import com.yatik.qrscanner.models.food.Nutriments
-import com.yatik.qrscanner.models.food.NutriscoreData
-import com.yatik.qrscanner.models.food.Product
-import com.yatik.qrscanner.repository.details.DetailsRepository
-import com.yatik.qrscanner.utils.Resource
-import com.yatik.qrscanner.utils.TestConstants
-import com.yatik.qrscanner.utils.TestConstants.Companion.MAIN_URL
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Assert.*
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.mockito.Mockito.anyString
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-
 /*
  * Copyright 2023 Yatik
  *
@@ -43,6 +14,35 @@ import org.mockito.Mockito.`when`
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.ui.fragments.details
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.common.truth.Truth.assertThat
+import com.yatik.qrscanner.getOrAwaitValueTest
+import com.yatik.qrscanner.models.UrlPreviewData
+import com.yatik.qrscanner.models.food.Nutriments
+import com.yatik.qrscanner.models.food.NutriscoreData
+import com.yatik.qrscanner.models.food.Product
+import com.yatik.qrscanner.repository.details.DetailsRepository
+import com.yatik.qrscanner.utils.Resource
+import com.yatik.qrscanner.utils.TestConstants
+import com.yatik.qrscanner.utils.TestConstants.Companion.MAIN_URL
+import com.yatik.qrscanner.utils.connectivity.ConnectivityHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.mockito.Mockito.anyString
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
+
 @OptIn(ExperimentalCoroutinesApi::class)
 class DetailsViewModelTest {
 
@@ -51,6 +51,7 @@ class DetailsViewModelTest {
 
     private lateinit var viewModel: DetailsViewModel
     private val mockedRepository = mock(DetailsRepository::class.java)
+    private val mockedConnectivityHelper = mock(ConnectivityHelper::class.java)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val urlPreviewData = UrlPreviewData(
@@ -67,7 +68,7 @@ class DetailsViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = DetailsViewModel(mockedRepository)
+        viewModel = DetailsViewModel(mockedRepository, mockedConnectivityHelper)
     }
 
     @After

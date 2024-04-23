@@ -136,3 +136,20 @@ fun noPermissionDialog(context: Context, message: String) {
     dialog.show()
     dialog.makeButtonTextTeal(context)
 }
+
+fun afterWiFiSavingDialog(context: Context, ssid: String) {
+    val builder = AlertDialog.Builder(context)
+    builder.setMessage(context.getString(R.string.wifi_saved_dialog_message) + ssid)
+        .setNegativeButton(context.getString(R.string.cancel)) { dialog: DialogInterface?, _: Int ->
+            dialog?.dismiss()
+        }
+        .setPositiveButton(context.getString(R.string.open)) { _: DialogInterface?, _: Int ->
+            context.startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+        }
+    val dialog = builder.create()
+    dialog.window?.setBackgroundDrawable(
+        ContextCompat.getDrawable(context, R.drawable.dialog_background)
+    )
+    dialog.show()
+    dialog.makeButtonTextTeal(context)
+}

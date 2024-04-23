@@ -112,6 +112,15 @@
     <string name="search_history">Search history items.</string>
     <string name="searchHint">Enter barcode data...</string>
     <string name="no_saved_items">No barcodes found to show.</string>
+    <string name="wifi_config_saved">Configuration saved or modified successfully</string>
+    <string name="invalid_wifi_config">Something went wrong - invalid configuration</string>
+    <string name="wifi_config_exist">Configuration already exist (as-is) on device, nothing changed</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="maps_not_installed">Google Maps is not installed on your device</string>
+    <string name="wifi_saved_dialog_message"><![CDATA["Network details saved successfully. The device may not connect automatically. If the device does not connect, please click open, go to saved networks and select "]]></string>
+    <string name="okay">Okay</string>
+    <string name="open">Open</string>
+    <string name="empty_qr_message">Sorry, this QR code doesn\'t contain any data</string>
 
 
     <string-array name="theme_types">
