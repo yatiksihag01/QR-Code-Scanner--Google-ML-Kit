@@ -1,15 +1,3 @@
-package com.yatik.qrscanner.database
-
-import androidx.room.AutoMigration
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.yatik.qrscanner.database.converters.NutrimentsTypeConverter
-import com.yatik.qrscanner.database.converters.NutriscoreTypeConverter
-import com.yatik.qrscanner.models.BarcodeData
-import com.yatik.qrscanner.models.UrlPreviewData
-import com.yatik.qrscanner.models.food.ProductEntity
-
 /*
  * Copyright 2023 Yatik
  *
@@ -26,9 +14,27 @@ import com.yatik.qrscanner.models.food.ProductEntity
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.database
+
+import androidx.room.AutoMigration
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.google.gson.Gson
+import com.yatik.qrscanner.database.converters.BarcodeTypeConverter
+import com.yatik.qrscanner.database.converters.NutrimentsTypeConverter
+import com.yatik.qrscanner.database.converters.NutriscoreTypeConverter
+import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.models.UrlPreviewData
+import com.yatik.qrscanner.models.barcode.BarcodeEntity
+import com.yatik.qrscanner.models.food.ProductEntity
+import com.yatik.qrscanner.utils.mappers.Mapper
+
 @Database(
-    version = 4,
-    entities = [BarcodeData::class, UrlPreviewData::class, ProductEntity::class],
+    version = 5,
+    entities = [BarcodeEntity::class, BarcodeData::class, UrlPreviewData::class, ProductEntity::class],
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -37,12 +43,57 @@ import com.yatik.qrscanner.models.food.ProductEntity
 )
 @TypeConverters(
     NutrimentsTypeConverter::class,
-    NutriscoreTypeConverter::class
+    NutriscoreTypeConverter::class,
+    BarcodeTypeConverter::class
 )
 abstract class BarcodeRoomDataBase : RoomDatabase() {
 
     abstract fun barcodeDao(): BarcodeDao
     abstract fun urlPreviewDao(): UrlPreviewDao
     abstract fun foodDao(): FoodDao
+
+    companion object {
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.beginTransaction()
+                try {
+                    db.execSQL("""
+                        CREATE TABLE IF NOT EXISTS scanned_data_table (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        details TEXT NOT NULL
+                        )
+                        """.trimIndent()
+                    )
+
+                    val cursor = db.query("SELECT * FROM barcode_table ORDER BY id DESC")
+                    while (cursor.moveToNext()) {
+                        val format = cursor.getInt(cursor.getColumnIndexOrThrow("format"))
+                        val type = cursor.getInt(cursor.getColumnIndexOrThrow("type"))
+                        val title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
+                        val decryptedText = cursor
+                            .getString(cursor.getColumnIndexOrThrow("decryptedText"))
+                        val others =
+                            cursor.getString(cursor.getColumnIndexOrThrow("others"))
+                        val dateTime =
+                            cursor.getString(cursor.getColumnIndexOrThrow("dateTime"))
+                        val barcodeData =
+                            BarcodeData(format, type, title, decryptedText, others, dateTime)
+                        val barcodeDetails = Mapper.fromBarcodeDataToBarcodeDetails(barcodeData)
+                        val json = Gson().toJson(barcodeDetails)
+                        db.execSQL(
+                            "INSERT INTO scanned_data_table (details) VALUES (?)",
+                            arrayOf(json)
+                        )
+                    }
+                    cursor.close()
+//                    db.execSQL("DROP TABLE barcode_table")
+                    db.setTransactionSuccessful()
+                } finally {
+                    db.endTransaction()
+                }
+            }
+
+        }
+    }
 
 }
