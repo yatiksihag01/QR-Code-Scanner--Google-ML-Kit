@@ -17,6 +17,7 @@
 package com.yatik.qrscanner.utils.mappers
 
 import android.os.Build
+import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.models.BarcodeData
 import com.yatik.qrscanner.models.barcode.BarcodeDetails
@@ -63,6 +64,10 @@ object Mapper {
                 "${barcodeData.title}"
             )
         }
+    }
+
+    fun fromBarcodeDetailsToJson(barcodeDetails: BarcodeDetails): String {
+        return Gson().toJson(barcodeDetails)
     }
 
     private fun mapForQRCodes(barcode: Barcode): BarcodeDetails? {

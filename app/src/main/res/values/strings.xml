@@ -112,6 +112,13 @@
     <string name="search_history">Search history items.</string>
     <string name="searchHint">Enter barcode data...</string>
     <string name="no_saved_items">No barcodes found to show.</string>
+    <string name="email">Email</string>
+    <string name="delete">Delete</string>
+    <string name="yes">Yes</string>
+    <string name="delete_confirmation">Are you sure to delete this item?</string>
+    <string name="cannot_delete_warning">Sorry, Unable to delete this item.</string>
+    <string name="deleted_item">Item deleted successfully</string>
+    <string name="undo">Undo</string>
 
 
     <string-array name="theme_types">

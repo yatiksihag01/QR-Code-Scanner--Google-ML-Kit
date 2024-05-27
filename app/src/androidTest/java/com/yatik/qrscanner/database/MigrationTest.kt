@@ -62,7 +62,10 @@ class MigrationTest {
            )
             close()
         }
-        database = helper.runMigrationsAndValidate(TEST_DB, 5, false, BarcodeRoomDataBase.MIGRATION_4_5)
+        database = helper.runMigrationsAndValidate(TEST_DB,
+            5,
+            true,
+            BarcodeRoomDataBase.MIGRATION_4_5)
         val cursor = database.query("SELECT * FROM scanned_data_table").apply {
             assertThat(moveToFirst()).isTrue()
             val json = getString(getColumnIndexOrThrow("details"))

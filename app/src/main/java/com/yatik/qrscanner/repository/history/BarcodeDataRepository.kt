@@ -17,30 +17,32 @@
 package com.yatik.qrscanner.repository.history
 
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
 import com.yatik.qrscanner.paging.sources.HistoryPagingSource
+import com.yatik.qrscanner.paging.sources.HistorySearchPagingSource
 import kotlinx.coroutines.flow.Flow
 
 interface BarcodeDataRepository {
 
-    fun getPagingDataStream(itemsPerPage: Int): Flow<PagingData<BarcodeData>>
+    fun getPagingDataStream(itemsPerPage: Int): Flow<PagingData<BarcodeDetails>>
+
+    fun getSearchedDataStream(searchQuery: String, pageSize: Int): Flow<PagingData<BarcodeDetails>>
 
     /**
      * Use [BarcodeDataRepository.undoDeletion] if you are inserting to undo deletion as this
      * method does not invalidates the [HistoryPagingSource].
      */
-    suspend fun insert(barcodeData: BarcodeData)
+    suspend fun insert(barcodeDetails: BarcodeDetails)
 
     /**
-     * Inserts the given [BarcodeData] object into database and invalidates the current
+     * Inserts the given [BarcodeDetails] object into database and invalidates the current
      * [HistoryPagingSource] object returned by
      * [BarcodeDataRepository.getHistoryPagingSource] method.
      */
-    suspend fun undoDeletion(barcodeData: BarcodeData)
+    suspend fun undoDeletion(barcodeDetails: BarcodeDetails)
 
-    suspend fun delete(barcodeData: BarcodeData)
-    fun getAllBarcodes(): PagingSource<Int, BarcodeData>
+    suspend fun delete(barcodeDetails: BarcodeDetails)
+    fun getAllBarcodes(): List<BarcodeDetails>
 
     /**
      * @param itemsPerPage Number of items to be returned per page.
@@ -48,7 +50,12 @@ interface BarcodeDataRepository {
      * @return New instance of [HistoryPagingSource] class.
      */
     fun getHistoryPagingSource(itemsPerPage: Int): HistoryPagingSource
+
+    /**
+     * @return New instance of [HistorySearchPagingSource] class
+     * if previous instance is null or invalid.
+     */
+    fun getSearchHistoryPagingSource(pageSize: Int, searchQuery: String): HistorySearchPagingSource
     suspend fun deleteAll()
-    fun searchFromBarcodes(searchQuery: String): Flow<PagingData<BarcodeData>>
 
 }

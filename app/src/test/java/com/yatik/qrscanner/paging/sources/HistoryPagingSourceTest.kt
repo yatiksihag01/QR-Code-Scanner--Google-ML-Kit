@@ -18,14 +18,14 @@ package com.yatik.qrscanner.paging.sources
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingSource
-import com.google.common.truth.Truth.*
-import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.common.truth.Truth.assertThat
 import com.yatik.qrscanner.database.BarcodeDao
-import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
+import com.yatik.qrscanner.models.barcode.data.Url
+import com.yatik.qrscanner.models.barcode.metadata.Format
+import com.yatik.qrscanner.models.barcode.metadata.Type
 import com.yatik.qrscanner.utils.TestConstants.Companion.ITEMS_PER_PAGE
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -33,7 +33,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.mock
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class HistoryPagingSourceTest {
 
     @get:Rule
@@ -41,13 +40,15 @@ class HistoryPagingSourceTest {
     private val mockedDao = mock(BarcodeDao::class.java)
     private lateinit var historyPagingSource: HistoryPagingSource
 
-    private val barcodeData = BarcodeData(
-        Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
-        "sample text", null, null, "09-02-2023 11:50:54"
+    private val barcodeDetails = BarcodeDetails(
+        Format.QR_CODE,
+        Type.TYPE_TEXT,
+        "27.01.2023 23:41:47", "Sample",
+        text = "Sample"
     )
-    private val barcodeData2 = BarcodeData(
-        Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT,
-        "sample text2", null, null, "09-02-2023 11:50:54"
+    private val barcodeDetails2 = BarcodeDetails(
+        Format.QR_CODE, Type.TYPE_URL, "27.01.2023 23:41:47",
+        "https://example.com", url = Url("SampleUrl", "https://example.com")
     )
 
     @Before
@@ -57,7 +58,7 @@ class HistoryPagingSourceTest {
 
     @Test
     fun `load returns LoadResult page`() = runTest {
-        val mockedList = listOf(barcodeData, barcodeData2)
+        val mockedList = listOf(barcodeDetails, barcodeDetails2)
         Mockito.`when`(mockedDao.getBarcodePages(anyInt(), anyInt())).thenReturn(mockedList)
 
         val params = PagingSource.LoadParams

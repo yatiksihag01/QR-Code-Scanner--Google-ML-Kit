@@ -34,7 +34,7 @@ import com.yatik.qrscanner.utils.mappers.Mapper
 
 @Database(
     version = 5,
-    entities = [BarcodeEntity::class, BarcodeData::class, UrlPreviewData::class, ProductEntity::class],
+    entities = [BarcodeEntity::class, UrlPreviewData::class, ProductEntity::class],
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -65,7 +65,7 @@ abstract class BarcodeRoomDataBase : RoomDatabase() {
                         """.trimIndent()
                     )
 
-                    val cursor = db.query("SELECT * FROM barcode_table ORDER BY id DESC")
+                    val cursor = db.query("SELECT * FROM barcode_table")
                     while (cursor.moveToNext()) {
                         val format = cursor.getInt(cursor.getColumnIndexOrThrow("format"))
                         val type = cursor.getInt(cursor.getColumnIndexOrThrow("type"))
@@ -86,7 +86,7 @@ abstract class BarcodeRoomDataBase : RoomDatabase() {
                         )
                     }
                     cursor.close()
-//                    db.execSQL("DROP TABLE barcode_table")
+                    db.execSQL("DROP TABLE barcode_table")
                     db.setTransactionSuccessful()
                 } finally {
                     db.endTransaction()

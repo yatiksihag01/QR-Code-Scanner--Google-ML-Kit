@@ -34,18 +34,18 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.size.Scale
 import coil.transform.RoundedCornersTransformation
-import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.adapters.food.FoodTableAdapter
 import com.yatik.qrscanner.databinding.FragmentDetailsBinding
-import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
+import com.yatik.qrscanner.models.barcode.metadata.Format
+import com.yatik.qrscanner.models.barcode.metadata.Type
 import com.yatik.qrscanner.models.food.Product
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Resource
@@ -55,7 +55,6 @@ import com.yatik.qrscanner.utils.foodTableRowsList
 import com.yatik.qrscanner.utils.getNovaInfo
 import com.yatik.qrscanner.utils.getNutriInfo
 import com.yatik.qrscanner.utils.isBookBarcode
-import com.yatik.qrscanner.utils.mappers.barcodeDataToGeneratorData
 import com.yatik.qrscanner.utils.setNovaColor
 import com.yatik.qrscanner.utils.setNutriColor
 import dagger.hilt.android.AndroidEntryPoint
@@ -99,40 +98,37 @@ class DetailsFragment : Fragment() {
         super.onViewStateRestored(savedInstanceState)
         isClickedGetDetails = savedInstanceState?.getBoolean("isClickedGetDetails") ?: false
         if (isClickedGetDetails)
-            showNutriments(args.barcodeData.title.toString())
+            showNutriments(args.barcodeDetails.rawValue)
     }
 
     @SuppressLint("SetTextI18n")
     private fun getBarcodeDetails() {
 
-        val barcodeData = args.barcodeData
-        val format = barcodeData.format
-        val valueType = barcodeData.type
-        val title = barcodeData.title
-        val decryptedText = barcodeData.decryptedText
-        val others = barcodeData.others
+        val barcodeDetails = args.barcodeDetails
 
-        val rawValue = title ?: "Sorry, this QR code doesn't contain any data"
-
+        // TODO
         binding.detailsToQrButton.setOnClickListener {
-            val bundle = Bundle().apply {
-                putParcelable("GeneratorData", barcodeDataToGeneratorData(barcodeData))
-            }
-            findNavController().navigate(
-                R.id.action_detailsFragment_to_generatorFragment,
-                bundle
-            )
+//            val bundle = Bundle().apply {
+//                putParcelable("GeneratorData", barcodeDataToGeneratorData(barcodeData))
+//            }
+//            findNavController().navigate(
+//                R.id.action_detailsFragment_to_generatorFragment,
+//                bundle
+//            )
         }
 
-        when (format) {
-            Barcode.FORMAT_QR_CODE -> {
+        when (barcodeDetails.format) {
+            Format.QR_CODE -> {
                 binding.detailsToolbar.menu.removeItem(R.id.get_food_details_button)
-                when (valueType) {
-                    Barcode.TYPE_WIFI -> {
+                when (barcodeDetails.type) {
+                    Type.TYPE_WIFI -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_wifi_24)
                         binding.typeText.text = "WiFi"
                         binding.decodedText.text = String.format(
-                            "SSID: %s\n\nPassword: %s\n\nType: %s", title, decryptedText, others
+                            "SSID: %s\n\nPassword: %s\n\nType: %s",
+                            barcodeDetails.wiFi?.ssid,
+                            barcodeDetails.wiFi?.password,
+                            barcodeDetails.wiFi?.security
                         )
                         binding.launchButton.icon = AppCompatResources.getDrawable(
                             requireContext(),
@@ -142,43 +138,53 @@ class DetailsFragment : Fragment() {
                         binding.launchButton.setOnClickListener { openWifiSettings() }
                     }
 
-                    Barcode.TYPE_URL -> {
-                        if (!decryptedText.isNullOrBlank())
-                            setUrlView(decryptedText)
-                    }
-
-                    Barcode.TYPE_TEXT -> {
-                        binding.decodedText.text = title
-                        if (title!!.startsWith("upi://pay")) {
-                            binding.typeIcon.setImageResource(R.drawable.upi_24)
-                            binding.typeText.text = getString(R.string.upi)
-                            payViaUPI(title)
-                            binding.launchButton.setOnClickListener { payViaUPI(title) }
-                        } else {
-                            binding.typeIcon.setImageResource(R.drawable.outline_text_icon)
-                            binding.typeText.setText(R.string.text)
-                            binding.launchButton.setOnClickListener { shareData(title) }
+                    Type.TYPE_URL -> {
+                        barcodeDetails.url?.url?.let {
+                            setUrlView(it)
                         }
                     }
 
-                    Barcode.TYPE_PHONE -> {
+                    Type.TYPE_TEXT -> {
+                        binding.decodedText.text = barcodeDetails.text
+                        if (barcodeDetails.text?.startsWith("upi://pay") == true) {
+                            binding.typeIcon.setImageResource(R.drawable.upi_24)
+                            binding.typeText.text = getString(R.string.upi)
+                            payViaUPI(barcodeDetails.text)
+                            binding.launchButton.setOnClickListener {
+                                payViaUPI(barcodeDetails.text)
+                            }
+                        } else {
+                            binding.typeIcon.setImageResource(R.drawable.outline_text_icon)
+                            binding.typeText.setText(R.string.text)
+                            binding.launchButton.setOnClickListener {
+                                barcodeDetails.text?.let { text ->
+                                    shareData(text)
+                                } ?: shareData(barcodeDetails.rawValue)
+                            }
+                        }
+                    }
+
+                    Type.TYPE_PHONE -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_call_24)
                         binding.typeText.setText(R.string.phone)
-                        binding.decodedText.text = String.format("Phone. No: %s", title)
+                        binding.decodedText.text = "Phone. No: ${barcodeDetails.phone?.number}"
                         binding.launchButton.setOnClickListener {
                             startActivity(
                                 Intent(
                                     Intent.ACTION_DIAL,
-                                    Uri.fromParts("tel", title, null)
+                                    Uri.fromParts(
+                                        "tel",
+                                        barcodeDetails.phone?.number,
+                                        null
+                                    )
                                 )
                             )
                         }
                     }
 
-                    Barcode.TYPE_GEO -> {
-                        val longLat = others?.split(",")
-                        val latitude = longLat?.get(0)
-                        val longitude = longLat?.get(1)
+                    Type.TYPE_GEO -> {
+                        val latitude = barcodeDetails.geo?.latitude
+                        val longitude = barcodeDetails.geo?.longitude
                         binding.typeIcon.setImageResource(R.drawable.outline_location_24)
                         binding.typeText.text = "Location"
                         binding.decodedText.text =
@@ -200,40 +206,49 @@ class DetailsFragment : Fragment() {
                         }
                     }
 
-                    Barcode.TYPE_SMS -> {
+                    Type.TYPE_SMS -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_sms_24)
                         binding.typeText.setText(R.string.sms)
                         binding.decodedText.text = String.format(
-                            "Phone. No: %s\n\nMessage: %s", title, decryptedText
+                            "Phone. No: %s\n\nMessage: %s",
+                            barcodeDetails.sms?.number,
+                            barcodeDetails.sms?.message
                         )
                         binding.launchButton.setOnClickListener {
-                            shareData(decryptedText ?: "")
+                            shareData(
+                                "From: ${barcodeDetails.sms?.number} " +
+                                        "Message: ${barcodeDetails.sms?.message}"
+                            )
                         }
+                    }
+
+                    Type.TYPE_ISBN -> {
+                        setProductView(barcodeDetails)
                     }
 
                     else -> {
                         binding.typeIcon.setImageResource(R.drawable.outline_question_mark_24)
                         binding.typeText.setText(R.string.raw)
-                        binding.decodedText.text = rawValue
+                        binding.decodedText.text = barcodeDetails.rawValue
                         binding.launchButton.setOnClickListener {
-                            shareData(rawValue)
+                            shareData(barcodeDetails.rawValue)
                         }
                     }
                 }
             }
 
-            Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E, Barcode.FORMAT_EAN_8, Barcode.FORMAT_EAN_13, Barcode.TYPE_ISBN -> {
-                setProductView(barcodeData)
+            Format.UPC_A, Format.UPC_E, Format.EAN_8, Format.EAN_13 -> {
+                setProductView(barcodeDetails)
 
             }
 
             else -> {
                 binding.detailsToolbar.menu.removeItem(R.id.get_food_details_button)
                 binding.typeIcon.setImageResource(R.drawable.outline_barcode_24)
-                binding.typeText.text = "Barcode"
-                binding.decodedText.text = title
+                binding.typeText.text = getString(R.string.barcode)
+                binding.decodedText.text = barcodeDetails.rawValue
                 binding.launchButton.setOnClickListener {
-                    shareData(rawValue)
+                    shareData(barcodeDetails.rawValue)
                 }
             }
         }
@@ -321,25 +336,23 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    private fun setProductView(barcodeData: BarcodeData) {
-
-        val barcode = barcodeData.title
+    private fun setProductView(barcodeDetails: BarcodeDetails) {
         binding.typeIcon.setImageResource(R.drawable.outline_product_24)
         binding.typeText.text = getString(R.string.product)
-        binding.decodedText.text = barcode
+        binding.decodedText.text = barcodeDetails.rawValue
         binding.launchButton.setOnClickListener {
             Utilities().customTabBuilder(
                 requireContext(),
-                Uri.parse("https://www.google.com/search?q=$barcode")
+                Uri.parse("https://www.google.com/search?q=${barcodeDetails.rawValue}")
             )
         }
-        if (!barcode.isNullOrBlank() && isBookBarcode(barcode))
+        if (isBookBarcode(barcodeDetails.rawValue))
             binding.detailsToolbar.menu.removeItem(R.id.get_food_details_button)
         else {
             binding.detailsToolbar.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.get_food_details_button -> {
-                        showNutrimentsDialog(barcode.toString())
+                        showNutrimentsDialog(barcodeDetails.rawValue)
                         true
                     }
 
