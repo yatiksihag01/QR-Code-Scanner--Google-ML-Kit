@@ -1,3 +1,19 @@
+/*
+ * Copyright 2023 Yatik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.yatik.qrscanner.ui.fragments.generator
 
 import android.app.Dialog
@@ -15,28 +31,19 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentQrCodeGeneratorBinding
-import com.yatik.qrscanner.models.GeneratorData
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
+import com.yatik.qrscanner.models.barcode.data.Phone
+import com.yatik.qrscanner.models.barcode.data.Security
+import com.yatik.qrscanner.models.barcode.data.Sms
+import com.yatik.qrscanner.models.barcode.data.Url
+import com.yatik.qrscanner.models.barcode.data.WiFi
+import com.yatik.qrscanner.models.barcode.metadata.Format
+import com.yatik.qrscanner.models.barcode.metadata.Type
 import com.yatik.qrscanner.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
-/*
- * Copyright 2023 Yatik
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 @AndroidEntryPoint
 class QRCodeGeneratorFragment : Fragment() {
@@ -97,9 +104,14 @@ class QRCodeGeneratorFragment : Fragment() {
                 Toast.makeText(requireContext(), "Please enter valid input", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                val generatorData = GeneratorData(type = Barcode.TYPE_TEXT, text = content)
+                val barcodeDetails = BarcodeDetails(
+                    format = Format.QR_CODE,
+                    type = Type.TYPE_TEXT,
+                    null, rawValue = content,
+                    text = content
+                )
                 val bundle = Bundle().apply {
-                    putParcelable("GeneratorData", generatorData)
+                    putParcelable("barcodeDetails", barcodeDetails)
                 }
                 findNavController().navigate(
                     R.id.action_QRCodeGeneratorFragment_to_generatorFragment,
@@ -126,17 +138,24 @@ class QRCodeGeneratorFragment : Fragment() {
         submitButton.setOnClickListener {
             val ssid = ssidField.text.toString()
             val password = passwordField.text.toString()
+            val security = when (securityField.text.toString()) {
+                "WEP" -> Security.WEP
+                "WPA" -> Security.WPA
+                "WPA2" -> Security.WPA2
+                else -> Security.OPEN
+            }
             if (ssid.isBlank()) {
                 Toast.makeText(requireContext(), "Please enter SSID", Toast.LENGTH_SHORT).show()
             } else {
-                val generatorData = GeneratorData(
-                    type = Barcode.TYPE_WIFI,
-                    ssid = ssid,
-                    password = password,
-                    securityType = securityField.text.toString()
+                val barcodeDetails = BarcodeDetails(
+                    format = Format.QR_CODE,
+                    type = Type.TYPE_WIFI,
+                    null,
+                    "WIFI:S:$ssid;T:${securityField.text};P:$password;",
+                    wiFi = WiFi(ssid, password, security)
                 )
                 val bundle = Bundle().apply {
-                    putParcelable("GeneratorData", generatorData)
+                    putParcelable("barcodeDetails", barcodeDetails)
                 }
                 findNavController().navigate(
                     R.id.action_QRCodeGeneratorFragment_to_generatorFragment,
@@ -162,9 +181,15 @@ class QRCodeGeneratorFragment : Fragment() {
             val content = textField.text.toString()
 
             if (content.startsWith("http://") || content.startsWith("https://")) {
-                val generatorData = GeneratorData(type = Barcode.TYPE_URL, url = content)
+                val barcodeDetails = BarcodeDetails(
+                    format = Format.QR_CODE,
+                    type = Type.TYPE_URL,
+                    null,
+                    rawValue = content,
+                    url = Url(null, content)
+                )
                 val bundle = Bundle().apply {
-                    putParcelable("GeneratorData", generatorData)
+                    putParcelable("barcodeDetails", barcodeDetails)
                 }
                 findNavController().navigate(
                     R.id.action_QRCodeGeneratorFragment_to_generatorFragment,
@@ -192,18 +217,23 @@ class QRCodeGeneratorFragment : Fragment() {
         val messageField = dialog.findViewById<TextInputEditText>(R.id.outlinedMessageField)
 
         submitButton.setOnClickListener {
-            val phone = phoneField.text.toString()
-            val message = messageField.text.toString()
-            if (phone.isBlank()) {
+            val sms = Sms(phoneField.text.toString(), messageField.text.toString())
+            if (sms.number?.isBlank() == true) {
                 Toast.makeText(requireContext(), "Please enter phone number", Toast.LENGTH_SHORT)
                     .show()
-            } else if (message.isBlank()) {
+            } else if (sms.message?.isBlank() == true) {
                 Toast.makeText(requireContext(), "Please enter message", Toast.LENGTH_SHORT).show()
             } else {
-                val generatorData =
-                    GeneratorData(type = Barcode.TYPE_SMS, phone = phone, message = message)
+                val barcodeDetails =
+                    BarcodeDetails(
+                        format = Format.QR_CODE,
+                        type = Type.TYPE_SMS,
+                        null,
+                        rawValue = "SMSTO:${sms.number};BODY:${sms.message};",
+                        sms = sms
+                    )
                 val bundle = Bundle().apply {
-                    putParcelable("GeneratorData", generatorData)
+                    putParcelable("barcodeDetails", barcodeDetails)
                 }
                 findNavController().navigate(
                     R.id.action_QRCodeGeneratorFragment_to_generatorFragment,
@@ -228,9 +258,15 @@ class QRCodeGeneratorFragment : Fragment() {
         submitButton.setOnClickListener {
             val content = textField.text.toString()
             if (content.isNotEmpty()) {
-                val generatorData = GeneratorData(type = Barcode.TYPE_PHONE, phone = content)
+                val barcodeDetails = BarcodeDetails(
+                    format = Format.QR_CODE,
+                    type = Type.TYPE_PHONE,
+                    null,
+                    rawValue = "tel:$content",
+                    phone = Phone(null, content, null)
+                )
                 val bundle = Bundle().apply {
-                    putParcelable("GeneratorData", generatorData)
+                    putParcelable("barcodeDetails", barcodeDetails)
                 }
                 findNavController().navigate(
                     R.id.action_QRCodeGeneratorFragment_to_generatorFragment,
@@ -259,10 +295,15 @@ class QRCodeGeneratorFragment : Fragment() {
         submitButton.setOnClickListener {
             val content = textField.text.toString()
             if (isValidEAN13(content)) {
-                val generatorData =
-                    GeneratorData(type = Barcode.FORMAT_EAN_13, barcodeNumber = content)
+                val barcodeDetails =
+                    BarcodeDetails(
+                        format = Format.EAN_13,
+                        type = Type.TYPE_UNKNOWN,
+                        timeStamp = null,
+                        rawValue = content
+                    )
                 val bundle = Bundle().apply {
-                    putParcelable("GeneratorData", generatorData)
+                    putParcelable("barcodeDetails", barcodeDetails)
                 }
                 findNavController().navigate(
                     R.id.action_QRCodeGeneratorFragment_to_generatorFragment,

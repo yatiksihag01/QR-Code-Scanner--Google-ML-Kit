@@ -59,8 +59,8 @@
         android:label="fragment_generator"
         tools:layout="@layout/fragment_generator">
         <argument
-            android:name="GeneratorData"
-            app:argType="com.yatik.qrscanner.models.GeneratorData" />
+            android:name="barcodeDetails"
+            app:argType="com.yatik.qrscanner.models.barcode.BarcodeDetails" />
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
