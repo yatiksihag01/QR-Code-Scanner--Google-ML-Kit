@@ -51,7 +51,7 @@ class HistorySearchPagingSource(
 
             LoadResult.Page(
                 data = filteredItemsList.take(pageSize),
-                prevKey = if (currentOffset < pageSize) null else (currentOffset - pageSize),
+                prevKey = if (currentOffset < pageSize) null else currentOffset - pageSize,
                 nextKey = if (reachedEnd) null else currentOffset
             )
         } catch (e: Exception) {

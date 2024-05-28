@@ -94,8 +94,8 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val barcodeData = args.barcodeData
-        getBarcodeDetails(barcodeData)
+        val barcodeDetails = args.barcodeDetails
+        getBarcodeDetails(barcodeDetails)
 
         binding.detailsToolbar.setNavigationOnClickListener {
             requireActivity().finish()
@@ -107,7 +107,7 @@ class DetailsFragment : Fragment() {
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                handleWiFiResultResponse(result, barcodeData.title!!)
+                handleWiFiResultResponse(result, barcodeDetails.wiFi?.ssid.toString())
             }
         }
 
@@ -126,9 +126,7 @@ class DetailsFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun getBarcodeDetails(barcodeData: BarcodeData) {
-
-        val barcodeDetails = args.barcodeDetails
+    private fun getBarcodeDetails(barcodeDetails: BarcodeDetails) {
 
         binding.detailsToQrButton.setOnClickListener {
             val bundle = Bundle().apply {
@@ -160,7 +158,11 @@ class DetailsFragment : Fragment() {
                         binding.launchButton.text = getString(R.string.wifi)
                         binding.launchButton.setOnClickListener {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                openWifiSettings(title!!, others!!, decryptedText)
+                                openWifiSettings(
+                                    barcodeDetails.wiFi?.ssid.toString(),
+                                    barcodeDetails.wiFi?.security.toString(),
+                                    barcodeDetails.wiFi?.password
+                                )
                             } else {
                                 startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
                             }
