@@ -16,8 +16,32 @@
 
 package com.yatik.qrscanner.utils.connectivity
 
+import android.net.wifi.WifiNetworkSuggestion
+import android.os.Build
+import androidx.annotation.RequiresApi
+
 interface ConnectivityHelper {
 
     fun isConnectedToInternet(): Boolean
+
+    /**
+     * Retrieves a list of [WifiNetworkSuggestion] object for the given SSID, security type, and
+     * password (if provided).
+     * If the password is null or empty, an open network suggestion is created.
+     * If a password is provided, a WPA2 or WPA3 network suggestion is created as per given securityType.
+     *
+     * Note: Requires API level [Build.VERSION_CODES.R] or higher.
+     *
+     * @param ssid The SSID (network name) of the WiFi network.
+     * @param securityType The security type of the WiFi network (e.g., "WPA2", "WPA3", "OPEN").
+     * @param password The password for the WiFi network. Can be null for open networks.
+     * @return An ArrayList of [WifiNetworkSuggestion] objects representing the WiFi network suggestions.
+     */
+    @RequiresApi(Build.VERSION_CODES.R)
+    fun getWiFiSuggestionsList(
+        ssid: String,
+        securityType: String,
+        password: String?
+    ): ArrayList<WifiNetworkSuggestion>
 
 }

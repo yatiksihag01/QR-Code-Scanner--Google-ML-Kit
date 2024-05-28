@@ -1,17 +1,3 @@
-package com.yatik.qrscanner.ui.fragments.details
-
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.yatik.qrscanner.models.UrlPreviewData
-import com.yatik.qrscanner.models.food.Product
-import com.yatik.qrscanner.repository.details.DetailsRepository
-import com.yatik.qrscanner.utils.Resource
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
 /*
  * Copyright 2023 Yatik
  *
@@ -28,9 +14,28 @@ import javax.inject.Inject
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.ui.fragments.details
+
+import android.net.wifi.WifiNetworkSuggestion
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.yatik.qrscanner.models.UrlPreviewData
+import com.yatik.qrscanner.models.food.Product
+import com.yatik.qrscanner.repository.details.DetailsRepository
+import com.yatik.qrscanner.utils.Resource
+import com.yatik.qrscanner.utils.connectivity.ConnectivityHelper
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
-    private val repository: DetailsRepository
+    private val repository: DetailsRepository,
+    private val connectivityHelper: ConnectivityHelper
 ) : ViewModel() {
 
     private val _urlPreviewResource: MutableLiveData<Resource<UrlPreviewData>> = MutableLiveData()
@@ -52,5 +57,13 @@ class DetailsViewModel @Inject constructor(
             _foodProductResource.postValue(resource)
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    fun getWiFiSuggestionsList(
+        ssid: String,
+        securityType: String,
+        password: String?
+    ): ArrayList<WifiNetworkSuggestion> =
+        connectivityHelper.getWiFiSuggestionsList(ssid, securityType, password)
 
 }
