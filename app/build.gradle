@@ -27,6 +27,9 @@ android {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
+    sourceSets {
+        androidTest.assets.srcDirs += file("$projectDir/schemas".toString())
+    }
 
     buildTypes {
         release {

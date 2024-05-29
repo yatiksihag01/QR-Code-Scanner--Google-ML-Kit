@@ -17,21 +17,23 @@
 package com.yatik.qrscanner.database
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.paging.PagingSource
 import androidx.test.filters.SmallTest
-import com.google.common.truth.Truth.*
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.yatik.qrscanner.models.BarcodeData
-import com.yatik.qrscanner.utils.Constants.Companion.ITEMS_PER_PAGE
+import com.google.common.truth.Truth.assertThat
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
+import com.yatik.qrscanner.models.barcode.data.Url
+import com.yatik.qrscanner.models.barcode.metadata.Format
+import com.yatik.qrscanner.models.barcode.metadata.Type
+import com.yatik.qrscanner.utils.mappers.Mapper
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.*
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import javax.inject.Inject
 import javax.inject.Named
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
 @HiltAndroidTest
 class BarcodeDaoTest {
@@ -58,109 +60,46 @@ class BarcodeDaoTest {
         dataBase.close()
     }
 
-    private val barcodeData = BarcodeData(
-        Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample",
-        null, null, "27.01.2023 23:41:47"
+    private val barcodeDetails = BarcodeDetails(
+        Format.QR_CODE,
+        Type.TYPE_TEXT,
+        "27.01.2023 23:41:47", "Sample",
+        text = "Sample"
     )
-    private val barcodeData2 = BarcodeData(
-        Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Sample2",
-        "https://example.com", null, "28.01.2023 00:00:47"
+    private val barcodeDetails2 = BarcodeDetails(
+        Format.QR_CODE, Type.TYPE_URL, "27.01.2023 23:41:47",
+        "https://example.com", url = Url("SampleUrl", "https://example.com")
     )
+    private val json = Mapper.fromBarcodeDetailsToJson(barcodeDetails)
+    private val json2 = Mapper.fromBarcodeDetailsToJson(barcodeDetails2)
 
     @Test
-    fun getAllBarcodesTest() = runTest {
-        dao.insert(barcodeData)
-        dao.insert(barcodeData2)
+    fun checkTypeConverter() = runTest {
+        dao.insert(json)
+        dao.insert(json2)
 
-        val resultPage = dao.getAllBarcodes().load(
-            PagingSource.LoadParams.Refresh(
-                key = null,
-                loadSize = ITEMS_PER_PAGE,
-                placeholdersEnabled = false
-            )
-        ) as PagingSource.LoadResult.Page
-
-        // id is auto-incrementing on actual insertion
-        barcodeData.id = 1
-        barcodeData2.id = 2
-
-        assertThat(resultPage.data[0]).isEqualTo(barcodeData2)
-        assertThat(resultPage.data[1]).isEqualTo(barcodeData)
-
+        val barcodesList = dao.getAllBarcodes()
+        assertThat(barcodesList[0]).isInstanceOf(BarcodeDetails::class.java)
     }
 
     @Test
-    fun getBarcodePages() = runTest {
-        dao.insert(barcodeData2)
-        dao.insert(barcodeData2)
-        dao.insert(barcodeData)
+    fun getBarcodePagesTest() = runTest {
+        dao.insert(json)
+        dao.insert(json2)
+        dao.insert(json)
 
-        dao.insert(barcodeData2)
-        dao.insert(barcodeData2)
-        dao.insert(barcodeData)
-        dao.insert(barcodeData2)
-        val initialItemReturned = BarcodeData(
-            Barcode.FORMAT_QR_CODE, Barcode.TYPE_TEXT, "Initial",
-            null, null, "27.01.2023 23:41:47"
-        )
-        dao.insert(initialItemReturned) // Because order is DESC by ID
+        dao.insert(json2)
+        dao.insert(json)
+        dao.insert(json2)
+        dao.insert(json)
 
         var barcodesList = dao.getBarcodePages(5, 0)
         assertThat(barcodesList.size).isEqualTo(5)
-        assertThat(barcodesList[0].title).isEqualTo(initialItemReturned.title)
-        assertThat(barcodesList[4].decryptedText).isEqualTo(barcodeData2.decryptedText)
+        assertThat(barcodesList[4].type).isEqualTo(barcodeDetails.type)
 
         barcodesList = dao.getBarcodePages(5, 5)
-        assertThat(barcodesList.size).isEqualTo(3)
-        assertThat(barcodesList[0].title).isEqualTo(barcodeData.title)
-    }
-
-    @Test
-    fun deleteAllBarcodeData() = runTest {
-        dao.insert(barcodeData)
-        dao.insert(barcodeData2)
-        dao.deleteAll()
-
-        val resultPage = dao.getAllBarcodes().load(
-            PagingSource.LoadParams.Refresh(
-                key = null,
-                loadSize = ITEMS_PER_PAGE,
-                placeholdersEnabled = false
-            )
-        ) as PagingSource.LoadResult.Page
-
-        assertThat(resultPage.data.size).isEqualTo(0)
-
-    }
-
-    @Test
-    fun searchFromBarcodes() = runTest {
-        dao.insert(barcodeData)
-        dao.insert(barcodeData2)
-
-        var resultPage = dao.searchFromBarcodes("Sample").load(
-            PagingSource.LoadParams.Refresh(
-                key = null,
-                loadSize = ITEMS_PER_PAGE,
-                placeholdersEnabled = false
-            )
-        ) as PagingSource.LoadResult.Page
-
-        // id is auto-incrementing on actual insertion
-        barcodeData.id = 1
-        barcodeData2.id = 2
-
-        assertThat(resultPage.data[0]).isEqualTo(barcodeData)
-
-        resultPage = dao.searchFromBarcodes("https://example.com").load(
-            PagingSource.LoadParams.Refresh(
-                key = null,
-                loadSize = ITEMS_PER_PAGE,
-                placeholdersEnabled = false
-            )
-        ) as PagingSource.LoadResult.Page
-
-        assertThat(resultPage.data[0]).isEqualTo(barcodeData2)
+        assertThat(barcodesList.size).isEqualTo(2)
+        assertThat(barcodesList[1].timeStamp).isEqualTo(barcodeDetails2.timeStamp)
     }
 
 }

@@ -37,7 +37,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.adapters.history.HistoryAdapter
 import com.yatik.qrscanner.databinding.FragmentHistoryBinding
-import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Utilities
 import com.yatik.qrscanner.utils.Utilities.Companion.getColorFromAttr
@@ -81,9 +81,9 @@ class HistoryFragment : Fragment() {
         setupSwipeAction(view)
 
         adapter.setOnDeleteClickListener { deleteDialog(it) }
-        adapter.setOnItemClickListener { barcodeData ->
+        adapter.setOnItemClickListener { barcodeDetails ->
             val bundle = Bundle().apply {
-                putParcelable("barcodeData", barcodeData)
+                putParcelable("barcodeDetails", barcodeDetails)
             }
             findNavController().navigate(
                 R.id.action_historyFragment_to_detailsFragment,
@@ -157,11 +157,11 @@ class HistoryFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.absoluteAdapterPosition
-                val barcodeData = adapter.getItemOnPosition(position)
-                barcodeViewModel.delete(barcodeData)
-                Snackbar.make(view, "Item deleted successfully", Snackbar.LENGTH_LONG).apply {
-                    setAction("Undo") {
-                        barcodeViewModel.undoDeletion(barcodeData)
+                val barcodeDetails = adapter.getItemOnPosition(position)
+                barcodeViewModel.delete(barcodeDetails)
+                Snackbar.make(view, getString(R.string.deleted_item), Snackbar.LENGTH_LONG).apply {
+                    setAction(getString(R.string.undo)) {
+                        barcodeViewModel.undoDeletion(barcodeDetails)
                     }
                     show()
                 }
@@ -177,7 +177,7 @@ class HistoryFragment : Fragment() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(searchQuery: String?): Boolean {
                 return if (searchQuery != null) {
-                    barcodeViewModel.searchFromBarcodes("%${searchQuery}%")
+                    barcodeViewModel.searchFromBarcodes(searchQuery)
                     searchView.clearFocus()
                     true
                 } else false
@@ -185,7 +185,7 @@ class HistoryFragment : Fragment() {
 
             override fun onQueryTextChange(searchQuery: String?): Boolean {
                 return if (searchQuery != null) {
-                    barcodeViewModel.searchFromBarcodes("%${searchQuery}%")
+                    barcodeViewModel.searchFromBarcodes(searchQuery)
                     true
                 } else false
             }
@@ -193,13 +193,13 @@ class HistoryFragment : Fragment() {
         })
     }
 
-    private fun deleteDialog(barcodeData: BarcodeData?) {
+    private fun deleteDialog(barcodeDetails: BarcodeDetails?) {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Delete")
-        builder.setMessage("Are you sure to delete this item?")
-        builder.setPositiveButton("Yes") { _, _ ->
-            if (barcodeData != null) {
-                barcodeViewModel.delete(barcodeData)
+        builder.setTitle(R.string.delete)
+        builder.setMessage(R.string.delete_confirmation)
+        builder.setPositiveButton(R.string.yes) { _, _ ->
+            if (barcodeDetails != null) {
+                barcodeViewModel.delete(barcodeDetails)
                 view?.let {
                     Snackbar.make(it, getString(R.string.swipe_delete_info), Snackbar.LENGTH_SHORT)
                         .show()
@@ -207,7 +207,7 @@ class HistoryFragment : Fragment() {
             } else {
                 Toast.makeText(
                     requireContext(),
-                    "Sorry, Unable to delete this item",
+                    R.string.cannot_delete_warning,
                     Toast.LENGTH_SHORT
                 ).show()
             }

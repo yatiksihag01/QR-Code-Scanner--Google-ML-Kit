@@ -39,6 +39,7 @@ import com.yatik.qrscanner.databinding.FragmentCropperBinding
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.ui.fragments.history.BarcodeViewModel
 import com.yatik.qrscanner.utils.Utilities
+import com.yatik.qrscanner.utils.mappers.Mapper
 import java.io.File
 
 class CropperFragment : Fragment(), CropImageView.OnSetImageUriCompleteListener,
@@ -148,13 +149,13 @@ class CropperFragment : Fragment(), CropImageView.OnSetImageUriCompleteListener,
     }
 
     private fun sendRequiredData(barcode: Barcode) {
-        val barcodeData = utilities.barcodeToBarcodeData(barcode)
+        val barcodeDetails = Mapper.fromBarcodeToBarcodeDetails(barcode)
         val saveScan = PreferenceManager.getDefaultSharedPreferences(requireContext())
             .getBoolean("save_scans_preference", true)
-        if (saveScan) barcodeViewModel.insert(barcodeData)
+        if (saveScan) barcodeViewModel.insert(barcodeDetails)
 
         val bundle = Bundle().apply {
-            putParcelable("barcodeData", barcodeData)
+            putParcelable("barcodeDetails", barcodeDetails)
         }
         findNavController().navigate(
             R.id.action_cropperFragment_to_detailsFragment, bundle

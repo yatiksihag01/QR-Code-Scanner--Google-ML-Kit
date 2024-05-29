@@ -35,9 +35,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.google.mlkit.vision.barcode.common.Barcode
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.databinding.FragmentGeneratorBinding
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
+import com.yatik.qrscanner.models.barcode.data.WiFi
+import com.yatik.qrscanner.models.barcode.metadata.Format
+import com.yatik.qrscanner.models.barcode.metadata.Type
 import com.yatik.qrscanner.ui.MainActivity
 import com.yatik.qrscanner.utils.Utilities.Companion.makeButtonTextTeal
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,22 +49,22 @@ import dagger.hilt.android.AndroidEntryPoint
  * A fragment that generates different types of QR codes based on the
  * supplied data.
  *
- * To use this fragment, pass the GeneratorData object with 'type' variable,
- * and set the corresponding data for that type. For example, to generate a WiFi QR code, set the
- * `type` to `Barcode.TYPE_WIFI` and set the `ssid`, `password`, and `securityType`
- * variables of GeneratorData object to the appropriate values.
+ * To use this fragment, pass the [BarcodeDetails] object with [BarcodeDetails.format]
+ * as [Format.QR_CODE] or [Format.EAN_13], and set the corresponding data for that [Type].
+ * For example, to generate a WiFi QR code, set the
+ * `type` to [Type.TYPE_WIFI] and set the [WiFi.ssid], [WiFi.password], and [WiFi.security]
+ * variables of BarcodeDetails object to the appropriate values.
  *
- * - Use the key 'GeneratorData' in `putParcelable(key: String, value: GeneratorData)` method
+ * - Use the key 'barcodeDetails' in `putParcelable(key: String, value: BarcodeDetails)` method
  *   and pass it as a bundle.
  *
  * Supported types of QR codes:
- * - `Barcode.TYPE_TEXT`: Plain text QR code. Pass the GeneratorData object with `text` variable.
- * - `Barcode.TYPE_WIFI`: WiFi network configuration QR code. Pass the GeneratorData object with `ssid`, `password`, and
- *   `securityType` variables.
- * - `Barcode.TYPE_URL`: URL QR code. Pass the GeneratorData object with `url` variable.
- * - `Barcode.TYPE_SMS`: SMS QR code. Pass the GeneratorData object with `phone` and `message` variables.
- * - `Barcode.TYPE_PHONE`: Phone number QR code. Pass the GeneratorData object with `phone` variable.
- * - `Barcode.TYPE_EAN_13`: EAN-13 barcode. Pass the GeneratorData object with `barcodeNumber` variable.
+ * - [Type.TYPE_TEXT]: Plain text QR code.
+ * - [Type.TYPE_WIFI]: WiFi network configuration QR code.
+ * - [Type.TYPE_URL]: URL QR code.
+ * - [Type.TYPE_SMS]: SMS QR code.
+ * - [Type.TYPE_PHONE]: Phone number QR code.
+ * - [Format.EAN_13]: EAN-13 barcode.
  */
 
 @AndroidEntryPoint
@@ -126,7 +129,7 @@ class GeneratorFragment : Fragment() {
             requireActivity().intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(requireActivity().intent)
         }
-        generatorViewModel.generateQRCode(args.GeneratorData)
+        generatorViewModel.generateBarcode(args.barcodeDetails)
     }
 
     private fun saveImage() {
@@ -169,47 +172,67 @@ class GeneratorFragment : Fragment() {
     }
 
     private fun setBarcodeInfo() {
-        val generatorData = args.GeneratorData
-        when (generatorData.type) {
-            Barcode.TYPE_TEXT -> {
-                binding.barcodeInfoTv.text = generatorData.text
+        val barcodeDetails = args.barcodeDetails
+        when (barcodeDetails.format) {
+            Format.EAN_8, Format.EAN_13, Format.UPC_A, Format.UPC_E -> {
+                binding.barcodeInfoTv.text = barcodeDetails.rawValue
+                binding.barcodeTypeTv.text = getString(R.string.product)
+            }
+
+            Format.CODABAR, Format.CODE_39, Format.CODE_93, Format.CODE_128 -> {
+                binding.barcodeInfoTv.text = barcodeDetails.rawValue
+                binding.barcodeTypeTv.text = barcodeDetails.format.toString()
+            }
+
+            Format.QR_CODE -> {
+                setQRInfo(barcodeDetails)
+            }
+
+            else -> {
+                binding.barcodeInfoTv.text = barcodeDetails.rawValue
+                binding.barcodeTypeTv.text = barcodeDetails.format.toString()
+            }
+        }
+
+    }
+
+    private fun setQRInfo(barcodeDetails: BarcodeDetails) {
+        when (barcodeDetails.type) {
+            Type.TYPE_TEXT -> {
+                binding.barcodeInfoTv.text = barcodeDetails.text
                 binding.barcodeTypeTv.text = getString(R.string.text)
             }
 
-            Barcode.TYPE_WIFI -> {
+            Type.TYPE_WIFI -> {
                 val info =
-                    "SSID: ${generatorData.ssid}\n\n" + "Security: ${generatorData.securityType}\n\n" + "Password: ${generatorData.password}"
+                    "SSID: ${barcodeDetails.wiFi?.ssid}\n\n" +
+                            "Security: ${barcodeDetails.wiFi?.security}\n\n" +
+                            "Password: ${barcodeDetails.wiFi?.password}"
                 binding.barcodeInfoTv.text = info
                 binding.barcodeTypeTv.text = getString(R.string.wifi)
             }
 
-            Barcode.TYPE_URL -> {
-                binding.barcodeInfoTv.text = generatorData.url
+            Type.TYPE_URL -> {
+                binding.barcodeInfoTv.text = barcodeDetails.url?.url
                 binding.barcodeTypeTv.text = getString(R.string.url)
             }
 
-            Barcode.TYPE_SMS -> {
-                val info = "Phone: ${generatorData.phone}\n\n" + "Message: ${generatorData.message}"
+            Type.TYPE_SMS -> {
+                val info = "Phone: ${barcodeDetails.phone?.number}\n\n" +
+                        "Message: ${barcodeDetails.sms?.message}"
                 binding.barcodeInfoTv.text = info
                 binding.barcodeTypeTv.text = getString(R.string.sms)
             }
 
-            Barcode.TYPE_PHONE -> {
-                binding.barcodeInfoTv.text = generatorData.phone
+            Type.TYPE_PHONE -> {
+                binding.barcodeInfoTv.text = barcodeDetails.phone?.number
                 binding.barcodeTypeTv.text = getString(R.string.phone)
             }
 
-            Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E, Barcode.FORMAT_EAN_8, Barcode.FORMAT_EAN_13, Barcode.TYPE_ISBN, Barcode.TYPE_PRODUCT -> {
-                binding.barcodeInfoTv.text = generatorData.barcodeNumber
-                binding.barcodeTypeTv.text = getString(R.string.product)
+            else -> {
+                binding.barcodeInfoTv.text = barcodeDetails.rawValue
+                binding.barcodeTypeTv.text = barcodeDetails.type.toString()
             }
-
-            Barcode.FORMAT_CODE_128, Barcode.FORMAT_CODE_39 -> {
-                binding.barcodeInfoTv.text = generatorData.barcodeNumber
-                binding.barcodeTypeTv.text = getString(R.string.barcode)
-            }
-
-            else -> binding.barcodeInfoTv.text = getString(R.string.no_data)
         }
     }
 

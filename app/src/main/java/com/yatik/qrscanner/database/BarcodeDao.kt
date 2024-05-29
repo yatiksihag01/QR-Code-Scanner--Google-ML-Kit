@@ -16,34 +16,35 @@
 
 package com.yatik.qrscanner.database
 
-import androidx.paging.PagingSource
-import androidx.room.*
-import com.yatik.qrscanner.models.BarcodeData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
+import com.yatik.qrscanner.models.barcode.BarcodeEntity
 
 @Dao
 interface BarcodeDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(barcodeData: BarcodeData)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(barcodeEntity: BarcodeEntity)
 
-    @Delete
-    suspend fun delete(barcodeData: BarcodeData)
+    @Query("INSERT INTO scanned_data_table (details) VALUES (:barcodeDetails)")
+    suspend fun insert(barcodeDetails: String)
 
-    @Query("SELECT * FROM barcode_table ORDER BY id DESC")
-    fun getAllBarcodes(): PagingSource<Int, BarcodeData>
+    @Query("DELETE FROM scanned_data_table WHERE details = :barcodeEntity")
+    suspend fun delete(barcodeEntity: String)
 
-    @Query("SELECT * FROM barcode_table ORDER BY id DESC LIMIT :limit OFFSET :offset")
-    suspend fun getBarcodePages(limit: Int, offset: Int): List<BarcodeData>
+    @Query("SELECT details FROM scanned_data_table ORDER BY id DESC")
+    fun getAllBarcodes(): List<BarcodeDetails>
 
-    @Query("DELETE FROM barcode_table")
+    @Query("SELECT id FROM scanned_data_table WHERE details = :barcodeDetails")
+    fun getBarcodeId(barcodeDetails: String): Int
+
+    @Query("SELECT details FROM scanned_data_table ORDER BY id DESC LIMIT :limit OFFSET :offset")
+    suspend fun getBarcodePages(limit: Int, offset: Int): List<BarcodeDetails>
+
+    @Query("DELETE FROM scanned_data_table")
     suspend fun deleteAll()
-
-    @Query(
-        "SELECT * FROM barcode_table " +
-                "WHERE title LIKE :searchQuery " +
-                "OR decryptedText LIKE :searchQuery " +
-                "ORDER BY id DESC"
-    )
-    fun searchFromBarcodes(searchQuery: String): PagingSource<Int, BarcodeData>
 
 }
