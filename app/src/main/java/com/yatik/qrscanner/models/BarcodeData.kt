@@ -1,12 +1,3 @@
-package com.yatik.qrscanner.models
-
-import android.os.Parcelable
-import androidx.annotation.Keep
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
-
 /*
  * Copyright 2023 Yatik
  *
@@ -23,6 +14,16 @@ import kotlinx.parcelize.Parcelize
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.models
+
+import android.os.Parcelable
+import androidx.annotation.Keep
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
+
+
 /**
  * SSID, title, number, phone_number, raw, barcodes => title: String
  *
@@ -37,6 +38,14 @@ import kotlinx.parcelize.Parcelize
 @Keep
 @Parcelize
 @Entity(tableName = "barcode_table")
+@Deprecated(
+    message = "The BarcodeData class is deprecated due to unclear field roles." +
+            " Use BarcodeDetails instead, which provides a clearer" +
+            " definition of each field's purpose.",
+    replaceWith = ReplaceWith("BarcodeDetails",
+        "com.yatik.qrscanner.models.barcode.BarcodeDetails"),
+    level = DeprecationLevel.WARNING
+)
 data class BarcodeData(
     @ColumnInfo(name = "format", defaultValue = "256") val format: Int,
     @ColumnInfo(name = "type") val type: Int,

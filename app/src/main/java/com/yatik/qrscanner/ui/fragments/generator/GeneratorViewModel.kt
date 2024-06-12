@@ -22,7 +22,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
@@ -31,7 +30,9 @@ import com.google.zxing.oned.EAN13Writer
 import com.google.zxing.oned.EAN8Writer
 import com.google.zxing.oned.UPCAWriter
 import com.google.zxing.oned.UPCEWriter
-import com.yatik.qrscanner.models.GeneratorData
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
+import com.yatik.qrscanner.models.barcode.metadata.Format
+import com.yatik.qrscanner.models.barcode.metadata.Type
 import com.yatik.qrscanner.repository.barcode_generator.GeneratorRepository
 import com.yatik.qrscanner.utils.Constants.Companion.QR_WIDTH_HEIGHT
 import com.yatik.qrscanner.utils.SingleLiveEvent
@@ -59,57 +60,42 @@ class GeneratorViewModel @Inject constructor(
     val imageSaved: SingleLiveEvent<Boolean>
         get() = _imageSaved
 
-    fun generateQRCode(generatorData: GeneratorData) = viewModelScope.launch {
+    fun generateBarcode(barcodeDetails: BarcodeDetails) = viewModelScope.launch {
         val bitMatrix: BitMatrix
         try {
-            when (generatorData.type) {
-                Barcode.TYPE_TEXT -> bitMatrix = multiFormatWriter(generatorData.text)
-                Barcode.TYPE_WIFI -> bitMatrix = multiFormatWriter(
-                    "WIFI:S:${generatorData.ssid};T:${generatorData.securityType};P:${generatorData.password};"
-                )
-
-                Barcode.TYPE_URL -> bitMatrix = multiFormatWriter(generatorData.url)
-                Barcode.TYPE_SMS -> bitMatrix = multiFormatWriter(
-                    "smsto:${generatorData.phone}:${generatorData.message}"
-                )
-
-                Barcode.TYPE_PHONE -> bitMatrix = multiFormatWriter(
-                    "tel:${generatorData.phone}"
-                )
-
-                Barcode.FORMAT_EAN_13 -> bitMatrix = EAN13Writer().encode(
-                    generatorData.barcodeNumber,
+            when (barcodeDetails.format) {
+                Format.QR_CODE -> bitMatrix = generateQRCode(barcodeDetails)
+                Format.EAN_13 -> bitMatrix = EAN13Writer().encode(
+                    barcodeDetails.rawValue,
                     BarcodeFormat.EAN_13,
                     QR_WIDTH_HEIGHT,
                     QR_WIDTH_HEIGHT
                 )
 
-                Barcode.FORMAT_EAN_8 -> bitMatrix = EAN8Writer().encode(
-                    generatorData.barcodeNumber,
+                Format.EAN_8 -> bitMatrix = EAN8Writer().encode(
+                    barcodeDetails.rawValue,
                     BarcodeFormat.EAN_8,
                     QR_WIDTH_HEIGHT,
                     QR_WIDTH_HEIGHT
                 )
 
-                Barcode.FORMAT_UPC_A -> bitMatrix = UPCAWriter().encode(
-                    generatorData.barcodeNumber,
+                Format.UPC_A -> bitMatrix = UPCAWriter().encode(
+                    barcodeDetails.rawValue,
                     BarcodeFormat.UPC_A,
                     QR_WIDTH_HEIGHT,
                     QR_WIDTH_HEIGHT
                 )
 
-                Barcode.FORMAT_UPC_E -> bitMatrix = UPCEWriter().encode(
-                    generatorData.barcodeNumber,
+                Format.UPC_E -> bitMatrix = UPCEWriter().encode(
+                    barcodeDetails.rawValue,
                     BarcodeFormat.UPC_E,
                     QR_WIDTH_HEIGHT,
                     QR_WIDTH_HEIGHT
                 )
 
-                else -> bitMatrix = MultiFormatWriter().encode(
-                    generatorData.barcodeNumber,
-                    BarcodeFormat.CODE_128,
-                    QR_WIDTH_HEIGHT,
-                    QR_WIDTH_HEIGHT
+                else -> bitMatrix = multiFormatWriter(
+                    barcodeDetails.rawValue,
+                    getBarcodeFormat(barcodeDetails.format)
                 )
             }
             renderIntoBitmap(bitMatrix)
@@ -117,9 +103,45 @@ class GeneratorViewModel @Inject constructor(
         } catch (writerException: WriterException) {
             writerException.printStackTrace()
             _isQRGeneratedSuccessfully.postValue(false)
-        } catch (e: Exception) {
+        } catch (e: IllegalArgumentException) {
             e.printStackTrace()
             _isQRGeneratedSuccessfully.postValue(false)
+        }
+    }
+
+    /**
+     * @throws IllegalArgumentException if the format is not [Format.QR_CODE].
+     * @throws WriterException if an error occurs while generating the QR code.
+     */
+    @Throws(WriterException::class, IllegalArgumentException::class)
+    private fun generateQRCode(barcodeDetails: BarcodeDetails): BitMatrix {
+        if (barcodeDetails.format != Format.QR_CODE) {
+            throw IllegalArgumentException("Invalid barcode format")
+        }
+        return when (barcodeDetails.type) {
+            Type.TYPE_TEXT -> multiFormatWriter(barcodeDetails.text, BarcodeFormat.QR_CODE)
+            Type.TYPE_WIFI -> multiFormatWriter(
+                "WIFI:S:${barcodeDetails.wiFi?.ssid};" +
+                        "T:${barcodeDetails.wiFi?.security};" +
+                        "P:${barcodeDetails.wiFi?.password};",
+                BarcodeFormat.QR_CODE
+            )
+
+            Type.TYPE_URL -> multiFormatWriter(barcodeDetails.url?.url, BarcodeFormat.QR_CODE)
+            Type.TYPE_SMS -> multiFormatWriter(
+                "smsto:${barcodeDetails.sms?.number}:${barcodeDetails.sms?.message}",
+                BarcodeFormat.QR_CODE
+            )
+
+            Type.TYPE_PHONE -> multiFormatWriter(
+                "tel:${barcodeDetails.phone?.number}",
+                BarcodeFormat.QR_CODE
+            )
+
+            else -> multiFormatWriter(
+                barcodeDetails.rawValue,
+                getBarcodeFormat(barcodeDetails.format)
+            )
         }
     }
 
@@ -150,8 +172,29 @@ class GeneratorViewModel @Inject constructor(
         }
     }
 
-    private fun multiFormatWriter(content: String?): BitMatrix = MultiFormatWriter().encode(
-        content, BarcodeFormat.QR_CODE, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT
-    )
+    @Throws(WriterException::class)
+    private fun multiFormatWriter(content: String?, format: BarcodeFormat): BitMatrix =
+        MultiFormatWriter().encode(content, format, QR_WIDTH_HEIGHT, QR_WIDTH_HEIGHT)
+
+    /**
+     * @throws IllegalArgumentException if the format is not supported.
+     */
+    @Throws(IllegalArgumentException::class)
+    private fun getBarcodeFormat(format: Format): BarcodeFormat {
+        return when (format) {
+            Format.QR_CODE -> BarcodeFormat.QR_CODE
+            Format.EAN_13 -> BarcodeFormat.EAN_13
+            Format.EAN_8 -> BarcodeFormat.EAN_8
+            Format.UPC_A -> BarcodeFormat.UPC_A
+            Format.UPC_E -> BarcodeFormat.UPC_E
+            Format.CODE_128 -> BarcodeFormat.CODE_128
+            Format.CODE_39 -> BarcodeFormat.CODE_39
+            Format.CODE_93 -> BarcodeFormat.CODE_93
+            Format.AZTEC -> BarcodeFormat.AZTEC
+            Format.CODABAR -> BarcodeFormat.CODABAR
+            Format.DATA_MATRIX -> BarcodeFormat.DATA_MATRIX
+            else -> throw IllegalArgumentException("Invalid barcode format")
+        }
+    }
 
 }

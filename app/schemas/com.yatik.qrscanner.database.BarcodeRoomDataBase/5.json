@@ -1,0 +1,146 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 5,
+    "identityHash": "88fc007a4da3ca1bf51eaa1f1ae28399",
+    "entities": [
+      {
+        "tableName": "scanned_data_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `details` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "barcodeDetails",
+            "columnName": "details",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "url_info_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`main_url` TEXT NOT NULL, `title` TEXT, `description` TEXT, `image_url` TEXT, PRIMARY KEY(`main_url`))",
+        "fields": [
+          {
+            "fieldPath": "mainUrl",
+            "columnName": "main_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "main_url"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "food_product",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`nutriments` TEXT, `nutriscore_data` TEXT, `nutrition_grade` TEXT, `product_name` TEXT NOT NULL, `image_front_small_url` TEXT, `brands` TEXT NOT NULL, `quantity` TEXT NOT NULL, `id` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "nutriments",
+            "columnName": "nutriments",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nutriscoreData",
+            "columnName": "nutriscore_data",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nutritionGrades",
+            "columnName": "nutrition_grade",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "productName",
+            "columnName": "product_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "frontImageSmall",
+            "columnName": "image_front_small_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "brands",
+            "columnName": "brands",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "barcode",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '88fc007a4da3ca1bf51eaa1f1ae28399')"
+    ]
+  }
+}

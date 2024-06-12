@@ -19,12 +19,12 @@ package com.yatik.qrscanner.paging.sources
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.yatik.qrscanner.database.BarcodeDao
-import com.yatik.qrscanner.models.BarcodeData
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
 
 class HistoryPagingSource(
     private val barcodeDao: BarcodeDao,
     private val itemsPerPage: Int
-) : PagingSource<Int, BarcodeData>() {
+) : PagingSource<Int, BarcodeDetails>() {
 
     /**
      * prevKey == null -> anchorPage is the first page.
@@ -33,23 +33,23 @@ class HistoryPagingSource(
      *
      * Both prevKey and nextKey are null -> anchorPage is the initial page, so return null.
      */
-    override fun getRefreshKey(state: PagingState<Int, BarcodeData>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, BarcodeDetails>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BarcodeData> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BarcodeDetails> {
         return try {
             val currentPageNumber = params.key ?: 0
-            val barcodeDataList =
+            val barcodeDetailsList =
                 barcodeDao.getBarcodePages(itemsPerPage, currentPageNumber * itemsPerPage)
             val prevKey = if (currentPageNumber > 0) currentPageNumber - 1 else null
-            val nextKey = if (barcodeDataList.isNotEmpty()) currentPageNumber + 1 else null
+            val nextKey = if (barcodeDetailsList.isNotEmpty()) currentPageNumber + 1 else null
 
             LoadResult.Page(
-                data = barcodeDataList,
+                data = barcodeDetailsList,
                 prevKey = prevKey,
                 nextKey = nextKey
             )

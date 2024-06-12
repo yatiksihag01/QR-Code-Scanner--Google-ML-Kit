@@ -1,19 +1,3 @@
-package com.yatik.qrscanner.adapters.history
-
-import android.annotation.SuppressLint
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.button.MaterialButton
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.yatik.qrscanner.R
-import com.yatik.qrscanner.models.BarcodeData
-
 /*
  * Copyright 2023 Yatik
  *
@@ -30,17 +14,35 @@ import com.yatik.qrscanner.models.BarcodeData
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.adapters.history
+
+import android.annotation.SuppressLint
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
+import com.yatik.qrscanner.R
+import com.yatik.qrscanner.models.barcode.BarcodeDetails
+import com.yatik.qrscanner.models.barcode.metadata.Format
+import com.yatik.qrscanner.models.barcode.metadata.Type
+
 class HistoryAdapter :
-    PagingDataAdapter<BarcodeData, HistoryAdapter.BarcodeDataViewHolder>(DiffCallback) {
+    PagingDataAdapter<BarcodeDetails, HistoryAdapter.BarcodeDataViewHolder>(DiffCallback) {
 
     inner class BarcodeDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    object DiffCallback : DiffUtil.ItemCallback<BarcodeData>() {
-        override fun areItemsTheSame(oldItem: BarcodeData, newItem: BarcodeData): Boolean {
-            return oldItem.id == newItem.id
+    object DiffCallback : DiffUtil.ItemCallback<BarcodeDetails>() {
+        override fun areItemsTheSame(oldItem: BarcodeDetails, newItem: BarcodeDetails): Boolean {
+            return oldItem.rawValue == newItem.rawValue &&
+                    oldItem.timeStamp == newItem.timeStamp
         }
 
-        override fun areContentsTheSame(oldItem: BarcodeData, newItem: BarcodeData): Boolean {
+        override fun areContentsTheSame(oldItem: BarcodeDetails, newItem: BarcodeDetails): Boolean {
             return oldItem == newItem
         }
     }
@@ -58,7 +60,7 @@ class HistoryAdapter :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: BarcodeDataViewHolder, position: Int) {
 
-        val barcodeData = getItem(position)
+        val barcode = getItem(position)
         val itemView = holder.itemView
 
         val icon: ImageView = itemView.findViewById(R.id.history_icon)
@@ -67,104 +69,128 @@ class HistoryAdapter :
         val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val date: TextView = itemView.findViewById(R.id.dateTime)
 
-        val format = barcodeData?.format
-        val type = barcodeData?.type
-        val title = barcodeData?.title
-        val dateTime = barcodeData?.dateTime
+        val format = barcode?.format
+        val type = barcode?.type
+        val dateTime = barcode?.timeStamp
 
         date.text = "· $dateTime"
 
-        tvTitle.text = barcodeData?.title?.let {
-            if (it.isEmpty()) {
-                val text = barcodeData.decryptedText.toString()
-                if (text.length <= 50) text
-                else "${text.substring(0, 47)}..."
-            } else if (it.length <= 50) it
-            else "${it.substring(0, 47)}..."
-        }
+
         when (format) {
-            Barcode.FORMAT_QR_CODE -> {
+            Format.QR_CODE -> {
                 when (type) {
-                    Barcode.TYPE_TEXT -> {
-                        if (title!!.startsWith("upi://pay")) {
+                    Type.TYPE_TEXT -> {
+                        if (barcode.text?.startsWith("upi://pay") == true) {
                             typeText.setText(R.string.upi)
                             icon.setImageResource(R.drawable.upi_24)
                         } else {
                             typeText.setText(R.string.text)
                             icon.setImageResource(R.drawable.outline_text_icon)
                         }
+                        setTitle(tvTitle, barcode.text)
                     }
 
-                    Barcode.TYPE_URL -> {
+                    Type.TYPE_URL -> {
                         typeText.setText(R.string.url)
+                        setTitle(tvTitle, barcode.url?.url)
                         icon.setImageResource(R.drawable.outline_url_24)
                     }
 
-                    Barcode.TYPE_PHONE -> {
+                    Type.TYPE_PHONE -> {
                         typeText.setText(R.string.phone)
+                        setTitle(tvTitle, barcode.phone?.number)
                         icon.setImageResource(R.drawable.outline_call_24)
                     }
 
-                    Barcode.TYPE_SMS -> {
+                    Type.TYPE_SMS -> {
                         typeText.setText(R.string.sms)
+                        setTitle(tvTitle, barcode.sms?.message)
                         icon.setImageResource(R.drawable.outline_sms_24)
                     }
 
-                    Barcode.TYPE_WIFI -> {
+                    Type.TYPE_WIFI -> {
                         typeText.setText(R.string.wifi)
+                        setTitle(tvTitle, barcode.wiFi?.ssid)
                         icon.setImageResource(R.drawable.outline_wifi_24)
                     }
 
-                    Barcode.TYPE_GEO -> {
+                    Type.TYPE_GEO -> {
                         typeText.setText(R.string.location)
+                        setTitle(
+                            tvTitle,
+                            barcode.geo?.longitude.toString() + ", " + barcode.geo?.latitude
+                        )
                         icon.setImageResource(R.drawable.outline_location_24)
+                    }
+
+                    Type.TYPE_EMAIL -> {
+                        typeText.setText(R.string.email)
+                        setTitle(tvTitle, barcode.email?.email)
+                        icon.setImageResource(R.drawable.outline_sms_24)
+                    }
+
+                    Type.TYPE_ISBN -> {
+                        typeText.setText(R.string.product)
+                        setTitle(tvTitle, barcode.isbn)
+                        icon.setImageResource(R.drawable.outline_product_24)
                     }
 
                     else -> {
                         typeText.setText(R.string.raw)
+                        setTitle(tvTitle, barcode.rawValue)
                         icon.setImageResource(R.drawable.outline_question_mark_24)
                     }
                 }
             }
 
-            Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E, Barcode.FORMAT_EAN_8, Barcode.FORMAT_EAN_13, Barcode.TYPE_ISBN -> {
+            Format.UPC_A, Format.UPC_E, Format.EAN_13, Format.EAN_8 -> {
                 typeText.setText(R.string.product)
+                setTitle(tvTitle, barcode.rawValue)
                 icon.setImageResource(R.drawable.outline_product_24)
             }
 
             else -> {
                 typeText.setText(R.string.barcode)
+                setTitle(tvTitle, barcode?.rawValue)
                 icon.setImageResource(R.drawable.outline_barcode_24)
             }
         }
         itemView.setOnClickListener {
             onItemClickListener?.let {
-                if (barcodeData != null) {
-                    it(barcodeData)
+                if (barcode != null) {
+                    it(barcode)
                 }
             }
         }
         deleteButton.setOnClickListener {
             onDeleteClickListener?.let {
-                if (barcodeData != null)
-                    it(barcodeData)
+                if (barcode != null)
+                    it(barcode)
             }
         }
     }
 
-    private var onItemClickListener: ((BarcodeData) -> Unit)? = null
-    private var onDeleteClickListener: ((BarcodeData) -> Unit)? = null
+    private var onItemClickListener: ((BarcodeDetails) -> Unit)? = null
+    private var onDeleteClickListener: ((BarcodeDetails) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (BarcodeData) -> Unit) {
+    fun setOnItemClickListener(listener: (BarcodeDetails) -> Unit) {
         onItemClickListener = listener
     }
 
-    fun setOnDeleteClickListener(listener: (BarcodeData) -> Unit) {
+    fun setOnDeleteClickListener(listener: (BarcodeDetails) -> Unit) {
         onDeleteClickListener = listener
     }
 
-    fun getItemOnPosition(position: Int): BarcodeData {
+    fun getItemOnPosition(position: Int): BarcodeDetails {
         return getItem(position)!!
+    }
+
+    private fun setTitle(textView: TextView, title: String?) {
+        textView.text = when {
+            title.isNullOrBlank() -> ""
+            title.length <= 50 -> title
+            else -> title.take(47) + "..."
+        }
     }
 
 }

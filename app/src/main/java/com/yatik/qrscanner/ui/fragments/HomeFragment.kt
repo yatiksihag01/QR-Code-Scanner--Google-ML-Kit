@@ -31,7 +31,12 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.camera.core.*
+import androidx.camera.core.Camera
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
+import androidx.camera.core.Preview
+import androidx.camera.core.TorchState
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -53,6 +58,7 @@ import com.yatik.qrscanner.utils.Constants
 import com.yatik.qrscanner.utils.Constants.Companion.SHEET_PEEK_VAL
 import com.yatik.qrscanner.utils.PermissionHelper
 import com.yatik.qrscanner.utils.Utilities
+import com.yatik.qrscanner.utils.mappers.Mapper
 import com.yatik.qrscanner.utils.ratingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.ExecutionException
@@ -198,13 +204,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun sendRequiredData(barcode: Barcode) {
-        val barcodeData = utilities.barcodeToBarcodeData(barcode)
+        val barcodeDetails = Mapper.fromBarcodeToBarcodeDetails(barcode)
         val saveScan = PreferenceManager.getDefaultSharedPreferences(requireContext())
             .getBoolean("save_scans_preference", true)
-        if (saveScan) barcodeViewModel.insert(barcodeData)
+        if (saveScan) barcodeViewModel.insert(barcodeDetails)
 
         val bundle = Bundle().apply {
-            putParcelable("barcodeData", barcodeData)
+            putParcelable("barcodeDetails", barcodeDetails)
         }
         findNavController().navigate(
             R.id.action_homeFragment_to_detailsFragment, bundle

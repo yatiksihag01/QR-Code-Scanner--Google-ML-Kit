@@ -59,22 +59,22 @@
         android:label="fragment_generator"
         tools:layout="@layout/fragment_generator">
         <argument
-            android:name="GeneratorData"
-            app:argType="com.yatik.qrscanner.models.GeneratorData" />
+            android:name="barcodeDetails"
+            app:argType="com.yatik.qrscanner.models.barcode.BarcodeDetails" />
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
         android:name="com.yatik.qrscanner.ui.fragments.details.DetailsFragment"
         android:label="fragment_details"
         tools:layout="@layout/fragment_details">
-        <argument
-            android:name="barcodeData"
-            app:argType="com.yatik.qrscanner.models.BarcodeData" />
         <action
             android:id="@+id/action_detailsFragment_to_generatorFragment"
             app:destination="@id/generatorFragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_left" />
+        <argument
+            android:name="barcodeDetails"
+            app:argType="com.yatik.qrscanner.models.barcode.BarcodeDetails" />
     </fragment>
     <fragment
         android:id="@+id/cropperFragment"

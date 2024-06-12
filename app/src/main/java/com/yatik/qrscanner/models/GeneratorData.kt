@@ -1,9 +1,3 @@
-package com.yatik.qrscanner.models
-
-import android.os.Parcelable
-import androidx.annotation.Keep
-import kotlinx.parcelize.Parcelize
-
 /*
  * Copyright 2023 Yatik
  *
@@ -20,8 +14,24 @@ import kotlinx.parcelize.Parcelize
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.models
+
+import android.os.Parcelable
+import androidx.annotation.Keep
+import kotlinx.parcelize.Parcelize
+
+
 @Keep
 @Parcelize
+@Deprecated(
+    message = "The GeneratorData class is deprecated as it became redundant" +
+            " with the BarcodeDetails class.",
+    replaceWith = ReplaceWith(
+        "BarcodeDetails",
+        "com.yatik.qrscanner.models.barcode.BarcodeDetails"
+    ),
+    level = DeprecationLevel.WARNING
+)
 data class GeneratorData(
     var type: Int,
     var text: String? = null,
