@@ -18,10 +18,15 @@ package com.yatik.qrscanner.models.barcode.data
 
 import android.os.Parcelable
 import com.google.errorprone.annotations.Keep
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+@Keep
 enum class ContactType {
-    MOBILE, WORK, HOME, OTHER
+    @SerializedName("MOBILE") MOBILE,
+    @SerializedName("WORK") WORK,
+    @SerializedName("HOME") HOME,
+    @SerializedName("OTHER") OTHER
 }
 
 @Keep
