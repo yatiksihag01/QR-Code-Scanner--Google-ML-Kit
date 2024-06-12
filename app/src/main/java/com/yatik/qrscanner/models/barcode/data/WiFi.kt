@@ -18,13 +18,15 @@ package com.yatik.qrscanner.models.barcode.data
 
 import android.os.Parcelable
 import com.google.errorprone.annotations.Keep
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+@Keep
 enum class Security {
-    OPEN,
-    WEP,
-    WPA,
-    WPA2
+    @SerializedName("OPEN") OPEN,
+    @SerializedName("WEP") WEP,
+    @SerializedName("WPA") WPA,
+    @SerializedName("WPA2") WPA2
 }
 
 @Keep

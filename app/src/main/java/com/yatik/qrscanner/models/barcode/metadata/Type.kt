@@ -16,21 +16,25 @@
 
 package com.yatik.qrscanner.models.barcode.metadata
 
+import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
+
 /**
  * Enum class representing different types of QR codes.
  */
+@Keep
 enum class Type {
-    TYPE_UNKNOWN,
-    TYPE_TEXT,
-    TYPE_URL,
-    TYPE_WIFI,
-    TYPE_EMAIL,
-    TYPE_PHONE,
-    TYPE_ISBN,
-    TYPE_GEO,
-    TYPE_CONTACT,
-    TYPE_CALENDAR,
-    TYPE_PRODUCT,
-    TYPE_SMS,
-    TYPE_DRIVER_LICENSE
+    @SerializedName("TYPE_UNKNOWN") TYPE_UNKNOWN,
+    @SerializedName("TYPE_TEXT") TYPE_TEXT,
+    @SerializedName("TYPE_URL") TYPE_URL,
+    @SerializedName("TYPE_WIFI") TYPE_WIFI,
+    @SerializedName("TYPE_EMAIL") TYPE_EMAIL,
+    @SerializedName("TYPE_PHONE") TYPE_PHONE,
+    @SerializedName("TYPE_ISBN") TYPE_ISBN,
+    @SerializedName("TYPE_GEO") TYPE_GEO,
+    @SerializedName("TYPE_CONTACT") TYPE_CONTACT,
+    @SerializedName("TYPE_CALENDAR") TYPE_CALENDAR,
+    @SerializedName("TYPE_PRODUCT") TYPE_PRODUCT,
+    @SerializedName("TYPE_SMS") TYPE_SMS,
+    @SerializedName("TYPE_DRIVER_LICENSE") TYPE_DRIVER_LICENSE
 }
