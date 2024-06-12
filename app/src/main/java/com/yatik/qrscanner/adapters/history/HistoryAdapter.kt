@@ -151,6 +151,7 @@ class HistoryAdapter :
 
             else -> {
                 typeText.setText(R.string.barcode)
+                setTitle(tvTitle, barcode?.rawValue)
                 icon.setImageResource(R.drawable.outline_barcode_24)
             }
         }
