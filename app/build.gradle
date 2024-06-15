@@ -17,8 +17,8 @@ android {
         applicationId "com.yatik.qrscanner"
         minSdk 23
         targetSdk 34
-        versionCode 35
-        versionName "2.6.1"
+        versionCode 36
+        versionName "2.6.2"
 
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.yatik.qrscanner.HiltTestRunner"
