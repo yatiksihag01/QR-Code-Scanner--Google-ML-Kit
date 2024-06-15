@@ -59,7 +59,7 @@ class HistorySearchPagingSource(
                     filteredItemsList.addAll(
                         barcodeDetailsList.filter { matchesQuery(it, searchQuery ?: "") }
                     )
-                    // If filteredItemsList size is less than pageSize, we reached the end of the table
+                    // If barcodeDetailsList size is less than pageSize, we reached the end of the table
                     if (barcodeDetailsList.size < pageSize) reachedEnd = true
                     if (filteredItemsList.size >= pageSize) break
                 }
@@ -67,7 +67,7 @@ class HistorySearchPagingSource(
 
             LoadResult.Page(
                 data = filteredItemsList.take(pageSize),
-                prevKey = if (currentOffset < pageSize) null else currentOffset - pageSize,
+                prevKey = null,
                 nextKey = if (reachedEnd) null else currentOffset
             )
         } catch (e: Exception) {
