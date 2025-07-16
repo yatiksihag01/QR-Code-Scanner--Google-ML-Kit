@@ -39,6 +39,8 @@ import androidx.camera.core.Preview
 import androidx.camera.core.TorchState
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -62,6 +64,7 @@ import com.yatik.qrscanner.utils.mappers.Mapper
 import com.yatik.qrscanner.utils.ratingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.ExecutionException
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -91,6 +94,14 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.standardBottomSheet) { v, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.navigationBars()
+            )
+            binding.navBarBackground.layoutParams.height = insets.bottom
+            windowInsets
+        }
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet)
         bottomSheetBehavior.peekHeight =
@@ -255,7 +266,7 @@ class HomeFragment : Fragment() {
         binding.policyButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             Utilities().customTabBuilder(
-                requireContext(), Uri.parse(Constants.POLICIES_LINK)
+                requireContext(), Constants.POLICIES_LINK.toUri()
             )
         }
     }

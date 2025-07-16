@@ -31,6 +31,7 @@
             android:layout_marginTop="8dp"
             android:text="1.0x"
             android:textColor="@color/white"
+            android:fitsSystemWindows="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -59,7 +60,7 @@
 
     <LinearLayout
         android:id="@+id/standard_bottom_sheet"
-        style="@style/ModalBottomSheetDialog"
+        style="?attr/bottomSheetDialogTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -83,12 +84,12 @@
                 android:id="@+id/button_flash"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:backgroundTint="?colorPrimaryVariant"
+                android:backgroundTint="?bottomSheetBackgroundTint"
                 android:contentDescription="Flash Off"
                 app:icon="@drawable/outline_flash_off_28"
                 app:iconGravity="top"
                 app:iconSize="28dp"
-                app:iconTint="?mainSheetIconColor"
+                app:iconTint="?colorOnPrimary"
                 app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_25"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -104,12 +105,12 @@
                 android:id="@+id/button_history"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:backgroundTint="?colorPrimaryVariant"
+                android:backgroundTint="?bottomSheetBackgroundTint"
                 android:contentDescription="History"
                 app:icon="@drawable/outline_history_28"
                 app:iconGravity="top"
                 app:iconSize="28dp"
-                app:iconTint="?mainSheetIconColor"
+                app:iconTint="?colorOnPrimary"
                 app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_mid"
                 app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_25"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -125,12 +126,12 @@
                 android:id="@+id/button_gallery"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:backgroundTint="?colorPrimaryVariant"
+                android:backgroundTint="?bottomSheetBackgroundTint"
                 android:contentDescription="Pick image from gallery"
                 app:icon="@drawable/outline_attach_file"
                 app:iconGravity="top"
                 app:iconSize="30dp"
-                app:iconTint="?mainSheetIconColor"
+                app:iconTint="?colorOnPrimary"
                 app:layout_constraintEnd_toStartOf="@+id/sheet_button_guide_75"
                 app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_mid"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -146,12 +147,12 @@
                 android:id="@+id/button_create_qr"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:backgroundTint="?colorPrimaryVariant"
+                android:backgroundTint="?bottomSheetBackgroundTint"
                 android:contentDescription="Settings button"
                 app:icon="@drawable/draw_28"
                 app:iconGravity="top"
                 app:iconSize="28dp"
-                app:iconTint="?mainSheetIconColor"
+                app:iconTint="?colorOnPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/sheet_button_guide_75"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -177,7 +178,7 @@
             style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:backgroundTint="?bottomSheetBackgroundTint"
             android:letterSpacing="0"
             android:text="Settings"
             android:textAlignment="textStart"
@@ -192,7 +193,7 @@
             style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:backgroundTint="?bottomSheetBackgroundTint"
             android:letterSpacing="0"
             android:text="Rate Us"
             android:textAlignment="viewStart"
@@ -207,7 +208,7 @@
             style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:backgroundTint="?bottomSheetBackgroundTint"
             android:letterSpacing="0"
             android:text="Share App❤"
             android:textAlignment="viewStart"
@@ -222,7 +223,7 @@
             style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:backgroundTint="?bottomSheetBackgroundTint"
             android:letterSpacing="0"
             android:text="Privacy Policy"
             android:textAlignment="viewStart"
@@ -233,5 +234,12 @@
             app:iconSize="28dp" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/nav_bar_background"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:background="?attr/colorPrimaryVariant" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

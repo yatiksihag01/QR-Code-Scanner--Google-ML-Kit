@@ -14,16 +14,15 @@
     </style>
 
     <style name="CustomToolbarStyle" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">?colorPrimaryVariant</item>
+        <item name="android:background">?colorPrimary</item>
         <item name="navigationIconTint">?colorOnPrimary</item>
     </style>
 
     <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
-    </style>
-
-    <style name="ModalBottomSheetDialog" parent="Widget.Material3.BottomSheet.Modal">
-        <item name="backgroundTint">?colorPrimaryVariant</item>
+        <item name="backgroundTint">?bottomSheetBackgroundTint</item>
+        <item name="paddingBottomSystemWindowInsets">true</item>
+        <item name="paddingLeftSystemWindowInsets">true</item>
+        <item name="paddingRightSystemWindowInsets">true</item>
         <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
     </style>
 

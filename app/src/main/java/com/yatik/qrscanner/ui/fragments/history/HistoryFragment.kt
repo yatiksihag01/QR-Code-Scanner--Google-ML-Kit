@@ -25,6 +25,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -75,6 +78,35 @@ class HistoryFragment : Fragment() {
             requireActivity().finish()
             requireActivity().intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(requireActivity().intent)
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.historyToolbar) { v, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+
+            v.layoutParams = (v.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                leftMargin = insets.left
+                rightMargin = insets.right
+                topMargin = insets.top
+            }
+            windowInsets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.historyRecyclerView) { v, windowInsets ->
+
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+
+            v.updatePadding(
+                left = insets.left,
+                right = insets.right,
+                bottom = insets.bottom
+            )
+            windowInsets
         }
 
         setMenu()

@@ -10,14 +10,14 @@ plugins {
 
 android {
     namespace 'com.yatik.qrscanner'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.yatik.qrscanner"
         minSdk 23
-        targetSdk 34
-        versionCode 36
-        versionName "2.6.2"
+        targetSdk 35
+        versionCode 37
+        versionName "2.7.0"
 
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.yatik.qrscanner.HiltTestRunner"
@@ -173,6 +173,5 @@ dependencies {
 
     // Mockito
     testImplementation libs.mockito.core
-    testImplementation libs.mockito.inline
     androidTestImplementation libs.mockito.android
 }

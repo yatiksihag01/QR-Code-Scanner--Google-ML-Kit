@@ -23,11 +23,20 @@ import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PackageInfoFlags
 import android.os.Build
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.yatik.qrscanner.R
 import com.yatik.qrscanner.utils.ThemeManager.Companion.updateTheme
@@ -44,7 +53,7 @@ class SettingsActivity : AppCompatActivity() {
                 val shouldShowRatingDialog =
                     sharedPreferences.getBoolean("shouldShowRatingDialog", true)
                 if (shouldShowRatingDialog) {
-                    sharedPreferences.edit().putBoolean("shouldShowRatingDialog", false).apply()
+                    sharedPreferences.edit { putBoolean("shouldShowRatingDialog", false) }
                     ratingDialog(this@SettingsActivity) { pressedCancel ->
                         if (pressedCancel) goToMainActivity()
                     }
@@ -61,11 +70,44 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
         updateTheme(this@SettingsActivity)
         setContentView(R.layout.activity_settings)
-        Utilities().setSystemBars(window, this@SettingsActivity, false)
+        Utilities().setSystemBars(window, this@SettingsActivity)
 
         val settingsToolbar = findViewById<MaterialToolbar>(R.id.settingsToolbar)
+        val appBarLayout = findViewById<AppBarLayout>(R.id.settingsToolbarLayout)
+        val settingsFragment = findViewById<LinearLayout>(R.id.settings_frag)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        ViewCompat.setOnApplyWindowInsetsListener(appBarLayout) { v, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+
+            v.layoutParams = (v.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                topMargin = insets.top
+                leftMargin = insets.left
+                rightMargin = insets.right
+            }
+
+            windowInsets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(settingsFragment) { v, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                left = insets.left,
+                right = insets.right,
+                bottom = insets.bottom,
+            )
+            windowInsets
+        }
         settingsToolbar.setNavigationOnClickListener {
             startActivity(Intent(this@SettingsActivity, MainActivity::class.java))
             finish()
