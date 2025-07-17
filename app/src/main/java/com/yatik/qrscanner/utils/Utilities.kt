@@ -32,21 +32,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.preference.PreferenceManager
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.yatik.qrscanner.R
-import com.yatik.qrscanner.models.BarcodeData
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 class Utilities {
 
@@ -81,15 +75,7 @@ class Utilities {
                     Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_NO
     }
 
-    fun setSystemBars(window: Window, activity: Activity, hideStatusBar: Boolean) {
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        // Configure the behavior of the hidden system bars
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        // Hide the status bar
-        if (hideStatusBar) {
-            windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
-        }
+    fun setSystemBars(window: Window, activity: Activity) {
         val lightBlue = activity.getString(R.string.light_blue_int_val)
         val darkBlue = activity.getString(R.string.dark_blue_int_val)
         val lightGreen = activity.getString(R.string.light_green_int_val)
@@ -110,25 +96,12 @@ class Utilities {
                 else lightBars(false, window)
             }
         }
-        window.navigationBarColor =
-            activity.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant)
-
-        // Make navigation bar transparent
-//        window.setFlags(
-//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-//            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-//        )
     }
 
     private fun lightBars(makeBarsLight: Boolean, window: Window) {
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        if (makeBarsLight) {
-            windowInsetsController.isAppearanceLightStatusBars = true
-            windowInsetsController.isAppearanceLightNavigationBars = true
-        } else {
-            windowInsetsController.isAppearanceLightStatusBars = false
-            windowInsetsController.isAppearanceLightNavigationBars = false
-        }
+        windowInsetsController.isAppearanceLightStatusBars = makeBarsLight
+        windowInsetsController.isAppearanceLightNavigationBars = makeBarsLight
     }
 
     fun vibrateIfAllowed(context: Context, isVibrationAllowed: Boolean, timeInMillis: Long) {
@@ -153,7 +126,7 @@ class Utilities {
     fun customTabBuilder(context: Context, uri: Uri) {
         val stringUri = uri.toString()
         val newUri = if (!stringUri.startsWith("https://") && !stringUri.startsWith("http://")) {
-            Uri.parse("https://$stringUri")
+            "https://$stringUri".toUri()
         } else uri
         val defaultColors = CustomTabColorSchemeParams.Builder()
             .setToolbarColor(context.getColorFromAttr(com.google.android.material.R.attr.colorPrimaryVariant))
@@ -172,82 +145,6 @@ class Utilities {
         val metrics = context.resources.displayMetrics
         val density = metrics.densityDpi / 160f
         return (peekHeightDp * density).toInt()
-    }
-
-    /*
-    * SSID, title, text, number, phone_number, raw, barcodes => title: String
-    *
-    * password, url, message => decryptedText: String
-    *
-    * encryptionType, ($latitude,$longitude) => others: String
-    *
-    * */
-
-    fun barcodeToBarcodeData(barcode: Barcode): BarcodeData {
-
-        val format = barcode.format
-        val valueType = barcode.valueType
-
-        val dateTime: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val current = LocalDateTime.now()
-            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-            current.format(formatter)
-        } else {
-            val date = Date()
-            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-            formatter.format(date)
-        }
-
-        var title: String? = null
-        var decryptedText: String? = null
-        var others: String? = null
-
-        if (barcode.format == Barcode.FORMAT_QR_CODE) {
-            when (barcode.valueType) {
-                Barcode.TYPE_WIFI -> {
-                    title = barcode.wifi?.ssid
-                    decryptedText = barcode.wifi?.password
-                    others = when (barcode.wifi?.encryptionType) {
-                        Barcode.WiFi.TYPE_OPEN -> "Open"
-                        Barcode.WiFi.TYPE_WPA -> "WPA"
-                        Barcode.WiFi.TYPE_WEP -> "WEP"
-                        else -> ""
-                    }
-                }
-
-                Barcode.TYPE_URL -> {
-                    title = barcode.url?.title
-                    decryptedText = barcode.url?.url
-                }
-
-                Barcode.TYPE_TEXT -> {
-                    title = barcode.displayValue
-                }
-
-                Barcode.TYPE_PHONE -> {
-                    title = barcode.phone?.number
-                }
-
-                Barcode.TYPE_GEO -> {
-                    val latitude = barcode.geoPoint!!.lat
-                    val longitude = barcode.geoPoint!!.lng
-                    others = "$latitude,$longitude"
-                }
-
-                Barcode.TYPE_SMS -> {
-                    title = barcode.sms?.phoneNumber
-                    decryptedText = barcode.sms?.message
-                }
-
-                else -> {
-                    title = barcode.rawValue ?: "Sorry, this QR code doesn't contain any data"
-                }
-            }
-        } else {
-            title = barcode.rawValue ?: "Sorry, Something wrong happened. Please try to rescan."
-        }
-
-        return BarcodeData(format, valueType, title, decryptedText, others, dateTime)
     }
 
     /**

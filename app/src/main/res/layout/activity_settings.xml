@@ -17,6 +17,7 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/settingsToolbar"
             android:layout_width="match_parent"
+            android:background="?colorPrimaryDark"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/arrow_back_28"
             app:title="Settings"

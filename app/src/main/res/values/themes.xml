@@ -10,9 +10,8 @@
         <item name="colorSecondary">@color/dark_blue</item>
         <item name="colorSecondaryVariant">@color/dark_blue</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="bottomSheetBackgroundTint">@color/nav_back_light_blue</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
         <item name="toolbarStyle">@style/CustomToolbarStyle</item>
         <item name="imageButtonStyle">@style/ImageButtonStyle</item>
@@ -32,9 +31,8 @@
         <item name="colorSecondary">@color/light_blue</item>
         <item name="colorSecondaryVariant">@color/light_blue</item>
         <item name="colorOnSecondary">@color/white</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="bottomSheetBackgroundTint">@color/nav_back_dark_blue</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
         <item name="toolbarStyle">@style/CustomToolbarStyle</item>
         <item name="imageButtonStyle">@style/ImageButtonStyle</item>
@@ -53,9 +51,8 @@
         <item name="colorSecondary">@color/dark_green</item>
         <item name="colorSecondaryVariant">@color/dark_green</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="bottomSheetBackgroundTint">@color/nav_back_light_green</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
         <item name="toolbarStyle">@style/CustomToolbarStyle</item>
         <item name="imageButtonStyle">@style/ImageButtonStyle</item>
@@ -74,9 +71,8 @@
         <item name="colorSecondary">@color/light_green</item>
         <item name="colorSecondaryVariant">@color/light_green</item>
         <item name="colorOnSecondary">@color/white</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="bottomSheetBackgroundTint">@color/nav_back_dark_green</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
         <item name="toolbarStyle">@style/CustomToolbarStyle</item>
         <item name="imageButtonStyle">@style/ImageButtonStyle</item>
