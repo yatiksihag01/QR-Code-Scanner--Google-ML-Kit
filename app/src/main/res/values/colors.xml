@@ -28,6 +28,12 @@
     <color name="dialogButtons">#89B3F7</color>
     <color name="redButton">#DF3737</color>
 
+    <!-- Bottom Sheet Background Tint to match navBar color -->
+    <color name="nav_back_dark_blue">#111618</color>
+    <color name="nav_back_light_blue">#FDFDFD</color>
+    <color name="nav_back_light_green">#FCFDFC</color>
+    <color name="nav_back_dark_green">#181B19</color>
+
     <!-- Transparent -->
     <color name="transparent">#00212A31</color>
     <color name="semiTransparentWhite">#80FFFFFF</color>

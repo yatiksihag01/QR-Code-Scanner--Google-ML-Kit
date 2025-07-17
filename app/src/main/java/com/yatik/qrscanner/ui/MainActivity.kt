@@ -20,6 +20,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import com.yatik.qrscanner.R
@@ -33,9 +34,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         updateTheme(this@MainActivity)
         setContentView(R.layout.activity_main)
-        Utilities().setSystemBars(window, this, true)
+        Utilities().setSystemBars(window, this)
 
         when (intent?.action) {
             Intent.ACTION_SEND -> if (intent.type?.startsWith("image/") == true) {
