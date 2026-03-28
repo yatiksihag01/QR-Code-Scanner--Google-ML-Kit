@@ -31,13 +31,12 @@ data class UrlPreviewData(
     @PrimaryKey(autoGenerate = false)
     @SerializedName("main_url")
     @ColumnInfo(name = "main_url") val mainUrl: String,
-    
+
     @SerializedName("title")
     @ColumnInfo(name = "title") val title: String?,
-    
+
     @SerializedName("description")
     @ColumnInfo(name = "description") val description: String?,
-    
     @SerializedName("image_url")
     @ColumnInfo(name = "image_url") val imageUrl: String?
 ) : Parcelable
