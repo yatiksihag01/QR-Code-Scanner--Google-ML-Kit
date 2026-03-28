@@ -17,14 +17,19 @@
 package com.yatik.qrscanner.models.barcode.data
 
 import android.os.Parcelable
-import com.google.errorprone.annotations.Keep
+import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Keep
 @Parcelize
 data class Email(
+    @SerializedName("email")
     val email: String?,
+    @SerializedName("subject")
     val subject: String?,
+    @SerializedName("message")
     val message: String?,
+    @SerializedName("type")
     val type: ContactType?
 ) : Parcelable
