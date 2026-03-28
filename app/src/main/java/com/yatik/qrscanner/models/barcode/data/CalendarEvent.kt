@@ -17,14 +17,19 @@
 package com.yatik.qrscanner.models.barcode.data
 
 import android.os.Parcelable
-import com.google.errorprone.annotations.Keep
+import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Keep
 @Parcelize
 data class CalendarEvent(
+    @SerializedName("description")
     val description: String?,
+    @SerializedName("start")
     val start: String?,
+    @SerializedName("end")
     val end: String?,
+    @SerializedName("organizer")
     val organizer: String?
 ) : Parcelable

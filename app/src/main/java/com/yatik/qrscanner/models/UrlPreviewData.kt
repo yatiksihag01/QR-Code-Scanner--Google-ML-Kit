@@ -1,12 +1,3 @@
-package com.yatik.qrscanner.models
-
-import android.os.Parcelable
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.google.errorprone.annotations.Keep
-import kotlinx.parcelize.Parcelize
-
 /*
  * Copyright 2023 Yatik
  *
@@ -23,13 +14,29 @@ import kotlinx.parcelize.Parcelize
  * limitations under the License.
  */
 
+package com.yatik.qrscanner.models
+
+import android.os.Parcelable
+import androidx.annotation.Keep
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+
 @Keep
 @Parcelize
 @Entity(tableName = "url_info_table")
 data class UrlPreviewData(
     @PrimaryKey(autoGenerate = false)
+    @SerializedName("main_url")
     @ColumnInfo(name = "main_url") val mainUrl: String,
+
+    @SerializedName("title")
     @ColumnInfo(name = "title") val title: String?,
+
+    @SerializedName("description")
     @ColumnInfo(name = "description") val description: String?,
+    @SerializedName("image_url")
     @ColumnInfo(name = "image_url") val imageUrl: String?
 ) : Parcelable

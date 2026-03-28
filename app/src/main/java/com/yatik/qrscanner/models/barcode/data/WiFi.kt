@@ -17,7 +17,7 @@
 package com.yatik.qrscanner.models.barcode.data
 
 import android.os.Parcelable
-import com.google.errorprone.annotations.Keep
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -32,7 +32,10 @@ enum class Security {
 @Keep
 @Parcelize
 data class WiFi(
+    @SerializedName("ssid")
     val ssid: String?,
+    @SerializedName("password")
     val password: String?,
+    @SerializedName("security")
     val security: Security?
 ) : Parcelable
